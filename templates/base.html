@@ -1,0 +1,44 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Pentarea | {% block title %}{% endblock %}</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- CSS SET -->
+        <style type="text/css">
+            body { padding-top: 60px; }
+        </style>
+        
+        <link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css">
+        <link href="/static/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
+        <!-- SCRIPT SET -->
+
+        <script src="/static/js/jquery.js"></script>
+        <script src="/static/js/bootstrap-button.js"></script>
+        <script src="/static/js/bootstrap-collapse.js"></script>
+        
+    </head>
+    <body>
+        <div class="navbar navbar-inverse navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="#">Pentarea</a>
+                    <div class="nav">
+                        <ul class="nav">
+                            {% if user.is_authenticated %}
+                                <li>Hello, {{ user.username }}</li>
+                            {% else %}
+                                <li class="{% block login_active %}{% endblock %}"><a href="/login/">Login</a></li>
+                                <li class="{% block register_active %}{% endblock %}"><a href="/register/">Register</a></li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </body>
+</html>

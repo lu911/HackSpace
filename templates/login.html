@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
+{% block login_active %}active{% endblock %}
+{% block content %}
+<h1>Login</h1>
+<form method="POST" class="form-horizontal">
+    <fieldset>
+        <dl>
+            {% for field in form %}
+            <dt>{{ field.label_tag }}</dt>
+            <dd>{{ field }} {{ field.errors }}</dd>
+            {% endfor %}
+        </dl>
+        {% csrf_token %}
+        <input class="btn" type="submit" value="Join" />
+    </fieldset>
+</form>
+{% endblock %}
