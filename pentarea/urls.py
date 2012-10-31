@@ -11,7 +11,7 @@ from member.views import *
 urlpatterns = patterns('',
     (r'^register/', MemberRegisterView),
     (r'^login/', MemberLoginView),
-    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/pentarea/public_html/pentarea/static'})
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'})
     #(r'^css/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': css }),
     #(r'^js/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': js }),
     #(r'^img/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': img })
