@@ -17,9 +17,9 @@ def memberRegisterView(request):
 
 def register_user(form):
     user = User.objects.create_user(
-        form.cleaned_data['username'],
-        form.cleaned_data['password'],
-        form.cleaned_data['email']
+        username=form.cleaned_data['username'],
+        password=form.cleaned_data['password'],
+        email=form.cleaned_data['email']
     )
     user.first_name = form.cleaned_data['nickname']
     user.save()
