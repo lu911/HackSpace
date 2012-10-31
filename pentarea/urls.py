@@ -6,10 +6,19 @@ from member.views import *
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+<<<<<<< HEAD
     (r'^register/$', memberRegisterView),
     (r'^login/$', memberLoginView),
     (r'^logout/$', memberLogout),
     (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/wisedier/git/pentarea/static'})
+=======
+    (r'^register/', MemberRegisterView),
+    (r'^login/', MemberLoginView),
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'})
+    #(r'^css/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': css }),
+    #(r'^js/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': js }),
+    #(r'^img/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': img })
+>>>>>>> e097d3522b861cb2420e52e93cc764f995ef689e
     # Examples:
     # url(r'^$', 'pentarea.views.home', name='home'),
     # url(r'^pentarea/', include('pentarea.foo.urls')),
