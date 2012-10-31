@@ -3,7 +3,7 @@
 {% block register_active %}active{% endblock %}
 {% block content %}
 <h1> Registration</h1>
-<form method="POST" class="form-horizontal">
+<form method="POST" action="." class="form-horizontal">
     <fieldset>
         <dl>
             {% for field in form %}
@@ -12,6 +12,7 @@
             {% endfor %}
         </dl>
         {% csrf_token %}
+        <input type="hidden" name="next" value="/" />
         <input class="btn" type="submit" value="Join" />
     </fieldset>
 </form>

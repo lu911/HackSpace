@@ -1,7 +1,4 @@
-import os.path
-from django.conf import settings
-from django.conf.urls.defaults import patterns, include, url
-from django.shortcuts import render
+from django.conf.urls.defaults import * 
 from member.views import * 
 
 # Uncomment the next two lines to enable the admin:
@@ -9,12 +6,10 @@ from member.views import *
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    (r'^register/', MemberRegisterView),
-    (r'^login/', MemberLoginView),
-    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/pentarea/public_html/pentarea/static'})
-    #(r'^css/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': css }),
-    #(r'^js/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': js }),
-    #(r'^img/(?P<path>.*)$', 'django.views.static.serve', { 'document_root': img })
+    (r'^register/$', memberRegisterView),
+    (r'^login/$', memberLoginView),
+    (r'^logout/$', memberLogout),
+    (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': '/home/wisedier/git/pentarea/static'})
     # Examples:
     # url(r'^$', 'pentarea.views.home', name='home'),
     # url(r'^pentarea/', include('pentarea.foo.urls')),

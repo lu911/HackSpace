@@ -1,18 +1,19 @@
-from django.contrib.auth.models import User
-from django.template import RequestContext
-from django.http import HttpResponseRedirect, HttpResponse
-from django.shortcuts import render
+#-*-coding:utf-8-*-
 from member.forms import *
+from django.contrib.auth.models import User
+from django.http import HttpResponseRedirect, HttpResponse, Http404
+from django.shortcuts import render
+from django.contrib.auth import login, logout
 
-def MemberRegisterView(request):
+def memberRegisterView(request):
     if request.method == 'POST':
-        form = RegisterForm(request.POST) #request.POST, request.FILES
+        form = RegisterForm(request.POST)
         if form.is_valid():
             register_user(form)
             return HttpResponseRedirect('/login/')
     else:
         form = RegisterForm(initial=request.GET)
-    return render(request, 'register.html', dict(form=form))
+    return render(request, 'registration/register.html', dict(form=form))
 
 def register_user(form):
     user = User.objects.create_user(
@@ -24,14 +25,20 @@ def register_user(form):
     user.save()
     UserProfile.objects.create(user=user,score=0)
 
-def MemberLoginView(request):
+def memberLoginView(request):
     if request.method == 'POST':
-        form = LoginForm()
+        form = AuthenticationForm(request.POST)
         if form.is_valid():
             user = form.get_user()
+            print user
             login(request, user)
-            return HttpResponseRedirect(request.POST.get('next', '/main/'))
+            return HttpResponseRedirect(request.POST.get('next', '/login/'))
+        else:
+            raise Http404(form.errors)
     else:
-        form = LoginForm()
-    return render(request, 'login.html', dict(form=form, next=request.GET.get('next', '/login/')))
+        form = AuthenticationForm()
+    return render(request, 'registration/login.html', dict(form=form, next=request.GET.get('next', '/login/')))
 
+def memberLogout(request):
+    logout(request)
+    return HttpResponseRedirect('/login/')

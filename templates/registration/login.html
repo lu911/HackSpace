@@ -3,16 +3,24 @@
 {% block login_active %}active{% endblock %}
 {% block content %}
 <h1>Login</h1>
-<form method="POST" class="form-horizontal">
+<form method="POST">
     <fieldset>
         <dl>
-            {% for field in form %}
+        {% for field in form %}
             <dt>{{ field.label_tag }}</dt>
             <dd>{{ field }} {{ field.errors }}</dd>
-            {% endfor %}
+        {% endfor %}
         </dl>
         {% csrf_token %}
-        <input class="btn" type="submit" value="Join" />
+        <input type="hidden" name="next" value="{{ next }}" />
+        <input class="btn" type="submit" value="Login" />
     </fieldset>
 </form>
+<div id="test">
+{% if user.is_authenticated %}
+    <h1>Login Success</h1>
+{% else %}
+    <h1>Login Failed</h1>
+{% endif %}
+</div>
 {% endblock %}
