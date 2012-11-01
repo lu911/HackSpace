@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Challenge{% endblock %}
+{% block content %}
+<ul>
+    {% for prob in prob_list %}
+        <li>{{ prob.prob_name }} </li>
+    {% endfor %}
+</ul>
+
+{% endblock %}

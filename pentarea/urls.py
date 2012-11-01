@@ -1,5 +1,6 @@
 from django.conf.urls.defaults import * 
 from member.views import * 
+from challenge.views import *
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -10,6 +11,7 @@ urlpatterns = patterns('',
     (r'^register/$', memberRegisterView),
     (r'^login/$', memberLoginView),
     (r'^logout/$', memberLogout),
+    (r'^challenge/$', ProbListView),
     (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'})
     # Examples:
     # url(r'^$', 'pentarea.views.home', name='home'),
