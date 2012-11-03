@@ -23,5 +23,8 @@ class ProbTag(models.Model):
     @classmethod
     def get_from_prob(cls,tag):
         return [prob_tag.prob_id for prob_tag in ProbTag.objects.filter(tag_id=tag)]
-
+    
+    @classmethod
+    def get_from_all_prob(cls):
+        return [prob_tag.prob_id for prob_tag in ProbTag.objects.all()]
 

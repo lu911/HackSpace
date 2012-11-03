@@ -1,10 +1,52 @@
 {% extends "base.html" %}
 {% block title %}Challenge{% endblock %}
 {% block content %}
-<ul>
-    {% for prob in prob_list %}
-        <li>{{ prob.prob_name }} </li>
-    {% endfor %}
-</ul>
+    <a href="/challenge/">All</a>
+{% for tag in tag_list %}
+    <a href="/challenge/?tag={{tag.id}}">{{tag.tag}}</a>
+{% endfor %}
+<br />
+<table style="float:left">
+    <tbody>
+        <tr>
+            {% for prob in prob_data %}
+                <th><button type="button" class="btn btn-large" onClick="printProb('{{prob.prob_content}}',{{prob.prob_point}})">{{ prob.prob_name }}</button></th>
+                {% if forloop.counter|divisibleby:"4" %} <!-- 4는 커스텀 정보-->
+                    </tr>
+                {% endif %}
+            {% endfor %}
+            </tr>
+    </tbody>
+</table>
 
+<div style="float:left">
+    <table>
+        <tbody>
+            <tr><th id="prob-content"></tr>
+            <tr><th id="prob-score"></th>
+            <form method="post">
+                {% csrf_token %}
+                <tr>
+                    <th><input type="text" name="auth" placeholder="Do not bruteforce!" /></th>
+                    <th><button id="btn_send" type="submit" class="btn">Auth</button></th>
+                </tr>
+            </form>
+        </tbody>
+    </table>
+    </form>
+</div>
+
+<script type="text/javascript">
+    function printProb(content,score){
+        $('#prob-content').html(content);
+        $('#prob-score').html(score);
+    }
+    
+    function auth(){
+        var text = $("#input-auth").val();
+        $.ajax({
+
+        })
+    }
+</script>
 {% endblock %}

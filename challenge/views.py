@@ -6,13 +6,15 @@ from django.http import HttpResponse
 
 #@login_required(login_url='/login/')
 def ProbListView(request):
-    tagName = request.GET.get('tag')
-    #tag_id = TagName.objects.get(tag=tagName)
-    #tag_list = TagName.objects.all()
-    #probIds = []
-    probIds = ProbTag.get_from_prob(1)
-    print probIds
-    #prob_list = Problem.objects.get(
-    return render(request,'challenge/list.html')
-
-
+    try:   
+        tagID = request.GET.get('tag', None)
+        #tag_id = TagName.objects.get(tag=tagName)
+        tagList = TagName.objects.all()
+        #probIds = []
+        if tagID is not None:
+            probData = ProbTag.get_from_prob(tagID)
+        else:
+            probData = ProbTag.get_from_all_prob()
+    except:
+        probData=ProbTag.get_from_all_prob()
+    return render(request,'challenge/list.html',dict(tag_list=tagList, prob_data=probData))
