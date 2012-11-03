@@ -24,7 +24,7 @@
         <tbody>
             <tr><th id="prob-content"></tr>
             <tr><th id="prob-score"></th>
-            <form method="post">
+            <form method="post" id="auth-form">
                 {% csrf_token %}
                 <tr>
                     <th><input type="text" name="auth" placeholder="Do not bruteforce!" /></th>
@@ -41,12 +41,16 @@
         $('#prob-content').html(content);
         $('#prob-score').html(score);
     }
-    
-    function auth(){
-        var text = $("#input-auth").val();
-        $.ajax({
 
-        })
-    }
+    $('#auth-form').submit(function(){
+        $.post('/challenge/auth/',$(this).serialize(),function(data){
+            if(data.auth.trim() == "OK"){
+                alert("Clear !");
+            }else{
+                alert("Wrong !");
+            }
+        });
+        return false;
+    });
 </script>
 {% endblock %}
