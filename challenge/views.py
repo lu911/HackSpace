@@ -21,9 +21,9 @@ def ProbListView(request):
 
 def AuthView(request):
     auth=request.POST.get('auth')
-#    prob_id=request.POST.get('prob_id')
+    probId=request.POST.get('prob-id')
     try:
-        prob=Problem.objects.get(prob_auth=auth)
+        prob=Problem.objects.get(prob_auth=auth, id=probId)
         if prob.prob_flag == 1:
             result='already cleared'
         else:
