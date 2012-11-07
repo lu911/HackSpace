@@ -1,5 +1,5 @@
 from django.db import models
-form member.models import *
+from member.models import *
 
 class Problem(models.Model):
     prob_name = models.CharField(max_length=128)
@@ -9,9 +9,9 @@ class Problem(models.Model):
     prob_flag = models.IntegerField()
 
 class AuthLog(models.Model):
-	prob_id = models.ForeignKey(Problem)    
-	user_id = models.ForeignKey(User)
-	auth_type = models.IntegerField()
+    prob_id = models.ForeignKey(Problem)    
+    user_id = models.ForeignKey(User)
+    auth_type = models.IntegerField()
     auth_time = models.DateField()
     auth_ip = models.CharField(max_length=16)
     auth_value = models.CharField(max_length=256)
@@ -30,4 +30,5 @@ class ProbTag(models.Model):
     @classmethod
     def get_from_all_prob(cls):
         return [prob_tag.prob_id for prob_tag in ProbTag.objects.all()]
+
 

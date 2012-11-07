@@ -4,6 +4,8 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 import json
+import datetime
+import time
 #@login_required(login_url='/login/')
 def ProbListView(request):
     try:   
@@ -22,14 +24,18 @@ def ProbListView(request):
 def AuthView(request):
     auth=request.POST.get('auth')
     probId=request.POST.get('prob-id')
+    prob=Problem.objects.get(id=probId)
     try:
-        prob=Problem.objects.get(prob_auth=auth, id=probId)
-        if prob.prob_flag == 1:
-            result='already cleared'
-        else:
-            result='OK'
-            prob.prob_flag=1
-            prob.save()
+        authLog=AuthLog.objects.get(user_id=request.user, prob_id=prob, auth_type=1)
     except:
-        result='fail'
+        if(prob.prob_auth == auth):
+            result='OK'
+ 	    authType=1
+        else:
+            result='fail'
+            authType=0
+        authLog=AuthLog(prob_id=prob, user_id=request.user, auth_type=authType, auth_time=datetime.datetime.now(), auth_ip=request.META['REMOTE_ADDR'], auth_value=auth)
+        authLog.save()
+    else:
+       result='already cleared'
     return HttpResponse(json.dumps(dict(auth=result)))

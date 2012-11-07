@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     (r'^login/$', memberLoginView),
     (r'^logout/$', memberLogout),
     (r'^challenge/$', ProbListView),
+    (r'^challenge/auth/$', AuthView),
     (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'})
     # Examples:
     # url(r'^$', 'pentarea.views.home', name='home'),
