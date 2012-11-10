@@ -1,16 +1,17 @@
 {% extends "base.html" %}
 {% block title %}Challenge{% endblock %}
+{% block challenge_active %}active{% endblock %}
 {% block content %}
     <a href="/challenge/">All</a>
 {% for tag in tag_list %}
-    <a href="/challenge/?tag={{tag.id}}">{{tag.tag}}</a>
+    <a href="/challenge/?tag={{tag.id|urlencode}}">{{tag.tag|escape}}</a>
 {% endfor %}
 <br />
 <table style="float:left">
     <tbody>
         <tr>
             {% for prob in prob_data %}
-                <th><button type="button" class="btn btn-large" onClick="printProb({{prob.id}},'{{prob.prob_content}}',{{prob.prob_point}})">{{ prob.prob_name }}</button></th>
+                <th><button type="button" class="btn btn-large" onClick="printProb({{prob.id|escape}},'{{prob.prob_content|escape}}',{{prob.prob_point|escape}})">{{ prob.prob_name|escape }}</button></th>
                 {% if forloop.counter|divisibleby:"4" %} <!-- 4는 커스텀 정보-->
                     </tr>
                 {% endif %}

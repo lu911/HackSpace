@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Rank{% endblock %}
+{% block rank_active%}active{% endblock %}
+{% block content %}
+<h1 class="pager">Rank</h1>
+<table class="table table-hover">
+    <tbody>
+        <tr class="info">
+            <td>#</td>
+            <td>Name</td>
+            <td>Score</td>
+            <td>Last Solving Time</td>
+        </tr>
+        {% for user in users %}
+        <tr>
+            <td></td>
+            <td>{{ user.name|escape }}</td>
+            <td>{{ user.score|escape }}</td>
+            <td>{{ user.auth_time|escape }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

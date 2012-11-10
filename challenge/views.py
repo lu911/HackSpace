@@ -6,7 +6,8 @@ from django.http import HttpResponse
 import json
 import datetime
 import time
-#@login_required(login_url='/login/')
+
+@login_required(login_url='/login/')
 def ProbListView(request):
     try:   
         tagID = request.GET.get('tag', None)
