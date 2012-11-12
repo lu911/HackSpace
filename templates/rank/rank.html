@@ -13,10 +13,10 @@
         </tr>
         {% for user in users %}
         <tr>
-            <td></td>
-            <td>{{ user.name|escape }}</td>
-            <td>{{ user.score|escape }}</td>
-            <td>{{ user.auth_time|escape }}</td>
+            <td>{{ forloop.counter }}</td>
+            <td>{{ user.id.user|escape }}</td>
+            <td>{{ user.id.score|escape }}</td>
+            <td>test</td>
         </tr>
         {% endfor %}
     </tbody>

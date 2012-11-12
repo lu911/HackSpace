@@ -50,7 +50,6 @@ class AuthenticationForm(forms.Form):
     def clean(self):
         try:
             user = authenticate(username=self.cleaned_data['username'],password=self.cleaned_data['password'])
-            print user, user.id, user.username
             if user is not None:
                 if user.is_active:
                     self._user = user

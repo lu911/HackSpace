@@ -2,6 +2,7 @@ from django.conf.urls.defaults import *
 from django.shortcuts import *
 from member.views import * 
 from challenge.views import *
+from rank.views import ShowRankView
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -14,7 +15,8 @@ urlpatterns = patterns('',
     (r'^logout/$', memberLogout),
     (r'^challenge/$', ProbListView),
     (r'^challenge/auth/$', AuthView),
-    (r'^rank/$', lambda request:render(request, 'rank/rank.html')),
+    (r'^rank/$', ShowRankView),
+    #(r'^rank/$', lambda request:render(request, 'rank/rank.html')),
     (r'^static/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'static'})
     # Examples:
     # url(r'^$', 'pentarea.views.home', name='home'),

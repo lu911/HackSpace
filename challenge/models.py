@@ -1,5 +1,6 @@
 from django.db import models
-from member.models import *
+from django.contrib.auth.models import User
+from member.models import UserProfile
 
 class Problem(models.Model):
     prob_name = models.CharField(max_length=128)
@@ -12,7 +13,7 @@ class AuthLog(models.Model):
     prob_id = models.ForeignKey(Problem)    
     user_id = models.ForeignKey(User)
     auth_type = models.IntegerField()
-    auth_time = models.DateField()
+    auth_time = models.DateTimeField()
     auth_ip = models.CharField(max_length=16)
     auth_value = models.CharField(max_length=256)
 

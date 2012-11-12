@@ -34,7 +34,7 @@ def memberLoginView(request):
             login(request, user)
             return HttpResponseRedirect(request.POST.get('next', '/login/'))
         else:
-            raise Http404(form.errors)
+            return HttpResponseRedirect(request.GET.get('next', '/login/'))
     else:
         form = AuthenticationForm()
     return render(request, 'registration/login.html', dict(form=form, next=request.GET.get('next', '/login/')))
