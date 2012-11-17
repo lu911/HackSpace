@@ -2,6 +2,7 @@
 from models import *
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
+from member.models import UserProfile
 from django.http import HttpResponse
 import json
 import datetime
@@ -32,6 +33,9 @@ def AuthView(request):
         if(prob.prob_auth == auth):
             result='OK'
  	    authType=1
+            user=UserProfile.objects.get(user=request.user)
+	    user.score+=prob.score
+            last_solve_time=datetime.datetime.now()
         else:
             result='fail'
             authType=0
