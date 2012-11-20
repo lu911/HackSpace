@@ -29,6 +29,9 @@
                         {% if user.is_authenticated %}
                             <li class="{% block challenge_active %}{% endblock %}"><a  href="/challenge/">Challenge</a></li>
                             <li class="{% block rank_active %}{% endblock %}"><a href="/rank/">Rank</a></li>
+                            {% if user.is_superuser %}
+                            <li class="{% block admin_active %}{% endblock %}"><a href="/admin/status/">Admin</a></li>
+                            {% endif %}
                             <li><a href="/logout/">Logout</a></li>
                         </ul>
                         <p class="navbar-text pull-right">{{ user.username|escape }}</p>

@@ -1,9 +1,10 @@
 #-*-coding:utf-8-*-
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 
 from member.models import UserProfile
 from challenge.models import Problem, AuthLog
+from django.contrib.auth.models import User
 
 def ShowSolveStatusView(request):
     problems = Problem.objects.all()
@@ -15,34 +16,41 @@ def ShowSolveStatusView(request):
         prob_id.append(i)
         solved_prob_num.append(0)
 
-    print prob_id
-    solved_prob = AuthLog.objects.filter(auth_type=1)
-    for prob in solved_prob:
-        print prob_id.index(prob.prob_id_id)
-        position = prob_id.index(prob.prob_id_id)
-        if position:
+    solved_prob = AuthLog.objects.filter(auth_type=1).order_by('prob_id')
+    try:
+        for prob in solved_prob:
+            position = prob_id.index(prob.prob_id_id)
             solved_prob_num[position] += 1
+    except ValueError:
+        return render(request, 'admin/solve_status/render_solve_status.html',
+                                dict(message='풀린 문제가 없습니다.'))
 
-    objects = []
-    j = 0
-    for i, prob in enumerate(solved_prob):
-        objects = solved_prob[i]
-        if objects is prob:
-            if i == solved_prob_num[j]:
-                j += 1
-            
-    return render(request, 'admin/show_solve_status.html', 
-                            dict(problems=solved_prob,
-                                 solved_prob_id=solved_prob_num))
+    sum = 0
+    regulated_prob = []
+    for num in solved_prob_num:
+        sum += num
+        regulated_prob.append(solved_prob[sum-1].prob_id.prob_name)
 
-def TestView(request):
-    if request.method == 'POST':
-        data1 = request.POST.get('data1')
-        data2 = request.POST.get('data2')
-        data = []
-        data.append(data1)
-        data.append(data2)
-        return render(request, 'test.html', dict(data=data))
-    else:
-        pass
-    return render(request, 'test.html')
+    return render(request, 'admin/solve_status/render_solve_status.html',
+                            dict(problems=regulated_prob,
+                                 solved_prob_num=solved_prob_num))
+
+def ShowSolverStatusView(request, problem_name):
+    problem = Problem.objects.get(prob_name=problem_name)
+    solvers = AuthLog.objects.filter(prob_id=problem.id, auth_type=1)
+    return render(request, 'admin/solve_status/solver_list.html',
+                            dict(problem=problem_name,
+                                 solvers=solvers))
+
+def SearchSolverView(request):
+    username = request.POST.get('username')
+    try:
+        user = User.objects.get(username=username)
+        solver_info = AuthLog.objects.filter(user_id=user.id, auth_type=1).order_by('-auth_time')
+        return render(request, 'admin/solve_status/user_solve_status.html',
+                                dict(solver_info=solver_info,
+                                     username=user.username))
+    except:
+        message = '존재하지 않는 ID입니다.'
+        return render(request, 'admin/solve_status/user_solve_status.html',
+                                dict(message=message))

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{problem}} - solvers {% endblock %}
+{% block content %}
+<form method="POST" class="form-search" action="/admin/user/">
+    <div class="input-append">
+        <input type="text" name="username" class="span2 search-query" placeholder="Username" />
+        <button type="submit" class="btn">Search</button>
+        {% csrf_token %}
+    </div>
+</form>
+{% for solver in solvers %}
+<p>{{ solver.user_id.username }} :: {{ solver.auth_value }} :: {{ solver.auth_time }} ({{ solver.auth_ip }})</p>
+{% endfor %}
+{% endblock %}

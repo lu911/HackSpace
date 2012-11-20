@@ -10,7 +10,7 @@ class Problem(models.Model):
     prob_flag = models.IntegerField()
 
 class AuthLog(models.Model):
-    prob_id = models.ForeignKey(Problem)    
+    prob_id = models.ForeignKey(Problem)
     user_id = models.ForeignKey(User)
     auth_type = models.IntegerField()
     auth_time = models.DateTimeField()
@@ -27,7 +27,7 @@ class ProbTag(models.Model):
     @classmethod
     def get_from_prob(cls,tag):
         return [prob_tag.prob_id for prob_tag in ProbTag.objects.filter(tag_id=tag)]
-    
+
     @classmethod
     def get_from_all_prob(cls):
         return [prob_tag.prob_id for prob_tag in ProbTag.objects.all()]

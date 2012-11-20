@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ username }} - Status {% endblock %}
+{% block content %}
+{% if message %}
+    <h3>{{ message }}</h3>
+{% else %}
+<h4>{{ username }}</h4> 
+<ul>
+    {% for solver in solver_info %}
+    <li>{{ solver.auth_value }} :: {{ solver.auth_time }} ({{ solver.auth_ip }})</li>
+    {% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %} status {% endblock %}
+{% block content %}
+{% if message %}
+    <h3>{{ message }}
+{% else %}
+    <table class="table table-hover" style="width:50%;">
+        <tbody>
+            <tr>
+                <td>#</td>
+                <td>Problem Field</td>
+                <td>Solver</td>
+            </tr>
+            {% for solved_num in solved_prob_num %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ problem.id }}</td>
+                <td>{{ solved_num }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% for problem in problems %}
+        <p><a href="/admin/solver/{{ problem }}/">{{ problem }}</a></p>
+    {% endfor %}
+    {% for solved_num in solved_prob_num %}
+        <p>{{ solved_num }}</p>
+    {% endfor %}
+{% endif %}
+{% endblock %}
