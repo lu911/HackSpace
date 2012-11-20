@@ -19,10 +19,13 @@ class AuthLog(models.Model):
 
 class TagName(models.Model):
     tag = models.CharField(max_length=16)
+    
+    def __str__(self):
+        return self.tag.encode('utf8')
 
 class ProbTag(models.Model):
     prob_id = models.ForeignKey(Problem)
-    tag_id = models.IntegerField()
+    tag_id = models.ForeignKey(TagName)
 
     @classmethod
     def get_from_prob(cls,tag):
