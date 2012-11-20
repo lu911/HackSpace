@@ -16,7 +16,7 @@
             <td>{{ forloop.counter }}</td>
             <td>{{ user.id.user|escape }}</td>
             <td>{{ user.id.score|escape }}</td>
-            <td>{{ user.id.last_solve_time }}</td>
+            <td>{{ user.id.last_solve_time|escape }}</td>
         </tr>
         {% endfor %}
     </tbody>

@@ -32,10 +32,11 @@ def AuthView(request):
     except:
         if(prob.prob_auth == auth):
             result='OK'
- 	    authType=1
+            authType=1
             user=UserProfile.objects.get(user=request.user)
-	    user.score+=prob.score
+            user.score+=prob.prob_point
             last_solve_time=datetime.datetime.now()
+            user.save()
         else:
             result='fail'
             authType=0

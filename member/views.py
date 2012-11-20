@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.http import HttpResponseRedirect, HttpResponse, Http404
 from django.shortcuts import render
 from django.contrib.auth import login, logout
+from datetime import datetime
 
 def memberRegisterView(request):
     if request.method == 'POST':
@@ -23,7 +24,7 @@ def register_user(form):
     )
     user.first_name = form.cleaned_data['nickname']
     user.save()
-    UserProfile.objects.create(user=user,score=0)
+    UserProfile.objects.create(user=user,score=0, last_solve_time=datetime.now())
 
 def memberLoginView(request):
     if request.method == 'POST':
