@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 
 from member.models import UserProfile
@@ -40,6 +41,12 @@ def ShowSolverStatusView(request, problem_name):
                             dict(problem=problem_name,
                                  solvers=solvers))
 
+def AdminProblemListManagerView(request):
+    tags = TagName.objects.all()
+    probs = {}
+    for tag in tags:
+        probs[tag.tag] = ProbTag.get_from_prob(tag.id)
+    return render(request,'admin/prob_list.html',dict(tags=tags,probs=probs))
 
 def AdminProblemManagerView(request):
     tags = TagName.objects.all()
@@ -82,13 +89,12 @@ def AdminModifyProblemView(request):
                     prob_tag.tag_id = form.cleaned_data['prob_tag']
                     prob.save()
                     prob_tag.save()
-                    return HttpResponseRedirect('/admin/prob/')
             else:
                 form = ProblemForm(initial=default)
-                
         except Problem.DoesNotExist:
-            raise ValidationError("존재 하지 않는 문제입니다.")
-    
+            pass
+    else:
+        pass
     return render(request,'admin/prob_modify_manager.html',dict(form=form))
 
 def AdminDeleteProblemView(request):
@@ -101,7 +107,9 @@ def AdminDeleteProblemView(request):
             prob_tag = ProbTag.objects.filter(prob_id=prob_id).delete()
             status = "OK"
         except Problem.DoesNotExist:
-            raise ValidationError("존재 하지 않는 문제입니다.")
+            pass
+    else:
+        pass
     return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
 
 def AdminTagManagerView(request):
@@ -117,7 +125,7 @@ def AdminTagManagerView(request):
 
 def AdminModifyTagView(request):
     tag_id = request.GET.get('tag_id')
-    tag_name = request.POST.get('tag_name')
+    tag_name = request.POST.get('tag')
     if request.user.is_superuser:
         try:
             tag = TagName.objects.get(id=tag_id)
@@ -129,7 +137,6 @@ def AdminModifyTagView(request):
                 if form.is_valid(): 
                     tag.tag = tag_name
                     tag.save()
-                    return HttpResponseRedirect('/admin/tag/')
             else:
                 form = TagForm(initial=default)
                 

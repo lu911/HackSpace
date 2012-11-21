@@ -23,6 +23,7 @@ urlpatterns = patterns('',
     url(r'^admin/prob/', AdminProblemManagerView),
     url(r'^admin/modify-prob/', AdminModifyProblemView),
     url(r'^admin/delete-prob/', AdminDeleteProblemView),
+    url(r'^admin/problist/', AdminProblemListManagerView),
     
     url(r'^challenge/$', ProbListView),
     url(r'^challenge/auth/',ChallengeAuthView),

@@ -1,40 +1,97 @@
 {% extends "base.html" %}
-{% block title %} status {% endblock %}
+{% block title %} Challenge Manager {% endblock %}
+{% block css_extneral %}
+<link href="/static/css/jquery.treeview.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block js_external %}
+<script src="/static/js/jquery.treeview.js"></script>
+{% endblock %}
+
 {% block content %}
 {% load admin_filter %}
-<ul>
-{% for tag in tags %}
-	<li>
-		{{tag.tag}}	
-		<ul>
-			{% for prob in probs|getObject:tag %}
-				<li>{{prob.prob_name}}</li>
-			{% endfor %} 
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3" id="problem-content">
+		<ul id="browser" class="filetree treeview">
+			{% for tag in tags %}
+				<li class="collapsable"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ tag.tag }}</span><i class="icon-pencil" id="tag-{{tag.id}}"></i><i class="icon-remove"></i>
+					<ul>
+						{% for prob in probs|getObject:tag %}
+							<li class="last"><a class="file" id="prob-{{prob.id}}">{{prob.prob_name}}</a></li>
+						{% endfor %} 
+					</ul>
+				</li>
+			{% endfor %}				
+
 		</ul>
-	</li>
-{% endfor %}	
-</ul>
+    </div>
+    <div class="span7" id="challenge-content">
+		  	
+    </div>
+  </div>
+</div>
 
-<form method="post" id="tag-form" enctype="multipart/form-data">
-    <fieldset>
-        <dl>
-        	<dt>{{form.prob_name.label_tag}}</dt>
-        	<dd>{{ form.prob_name }} {{ form.prob_name.errors }}</dd>
-        	<dt>{{form.prob_content.label_tag}}</dt>
-        	<dd>{{ form.prob_content }} {{ form.prob_content.errors }}</dd>
-        	<dt>{{form.prob_point.label_tag}}</dt>
-        	<dd>{{ form.prob_point }} {{ form.prob_point.errors }}</dd>
-        	<dt>{{form.prob_auth.label_tag}}</dt>
-        	<dd>{{ form.prob_auth }} {{ form.prob_auth.errors }}</dd>
-        	<dt>{{form.prob_flag.label_tag}}</dt>
-        	<dd>{{ form.prob_flag }} {{ form.prob_flag.errors }}</dd>
-        	<dt>{{form.prob_tag.label_tag}}</dt>
-        	<dd>{{ form.prob_tag }} {{ form.prob_tag.errors }}</dd>
-        	
-        </dl>
-        {% csrf_token %}
-		<input type="submit" value="추가" />
-	</fieldset>
-</form>
 
+
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#browser").treeview();
+		var prob_id,tag_id;
+		$('.file').live('click',function(){
+			var id = $(this).attr('id');
+			prob_id = id.split("-")[1];
+			$.ajax(
+			{
+				url: "/admin/modify-prob/?prob_id=" + prob_id,
+				type: "GET",
+				dataType: "html",
+				success: function(data){
+					$('#challenge-content').hide().html(data).fadeIn(700);
+				}
+			});
+		});
+		
+		$('.icon-pencil').live('click',function(){
+			var id = $(this).attr('id');
+			tag_id = id.split("-")[1];
+			$.ajax(
+			{
+				url: "/admin/modify-tag/?tag_id=" + tag_id,
+				type: "GET",
+				dataType: "html",
+				success: function(data){
+					$('#challenge-content').hide().html(data).fadeIn(700);
+				}
+			});	
+		});
+		
+		$('#problem-modify-form').live('submit',function(){
+			$.post("/admin/modify-prob/?prob_id=" + prob_id,$(this).serialize(),function(data){
+				$('#challenge-content').hide().html(data).fadeIn(700);
+				ReloadProbList();
+			});
+			return false;
+		});
+		$('#tag-modify-form').live('submit',function(){
+			$.post("/admin/modify-tag/?tag_id=" + tag_id,$(this).serialize(),function(data){
+				$('#challenge-content').hide().html(data).fadeIn(700);
+				ReloadProbList();
+			});
+			return false;
+		});
+		
+	});
+	
+	function ReloadProbList(){
+		$.ajax(
+		{
+			url: "/admin/problist/",
+			type: "GET",
+			dataType: "html",
+			success: function(data){
+				$('#problem-content').html(data);
+			}
+		});	
+	}
+</script>
 {% endblock %}

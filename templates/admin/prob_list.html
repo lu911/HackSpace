@@ -1,0 +1,13 @@
+{% load admin_filter %}
+<ul id="browser" class="filetree treeview">
+	{% for tag in tags %}
+		<li class="collapsable"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ tag.tag }}</span><i class="icon-pencil" id="tag-{{tag.id}}"></i><i class="icon-remove"></i>
+			<ul>
+				{% for prob in probs|getObject:tag %}
+					<li class="last"><a class="file" id="prob-{{prob.id}}">{{prob.prob_name}}</a></li>
+				{% endfor %} 
+			</ul>
+		</li>
+	{% endfor %}				
+
+</ul>
