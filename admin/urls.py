@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, url
-from views import ShowSolveStatusView, ShowSolverStatusView, SearchSolverView
+from views import ShowSolveStatusView, ShowSolverStatusView, SearchUserView
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -8,5 +8,5 @@ from views import ShowSolveStatusView, ShowSolverStatusView, SearchSolverView
 urlpatterns = patterns('',
     url(r'^status/', ShowSolveStatusView),
     url(r'^solver/(\w+)/', ShowSolverStatusView),
-    url(r'^user/', SearchSolverView),
+    url(r'^user/', SearchUserView),
 )

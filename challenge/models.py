@@ -8,6 +8,7 @@ class Problem(models.Model):
     prob_point = models.IntegerField()
     prob_auth = models.CharField(max_length=256)
     prob_flag = models.IntegerField()
+    prob_solver = models.IntegerField(default=0)
 
 class AuthLog(models.Model):
     prob_id = models.ForeignKey(Problem)

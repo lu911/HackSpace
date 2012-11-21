@@ -9,14 +9,19 @@
         <style type="text/css">
             body { padding-top: 60px; }
         </style>
+        {% block style_external %}{% endblock %}
         
         <link href="/static/css/bootstrap.css" rel="stylesheet" type="text/css">
         <link href="/static/css/bootstrap-responsive.css" rel="stylesheet" type="text/css">
-        <!-- SCRIPT SET -->
+        {% block css_extneral %}{% endblock %}
+        <!-- CSS SET -->
 
+        <!-- SCRIPT SET -->
         <script src="/static/js/jquery.js"></script>
         <script src="/static/js/bootstrap-button.js"></script>
         <script src="/static/js/bootstrap-collapse.js"></script>
+        {% block js_external %}{% endblock %}
+        <!-- SCRIPT SET -->
         
     </head>
     <body>

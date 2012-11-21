@@ -11,35 +11,12 @@ import json
 
 
 def ShowSolveStatusView(request):
+
     problems = Problem.objects.all()
-    quantity = problems.count() + 1
-    prob_id = []
-    solved_prob_num = []
-
-    for i in xrange(1,quantity):
-        prob_id.append(i)
-        solved_prob_num.append(0)
-
-    solved_prob = AuthLog.objects.filter(auth_type=1).order_by('prob_id')
-    try:
-        for prob in solved_prob:
-            position = prob_id.index(prob.prob_id_id)
-            solved_prob_num[position] += 1
-    except ValueError:
-        return render(request, 'admin/solve_status/render_solve_status.html',
-                                dict(message='풀린 문제가 없습니다.'))
-
-    sum = 0
-    regulated_prob = []
-    for num in solved_prob_num:
-        sum += num
-        regulated_prob.append(solved_prob[sum-1].prob_id.prob_name)
-
     return render(request, 'admin/solve_status/render_solve_status.html',
-                            dict(problems=regulated_prob,
-                                 solved_prob_num=solved_prob_num))
+                            dict(problems=problems))
 
-def SearchSolverView(request):
+def SearchUserView(request):
     username = request.POST.get('username')
     try:
         user = User.objects.get(username=username)

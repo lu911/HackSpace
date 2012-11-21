@@ -29,6 +29,11 @@ urlpatterns = patterns('',
     
     #url(r'^rank/$', lambda request:render(request, 'rank/rank.html')),
     url(r'^static/(?P<path>.*)', 'django.views.static.serve', {'document_root': 'static'}),
-    url(r'^board/', lambda request:render(request, 'board/board.html')),
     url(r'^admin/', include('admin.urls')),
+    
+    # test page
+    url(r'^board/', lambda request:render(request, 'board/board.html')),
+    url(r'^test1/', lambda request:render(request, 'AwesomeChartJS/demo-animated.html')),
+    url(r'^test2/', lambda request:render(request, 'AwesomeChartJS/demo.html')),
+    url(r'^test3/', lambda request:render(request, 'AwesomeChartJS/demo-multicolor.html')),
 )

@@ -12,9 +12,7 @@ import time
 def ProbListView(request):
     try:   
         tagID = request.GET.get('tag', None)
-        #tag_id = TagName.objects.get(tag=tagName)
         tagList = TagName.objects.all()
-        #probIds = []
         if tagID is not None:
             probData = ProbTag.get_from_prob(tagID)
         else:
@@ -37,6 +35,8 @@ def AuthView(request):
             user.score+=prob.prob_point
             last_solve_time=datetime.datetime.now()
             user.save()
+            prob.prob_solver += 1
+            prob.save()
         else:
             result='fail'
             authType=0
