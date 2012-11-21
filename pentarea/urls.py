@@ -17,10 +17,12 @@ urlpatterns = patterns('',
     
     url(r'^admin/tag/', AdminTagManagerView),
     url(r'^admin/prob/', AdminProblemManagerView),
+    url(r'^admin/modify-prob/', AdminModifyProblemView),
     
     
     url(r'^challenge/', ProbListView),
     url(r'^challenge/auth/', AuthView),
+    
     
     url(r'^rank/', ShowRankView),
     
