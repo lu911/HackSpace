@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from member.models import UserProfile
 from challenge.models import Problem, AuthLog, TagName, ProbTag
-from admin.forms import AddTagForm, AddProblemForm
+from admin.forms import AddTagForm, ProblemForm
 
 import json
 
@@ -91,28 +91,38 @@ def AdminProblemManagerView(request):
     return render(request,'admin/prob_manager.html',dict(form=form,tags=tags,probs=probs))
 
 def AdminModifyProblemView(request):
-    prob_id = request.GEt.get('prob_id')
+    prob_id = request.GET.get('prob_id')
     if request.user.is_superuser:
         try:
             prob = Problem.objects.get(id=prob_id)
             prob_tag = ProbTag.objects.get(prob_id=prob_id)
+            default = {
+                'prob_name' : prob.prob_name,
+                'prob_content' : prob.prob_content,
+                'prob_point' : prob.prob_point,
+                'prob_auth' : prob.prob_auth,
+                'prob_flag' : prob.prob_flag,
+                'prob_tag'  : prob_tag.tag_id
+            }
             if request.method == 'POST':
-                default = {
-                    'prob_name' : prob.prob_name,
-                    'prob_content' : prob.prob_content,
-                    'prob_point' : prob.prob_point,
-                    'prob_auth' : prob.prob_auth,
-                    'prob_flag' : prob.prob_flag,
-                    'prob_tag'  : prob_tag.tag
-                }
+                form = ProblemForm(request.POST)
+                if form.is_valid(): 
+                    prob.prob_name = form.cleaned_data['prob_name']
+                    prob.prob_content = form.cleaned_data['prob_content']
+                    prob.prob_flag = form.cleaned_data['prob_flag']
+                    prob.prob_auth = form.cleaned_data['prob_auth']
+                    prob.prob_point = form.cleaned_data['prob_point']
+                    prob_tag.tag_id = form.cleaned_data['prob_tag']
+                    prob.save()
+                    prob_tag.save()
+                    return HttpResponseRedirect('/admin/prob/')
             else:
                 form = ProblemForm(initial=default)
-            return render(request,'admin/prob_modify_manager.html',dict(form=form))
-            
-        
-        
+                
         except Problem.DoesNotExist:
             raise ValidationError("존재 하지 않는 문제입니다.")
+    
+    return render(request,'admin/prob_modify_manager.html',dict(form=form))
 
 def AdminTagCheckView(request):
     tag = request.POST.get('tag')

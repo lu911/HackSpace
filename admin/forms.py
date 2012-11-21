@@ -10,11 +10,13 @@ class AddTagForm(forms.Form):
     tag = forms.CharField(label=u'태그', max_length=32)
     
     
-class AddProblemForm(forms.Form):
+class ProblemForm(forms.Form):
     GENDER_CHOICE = (
         ('1', '공개'),
         ('0', '비공개'),
     )
+    
+    
     prob_name = forms.CharField(label=u'문제 이름')
     prob_content = forms.CharField(label=u'문제 내용', widget=forms.Textarea)
     prob_point = forms.CharField(label=u'문제 점수')
