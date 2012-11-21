@@ -45,7 +45,7 @@ $(function () {
                         color: '#000000',
                         connectorColor: '#000000',
                         formatter: function() {
-                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                            return '<b>'+ this.point.name +'</b>: '+ parseInt(this.percentage) +' %';
                         }
                     }
                 }
@@ -68,14 +68,8 @@ $(function () {
 {% if message %}
 <h3>{{ message }}
 {% else %}
-<form method="POST" class="form-search" action="/admin/user/">
-    <div class="input-append">
-        <input type="text" name="username" class="span2 search-query" placeholder="Username" />
-        <button type="submit" class="btn">Search</button>
-        {% csrf_token %}
-    </div>
-</form>
-<table class="table table-hover" style="width:50%; float:right;">
+{% include "admin/solve_status/user_search.html" %}
+<table class="table table-hover" style="width:40%; float:right;">
     <tbody>
         <tr class="info">
             <td>#</td>
@@ -93,6 +87,6 @@ $(function () {
 </table>
 <script src="/static/js/highcharts.js"></script>
 <script src="/static/js/exporting.js"></script>
-<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
+<div id="container" style="min-width: 60%; height: 400px; margin: 0 auto;float:left"></div>
 {% endif %}
 {% endblock %}

@@ -4,12 +4,16 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db.models import Q
+from django.core.exceptions import ValidationError
 
 from member.models import UserProfile
 from challenge.models import Problem, AuthLog, TagName, ProbTag
 from admin.forms import TagForm, ProblemForm
 
 import json
+
+def MainView(request):
+    return render(request, 'admin/main.html')
 
 def ShowSolveStatusView(request):
     all_problems = Problem.objects.all()
@@ -27,7 +31,7 @@ def SearchUserView(request):
                                 dict(solver_info=solver_info,
                                      username=user.username))
     except:
-        message = '존재하지 않는 ID입니다.'
+        message = 'not exist user.'
         return render(request, 'admin/solve_status/user_solve_status.html',
                                 dict(message=message))
     return render(request, 'admin/show_solve_status.html',
@@ -139,9 +143,8 @@ def AdminModifyTagView(request):
                     tag.save()
             else:
                 form = TagForm(initial=default)
-                
-        except Tag.DoesNotExist:
-            raise ValidationError("존재 하지 않는 태그입니다.")
+        except:
+            form = TagForm(initial=default)
     return render(request,'admin/tag_modify_manager.html',dict(form=form)) 
 
 def AdminDeleteTagView(request):
@@ -157,7 +160,7 @@ def AdminDeleteTagView(request):
             tag.delete()
             status = "OK"
         except Tag.DoesNotExist:
-            raise ValidationError("존재 하지 않는 태그입니다.")
+            pass
     return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
 
 def AdminTagCheckView(request):
