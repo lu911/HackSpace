@@ -2,47 +2,87 @@
 {% block title %} status {% endblock %}
 {% block style_external %}
 <style type="text/css">
-    .charts_container{
-        width: 900px;
-        height: 420px;
-        margin: 10px auto;
-    }
-    
-    .chart_container_centered{
-        text-align: center;
-        width: 900px;
-        height: 420px;
-        margin: 10px auto;
-    }
-    
-    .chart_container{
-        width: 400px;
-        height: 400px;
-        margin: 0px 25px;
-        float: left;
-    }
-    
-    .footer{
-        font-size: small;
-        text-align: right;
-    }
 </style>
 {% endblock %}
 {% block js_external %}
-<script type="application/javascript" src="/static/js/awesomechart.js"></script>
+<script type="text/javascript">
+$(function () {
+    var chart;
+    $(document).ready(function() {
+        
+        // Radialize the colors
+        Highcharts.getOptions().colors = $.map(Highcharts.getOptions().colors, function(color) {
+            return {
+                radialGradient: { cx: 0.5, cy: 0.3, r: 0.7 },
+                stops: [
+                    [0, color],
+                    [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+                ]
+            };
+        });
+        
+        // Build the chart
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container',
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false
+            },
+            title: {
+                text: 'Solved Problem Statics'
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage}%</b>',
+                percentageDecimals: 1
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: true,
+                        color: '#000000',
+                        connectorColor: '#000000',
+                        formatter: function() {
+                            return '<b>'+ this.point.name +'</b>: '+ this.percentage +' %';
+                        }
+                    }
+                }
+            },
+            series: [{
+                type: 'pie',
+                name: 'Browser share',
+                data: [
+                    {% for prob in solved_problems %}
+                    ['{{ prob.prob_name }}', {{ prob.prob_solver }}]{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                ]
+            }]
+        });
+    });
+});
+</script>
 {% endblock %}
 {% block content %}
 {% if message %}
 <h3>{{ message }}
 {% else %}
-<table class="table table-hover" style="width:60%">
+<form method="POST" class="form-search" action="/admin/user/">
+    <div class="input-append">
+        <input type="text" name="username" class="span2 search-query" placeholder="Username" />
+        <button type="submit" class="btn">Search</button>
+        {% csrf_token %}
+    </div>
+</form>
+<table class="table table-hover" style="width:50%; float:right;">
     <tbody>
         <tr class="info">
             <td>#</td>
             <td>Problem Name</td>
             <td>Solvers</td>
         </tr>
-        {% for problem in problems %}
+        {% for problem in all_problems %}
         <tr>
             <td>{{ forloop.counter }}</td>
             <td><a href="/admin/solver/{{ problem.prob_name }}/">{{ problem.prob_name }}</a></td>
@@ -51,5 +91,8 @@
         {% endfor %}
     </tbody>
 </table>
+<script src="/static/js/highcharts.js"></script>
+<script src="/static/js/exporting.js"></script>
+<div id="container" style="min-width: 400px; height: 400px; margin: 0 auto"></div>
 {% endif %}
 {% endblock %}

@@ -2,6 +2,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
+from django.db.models import Q
 
 from member.models import UserProfile
 from challenge.models import Problem, AuthLog, TagName, ProbTag
@@ -9,12 +10,12 @@ from admin.forms import TagForm, ProblemForm
 
 import json
 
-
 def ShowSolveStatusView(request):
-
-    problems = Problem.objects.all()
+    all_problems = Problem.objects.all()
+    solved_problems = Problem.objects.filter(~Q(prob_solver=0))
     return render(request, 'admin/solve_status/render_solve_status.html',
-                            dict(problems=problems))
+                            dict(all_problems=all_problems,
+                                 solved_problems=solved_problems))
 
 def SearchUserView(request):
     username = request.POST.get('username')
