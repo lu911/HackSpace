@@ -8,7 +8,20 @@
         {% csrf_token %}
     </div>
 </form>
-{% for solver in solvers %}
-<p>{{ solver.user_id.username }} :: {{ solver.auth_value }} :: {{ solver.auth_time }} ({{ solver.auth_ip }})</p>
+<table class="table table-hover">
+    <tr class="info">
+        <td>Solver</td>
+        <td>Authentication Value</td>
+        <td>Authentication Time</td>
+        <td>Solver IP</td>
+    </tr>
+    {% for solver in solvers %}
+    <tr>
+        <td>{{ solver.user_id.username }}</td>
+        <td>{{ solver.auth_value }}</td>
+        <td>{{ solver.auth_time }}</td>
+        <td>{{ solver.auth_ip }}</td>
+    </tr>
 {% endfor %}
+</table>
 {% endblock %}

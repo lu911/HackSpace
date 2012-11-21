@@ -52,7 +52,7 @@ $(function () {
             },
             series: [{
                 type: 'pie',
-                name: 'Browser share',
+                name: 'Solving Rate',
                 data: [
                     {% for prob in solved_problems %}
                     ['{{ prob.prob_name }}', {{ prob.prob_solver }}]{% if not forloop.last %},{% endif %}

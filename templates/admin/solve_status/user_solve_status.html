@@ -1,14 +1,98 @@
 {% extends "base.html" %}
 {% block title %}{{ username }} - Status {% endblock %}
+{% block js_external %}
+{% if chart_render and score %}
+<script type="text/javascript">
+$(function () {
+    var chart;
+    $(document).ready(function() {
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'chart_container',
+                type: 'line',
+                marginRight: 130,
+                marginBottom: 35
+            },
+            title: {
+                text: '{{ username }}',
+                x: -20 //center
+            },
+            subtitle: {
+                text: 'Change Chart',
+                x: -20
+            },
+            xAxis: {
+                title: {
+                    text: 'Time'
+                },
+                categories: [
+                    {% for info in solver_info %}
+                    '{{ info.auth_time }}'{% if not forloop.last %},{% endif %}
+                    {% endfor %}
+                    ]
+            },
+            yAxis: {
+                title: {
+                    text: 'Score'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function() {
+                        return '<b>'+ this.series.name +'</b><br/>'+
+                        this.x +': '+ this.y +'points';
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -10,
+                y: 100,
+                borderWidth: 0
+            },
+            series: [{
+                name: '{{ username }}',
+                data: [ {% for score in scores %} {{ score }}{% if not forloop.last %},{% endif %} {% endfor %} ]
+            }]
+        });
+    });
+});
+</script>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 {% if message %}
     <h3>{{ message }}</h3>
 {% else %}
-<h4>{{ username }}</h4> 
-<ul>
+<div id="chart_container" style="min-width:400px; height: 400px; margin: 0 auto"></div>
+<br>
+<table class="table table-hover" style="width:100%">
+    <tr class="info">
+        <td>Problem Name</td>
+        <td>Value</td>
+        <td>Time</td>
+        <td>IP</td>
+    </tr>
     {% for solver in solver_info %}
-    <li>{{ solver.auth_value }} :: {{ solver.auth_time }} ({{ solver.auth_ip }})</li>
+    <tr>
+        <td>{{ solver.prob_id.prob_name }}</td>
+        <td>{{ solver.auth_value }}</td>
+        <td>{{ solver.auth_time }}</td>
+        <td>{{ solver.auth_ip }}</td>
+    </tr>
     {% endfor %}
-</ul>
+    <tr>
+    </tr>
+</table>
+{% endif %}
+{% if chart_render and score %}
+<script src="/static/js/highcharts.js"></script>
+<script src="/static/js/exporting.js"></script>
 {% endif %}
 {% endblock %}

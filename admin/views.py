@@ -25,17 +25,27 @@ def SearchUserView(request):
     username = request.POST.get('username')
     try:
         user = User.objects.get(username=username)
-        solver_info = AuthLog.objects.filter(user_id=user.id, auth_type=1).order_by('-auth_time')
+        solver_info = AuthLog.objects.filter(user_id=user.id, auth_type=1).order_by('auth_time')
+        sum = 0
+        scores = []
+        for info in solver_info:
+            sum += info.prob_id.prob_point
+            scores.append(sum)
+        if sum == 0:
+            score = False
+        else:
+            score = True
         return render(request, 'admin/solve_status/user_solve_status.html',
                                 dict(solver_info=solver_info,
-                                     username=user.username))
+                                     scores=scores,
+                                     username=user.username,
+                                     chart_render=True,
+                                     score=score))
     except:
         message = 'not exist user.'
         return render(request, 'admin/solve_status/user_solve_status.html',
-                                dict(message=message))
-    return render(request, 'admin/show_solve_status.html',
-                            dict(problems=solved_prob,
-                                 solved_prob_id=solved_prob_num))
+                                dict(message=message,
+                                     chart_render=False))
 
 def ShowSolverStatusView(request, problem_name):
     problem = Problem.objects.get(prob_name=problem_name)
