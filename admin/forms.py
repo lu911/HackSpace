@@ -6,7 +6,7 @@ from member.models import UserProfile
 from challenge.models import TagName
 from django.core.exceptions import ValidationError
 
-class AddTagForm(forms.Form):
+class TagForm(forms.Form):
     tag = forms.CharField(label=u'태그', max_length=32)
     
     
