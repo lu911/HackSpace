@@ -21,27 +21,31 @@ def ProbListView(request):
         probData=ProbTag.get_from_all_prob()
     return render(request,'challenge/list.html',dict(tag_list=tagList, prob_data=probData))
 
-def AuthView(request):
-    auth=request.POST.get('auth')
-    probId=request.POST.get('prob-id')
-    prob=Problem.objects.get(id=probId)
+def ChallengeAuthView(request):
+    auth = request.POST.get('auth')
+    prob_id = request.POST.get('prob-id')
     try:
-        authLog=AuthLog.objects.get(user_id=request.user, prob_id=prob, auth_type=1)
-    except:
-        if(prob.prob_auth == auth):
-            result='OK'
-            authType=1
-            user=UserProfile.objects.get(user=request.user)
-            user.score+=prob.prob_point
-            last_solve_time=datetime.datetime.now()
-            user.save()
-            prob.prob_solver += 1
-            prob.save()
+        prob = Problem.objects.get(id=prob_id)
+        authLog = AuthLog.objects.get(user_id=request.user, prob_id=prob, auth_type=1)
+        if authLog.count() > 0 :
+            reason = "Already Cleared"
         else:
-            result='fail'
-            authType=0
-        authLog=AuthLog(prob_id=prob, user_id=request.user, auth_type=authType, auth_time=datetime.datetime.now(), auth_ip=request.META['REMOTE_ADDR'], auth_value=auth)
-        authLog.save()
-    else:
-       result='already cleared'
-    return HttpResponse(json.dumps(dict(auth=result)))
+            if prob.prob_auth == auth:
+                status = "OK"
+                authType = 1
+                user = request.user.get_profile()
+                user.score += prob.prob_point
+                last_solve_time = datetime.datetime.now()
+                user.save()
+                prob.prob_solver += 1
+                prob.save()
+            else:
+                reason = "Wrong"
+                authType = 0
+            authLog = AuthLog(prob_id=prob, user_id=request.user, auth_type=authType, auth_time=datetime.datetime.now(), auth_ip=request.META['REMOTE_ADDR'], auth_value=auth)
+            authLog.save()
+    except Problem.DoesNotExist:
+        raise ValidationError("존재 하지 않는 문제입니다.")  
+    status = {"status":status, "reason":reason}
+    print status
+    return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')

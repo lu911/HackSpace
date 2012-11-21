@@ -10,13 +10,13 @@
 <table style="float:left">
     <tbody>
         <tr>
-            {% for prob in prob_data %}
-                <th><button type="button" class="btn btn-large" onClick="printProb({{prob.id|escape}},'{{prob.prob_content|escape}}',{{prob.prob_point|escape}})">{{ prob.prob_name|escape }}</button></th>
-                {% if forloop.counter|divisibleby:"4" %} <!-- 4는 커스텀 정보-->
-                    </tr>
-                {% endif %}
-            {% endfor %}
-            </tr>
+        {% for prob in prob_data %}
+            <th><button type="button" class="btn btn-large" onClick="printProb({{prob.id|escape}},'{{prob.prob_content|escape}}',{{prob.prob_point|escape}})">{{ prob.prob_name|escape }}</button></th>
+        {% if forloop.counter|divisibleby:"4" %} <!-- 4는 커스텀 정보-->
+        </tr>
+        {% endif %}
+        {% endfor %}
+        </tr>
     </tbody>
 </table>
 
@@ -35,7 +35,6 @@
             </form>
         </tbody>
     </table>
-    </form>
 </div>
 
 <script type="text/javascript">
@@ -47,6 +46,7 @@
 
     $('#auth-form').submit(function(){
         $.post('/challenge/auth/',$(this).serialize(),function(data){
+        	console.log(data);
             if(data.auth == "OK"){
                 alert("Clear !");
             }else{

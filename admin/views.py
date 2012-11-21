@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 from member.models import UserProfile
 from challenge.models import Problem, AuthLog, TagName, ProbTag
-from admin.forms import AddTagForm, ProblemForm
+from admin.forms import TagForm, ProblemForm
 
 import json
 
@@ -38,17 +38,6 @@ def ShowSolverStatusView(request, problem_name):
     return render(request, 'admin/solve_status/solver_list.html',
                             dict(problem=problem_name,
                                  solvers=solvers))
-
-def AdminTagManagerView(request):
-    tags = TagName.objects.all()
-    if request.method == 'POST':
-        form = AddTagForm(request.POST)
-        if form.is_valid():
-            if request.user.is_superuser:
-                TagName.objects.create(tag=form.cleaned_data['tag'])
-    else:
-        form = AddTagForm()
-    return render(request,'admin/tag_manager.html',dict(form=form,tags=tags))
 
 
 def AdminProblemManagerView(request):
@@ -101,15 +90,78 @@ def AdminModifyProblemView(request):
     
     return render(request,'admin/prob_modify_manager.html',dict(form=form))
 
-def AdminTagCheckView(request):
-    tag = request.POST.get('tag')
+def AdminDeleteProblemView(request):
+    prob_id = request.GET.get('prob_id')
     status = "FAIL"
     if request.user.is_superuser:
         try:
-            tag_ = TagName.object.get(tag=tag)
+            prob = Problem.objects.get(id=prob_id)
+            prob.delete()
+            prob_tag = ProbTag.objects.filter(prob_id=prob_id).delete()
+            status = "OK"
+        except Problem.DoesNotExist:
+            raise ValidationError("존재 하지 않는 문제입니다.")
+    return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
+
+def AdminTagManagerView(request):
+    tags = TagName.objects.all()
+    if request.method == 'POST':
+        form = TagForm(request.POST)
+        if form.is_valid():
+            if request.user.is_superuser:
+                TagName.objects.create(tag=form.cleaned_data['tag'])
+    else:
+        form = TagForm()
+    return render(request,'admin/tag_manager.html',dict(form=form,tags=tags))
+
+def AdminModifyTagView(request):
+    tag_id = request.GET.get('tag_id')
+    tag_name = request.POST.get('tag_name')
+    if request.user.is_superuser:
+        try:
+            tag = TagName.objects.get(id=tag_id)
+            default = {
+                'tag' : tag.tag
+            }
+            if request.method == 'POST':
+                form = TagForm(request.POST)
+                if form.is_valid(): 
+                    tag.tag = tag_name
+                    tag.save()
+                    return HttpResponseRedirect('/admin/tag/')
+            else:
+                form = TagForm(initial=default)
+                
+        except Tag.DoesNotExist:
+            raise ValidationError("존재 하지 않는 태그입니다.")
+    return render(request,'admin/tag_modify_manager.html',dict(form=form)) 
+
+def AdminDeleteTagView(request):
+    tag_id = request.GET.get('tag_id')
+    status = "FAIL"
+    if request.user.is_superuser:
+        try:
+            tag = TagName.objects.get(id=tag_id)
+            prob_tag = ProbTag.objects.filter(tag_id=tag_id)
+            for tag in prob_tag:
+                tag.tag_id = 0
+            prob_tag.save()
+            tag.delete()
+            status = "OK"
+        except Tag.DoesNotExist:
+            raise ValidationError("존재 하지 않는 태그입니다.")
+    return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
+
+def AdminTagCheckView(request):
+    tag = request.GET.get('tag')
+    status = "FAIL"
+    if request.user.is_superuser:
+        try:
+            tag_ = TagName.objects.get(tag=tag)
             status = "FAIL"
         except TagName.DoesNotExist:
             status = "OK"
-    return render(request,json.dumps(dict(status=status)))
+    
+    return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
 
 
