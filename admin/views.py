@@ -55,6 +55,13 @@ def SearchSolverView(request):
                             dict(problems=solved_prob,
                                  solved_prob_id=solved_prob_num))
 
+def ShowSolverStatusView(request, problem_name):
+    problem = Problem.objects.get(prob_name=problem_name)
+    solvers = AuthLog.objects.filter(prob_id=problem.id, auth_type=1)
+    return render(request, 'admin/solve_status/solver_list.html',
+                            dict(problem=problem_name,
+                                 solvers=solvers))
+
 def AdminTagManagerView(request):
     tags = TagName.objects.all()
     if request.method == 'POST':
