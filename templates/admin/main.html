@@ -1,18 +1,10 @@
 {% extends "base.html" %}
 {% block title %}Admin{% endblock %}
 {% block content %}
-<div class="well" style="max-width: 200px; padding: 8px 0;">
-    <ul class="nav nav-list">
-        <li class="nav-header">Administrator</li>
-        <li><a href="#">Problem</a></li>
-        <li><a href="#">Tag</a></li>
-        <li><a href="#">User</a></li>
-        <li class="divider"></li>
-        <li class="nav-header">Status</li>
-        <li><a href="/admin/status/">Solve</a></li>
-        <li><a href="#">User</a></li>
-        <li class="divider"></li>
-        <li><a href="#">Help</a></li>
-    </ul>
+<div class="row-fluid">
+    <div class="span12">
+        <div class="span2"><a href="/admin/status/">Page Situation</a></div>
+        <div class="span2"><a href="/admin/prob/">Challnege Management</a></div>
+    </div>
 </div>
 {% endblock %}

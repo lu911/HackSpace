@@ -7,9 +7,7 @@ from django.shortcuts import render
 # admin.autodiscover()
 
 urlpatterns = patterns('',
-    url(r'^$', MainView),
-
-    url(r'^status/', ShowSolveStatusView),
+    url(r'^$', ShowSolveStatusView),
     url(r'^solver/(\w+)/', ShowSolverStatusView),
     url(r'^user/', SearchUserView),
 

@@ -1,4 +1,43 @@
-<form method="post" id="problem-modify-form" >
+<form method="post" class="form-horizontal" id="problem-modify-form" >
+    <div class="control-group">
+        <label class="control-label" for="inputProbName">문제 이름</label>
+        <div class="controls">
+            {{ form.prob_name }} {{ form.prob_name.errors }}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label " for="inputContent">문제 내용</label>
+        <div class="controls">
+            {{ form.prob_content }} {{ form.prob_content.errors }}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="input">문제 점수</label>
+        <div class="controls">
+            {{ form.prob_point }} {{ form.prob_point.errors }}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="input">문제 답</label>
+        <div class="controls">
+            {{ form.prob_auth }} {{ form.prob_auth.errors }}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="input">공개 여부</label>
+        <div class="controls">
+            {{ form.prob_flag }} {{ form.prob_flag.errors }}
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="input">태그</label>
+        <div class="controls">
+            {{ form.prob_tag }} {{ form.prob_tag.errors }}
+        </div>
+    </div>
+</form>
+    {% csrf_token %}
+    <!--
     <fieldset>
         <dl>
         	<dt>{{form.prob_name.label_tag}}</dt>
@@ -17,5 +56,4 @@
         </dl>
         {% csrf_token %}
 		<input type="submit" value="수정" />
-	</fieldset>
-</form>
+	</fieldset>-->

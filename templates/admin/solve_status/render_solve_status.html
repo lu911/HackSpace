@@ -68,6 +68,7 @@ $(function () {
 {% if message %}
 <h3>{{ message }}
 {% else %}
+{% include "admin/solve_status/header.html" %}
 {% include "admin/solve_status/user_search.html" %}
 <table class="table table-hover" style="width:40%; float:right;">
     <tbody>

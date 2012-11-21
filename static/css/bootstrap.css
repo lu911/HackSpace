@@ -3120,6 +3120,16 @@ button.close {
           box-shadow: none;
 }
 
+.btn-menu {
+  width: 170px;
+  height: 70px;
+  font-size: 16px;
+  line-height: normal;
+  -webkit-border-radius: 5px;
+     -moz-border-radius: 5px;
+          border-radius: 5px;
+}
+
 .btn-large {
   width: 100px;
   height: 100px;
