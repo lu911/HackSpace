@@ -1,5 +1,5 @@
 from django.conf.urls.defaults import patterns, url
-from views import MainView, ShowSolveStatusView, ShowSolverStatusView, SearchUserView, AdminTagManagerView, AdminTagCheckView, AdminModifyTagView, AdminDeleteTagView, AdminProblemManagerView, AdminModifyProblemView
+from views import *
 from django.shortcuts import render
 
 # Uncomment the next two lines to enable the admin:
@@ -20,4 +20,6 @@ urlpatterns = patterns('',
     
     url(r'^prob/', AdminProblemManagerView),
     url(r'^modify-prob/', AdminModifyProblemView),
+    url(r'^delete-prob/', AdminDeleteProblemView),
+    url(r'^problist/', AdminProblemListManagerView),
 )

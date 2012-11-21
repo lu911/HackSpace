@@ -1,10 +1,4 @@
-{% extends "base.html" %}
-{% block title %} status {% endblock %}
-{% block content %}
-{% load admin_filter %}
-
-
-<form method="post" id="tag-form" enctype="multipart/form-data">
+<form method="post" id="problem-modify-form" >
     <fieldset>
         <dl>
         	<dt>{{form.prob_name.label_tag}}</dt>
@@ -25,5 +19,3 @@
 		<input type="submit" value="수정" />
 	</fieldset>
 </form>
-
-{% endblock %}
