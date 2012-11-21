@@ -23,6 +23,9 @@ class TagName(models.Model):
     
     def __str__(self):
         return self.tag.encode('utf8')
+    
+    def getProblemCount(self):
+        return len(ProbTag.get_from_prob(self))
 
 class ProbTag(models.Model):
     prob_id = models.ForeignKey(Problem)

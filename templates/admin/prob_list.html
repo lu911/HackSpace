@@ -1,13 +1,16 @@
 {% load admin_filter %}
 <ul id="browser" class="filetree treeview">
 	{% for tag in tags %}
-		<li class="collapsable"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ tag.tag }}</span><i class="icon-pencil" id="tag-{{tag.id}}"></i><i class="icon-remove"></i>
-			<ul>
-				{% for prob in probs|getObject:tag %}
-					<li class="last"><a class="file" id="prob-{{prob.id}}">{{prob.prob_name}}</a></li>
-				{% endfor %} 
-			</ul>
-		</li>
+	<li class="collapsable" id="{{tag.tag}}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ tag.tag }}</span>
+		<span id="tool_box">
+			<i class="icon-pencil" id="tag-{{tag.id}}"></i>
+			<i class="icon-remove" id="del-tag-{{tag.id}}"></i>
+		</span>
+		<ul>
+			{% for prob in probs|getObject:tag %}
+				<li class="last"><a class="file" id="prob-{{prob.id}}">{{prob.prob_name}}</a><i class="icon-remove"id="del-prob-{{prob.id}}"></i></li>
+			{% endfor %} 
+		</ul>
+	</li>
 	{% endfor %}				
-
 </ul>

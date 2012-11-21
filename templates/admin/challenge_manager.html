@@ -8,18 +8,20 @@
 {% endblock %}
 
 {% block content %}
-<div style="padding-bottom:80px;"></div>
+<div style="padding-bottom:80px;">
 {% include "admin/solve_status/header.html" %}
-{% header-menu %}
-	<div class="span4 offset3">
+
+{% block header-menu %}
+	<div class="span4 offset8">
 	    <a href="#">
-	        <button class="btn btn-primary" type="button">Add Tag</button>
+	        <button class="btn btn-primary" id="add-tag" type="button">Add Tag</button>
 	    </a>
 	    <a href="#">
-	        <button class="btn btn-primary" type="button">Add Problem</button>
+	        <button class="btn btn-primary" id="add-prob" type="button">Add Problem</button>
 	    </a>    
 	</div>
 {% endblock %}
+</div>
 <hr>
 {% load admin_filter %}
 <div class="container-fluid">
@@ -27,7 +29,11 @@
     <div class="span3" id="problem-content" style="border-right:2px solid #eeeeee;">
 		<ul id="browser" class="filetree treeview">
 			{% for tag in tags %}
-			<li class="collapsable" id="{{tag.tag}}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ tag.tag }}</span><i class="icon-pencil" id="tag-{{tag.id}}"></i><i class="icon-remove" id="del-tag-{{tag.id}}"></i>
+			<li class="collapsable" id="{{tag.tag}}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ tag.tag }}</span>
+				<span id="tool_box">
+					<i class="icon-pencil" id="tag-{{tag.id}}"></i>
+					<i class="icon-remove" id="del-tag-{{tag.id}}"></i>
+				</span>
 				<ul>
 					{% for prob in probs|getObject:tag %}
 						<li class="last"><a class="file" id="prob-{{prob.id}}">{{prob.prob_name}}</a><i class="icon-remove"id="del-prob-{{prob.id}}"></i></li>
@@ -44,12 +50,10 @@
 </div>
 
 
-<!--<script src="/static/js/highcharts-more.js"></script>
+
 <script src="/static/js/highcharts.js"></script>
-<script src="/static/js/exporting.js"></script>-->
-<script src="http://code.highcharts.com/highcharts.js"></script>
-<script src="http://code.highcharts.com/highcharts-more.js"></script>
-<script src="http://code.highcharts.com/modules/exporting.js"></script>
+<script src="/static/js/highcharts-more.js"></script>
+<script src="/static/js/exporting.js"></script>
 <script type="text/javascript">
 	
 
@@ -145,7 +149,7 @@
 			});
 			return false;
 		});
-		$('.last .icon-remove').live('click',function(){
+		$('.last').find('.icon-remove').live('click',function(){
 			var id = $(this).attr('id');
 			prob_id = id.split("-")[2];
 			if(confirm("문제를 삭제합니다."))
@@ -157,6 +161,7 @@
 					dataType: "html",
 					success: function(data){
 						location.href = location.href;
+						ReloadProbList();
 					}
 				});				
 			}
@@ -165,7 +170,7 @@
 				return false;
 			}
 		});	
-		$('.collapsable .icon-remove').live('click',function(){
+		$('#tool_box').find('.icon-remove').live('click',function(){
 			var id = $(this).attr('id');
 			prob_id = id.split("-")[2];
 			if(confirm("태그를 삭제합니다."))
@@ -177,8 +182,10 @@
 					dataType: "html",
 					success: function(data){
 						location.href = location.href;
+						ReloadProbList();	
 					}
-				});				
+				});
+							
 			}
 			else
 			{
@@ -186,8 +193,45 @@
 			}
 		});			
 		
+		$('#add-tag').live('click',function(){
+			$.ajax(
+			{
+				url: "/admin/add-tag/",
+				type: "GET",
+				dataType: "html",
+				success: function(data){
+					$('#challenge-content').hide().html(data).fadeIn(700);
+				}
+			});	
+			return false;
+		});
+		$('#tag-add-form').live('submit',function(){
+			$.post("/admin/add-tag/",$(this).serialize(),function(data){
+				$('#challenge-content').hide().html(data).fadeIn(700);
+				ReloadProbList();
+			});
+			return false;
+		});
+		$('#add-prob').live('click',function(){
+			$.ajax(
+			{
+				url: "/admin/add-prob/",
+				type: "GET",
+				dataType: "html",
+				success: function(data){
+					$('#challenge-content').hide().html(data).fadeIn(700);
+				}
+			});	
+			return false;
+		});
+		$('#problem-add-form').live('submit',function(){
+			$.post("/admin/add-prob/",$(this).serialize(),function(data){
+				$('#challenge-content').hide().html(data).fadeIn(700);
+				ReloadProbList();
+			});
+			return false;
+		});		
 	});
-
 	
 	function ReloadProbList(){
 		$.ajax(

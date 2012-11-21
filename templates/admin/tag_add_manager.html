@@ -1,0 +1,11 @@
+
+<form method="post" id="tag-add-form" >
+    <fieldset>
+        <dl class="form">
+            <dt>태그 이름</dt>
+            <dd>{{form.tag}}</dd>
+		</dl>
+		{% csrf_token %}
+		<input type="submit" value="추가" />
+	</fieldset>
+</form>

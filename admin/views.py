@@ -62,11 +62,15 @@ def AdminProblemListManagerView(request):
         probs[tag.tag] = ProbTag.get_from_prob(tag.id)
     return render(request,'admin/prob_list.html',dict(tags=tags,probs=probs))
 
-def AdminProblemManagerView(request):
+def AdminChallengeManagerView(request):
     tags = TagName.objects.all()
     probs = {}
     for tag in tags:
         probs[tag.tag] = ProbTag.get_from_prob(tag.id)
+    return render(request,'admin/challenge_manager.html',dict(tags=tags,probs=probs))
+
+
+def AdminAddProblemManagerView(request):
     if request.method == 'POST':
         form = ProblemForm(request.POST)
         if form.is_valid():
@@ -76,7 +80,7 @@ def AdminProblemManagerView(request):
                 ProbTag.objects.create(prob_id = problem, tag_id = form.cleaned_data['prob_tag'])
     else:
         form = ProblemForm()
-    return render(request,'admin/prob_manager.html',dict(form=form,tags=tags,probs=probs))
+    return render(request,'admin/prob_add_manager.html',dict(form=form))
 
 def AdminModifyProblemView(request):
     prob_id = request.GET.get('prob_id')
@@ -126,7 +130,7 @@ def AdminDeleteProblemView(request):
         pass
     return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
 
-def AdminTagManagerView(request):
+def AdminAddTagManagerView(request):
     tags = TagName.objects.all()
     if request.method == 'POST':
         form = TagForm(request.POST)
@@ -135,7 +139,7 @@ def AdminTagManagerView(request):
                 TagName.objects.create(tag=form.cleaned_data['tag'])
     else:
         form = TagForm()
-    return render(request,'admin/tag_manager.html',dict(form=form,tags=tags))
+    return render(request,'admin/tag_add_manager.html',dict(form=form,tags=tags))
 
 def AdminModifyTagView(request):
     tag_id = request.GET.get('tag_id')
@@ -162,14 +166,18 @@ def AdminDeleteTagView(request):
     status = "FAIL"
     if request.user.is_superuser:
         try:
-            tag = TagName.objects.get(id=tag_id)
-            prob_tag = ProbTag.objects.filter(tag_id=tag_id)
-            for tag in prob_tag:
-                tag.tag_id = 0
-            prob_tag.save()
-            tag.delete()
-            status = "OK"
-        except Tag.DoesNotExist:
+            if tag_id == 1 or tag_id == "1":
+                pass
+            else:
+                tag = TagName.objects.get(id=tag_id)
+                prob_tag = ProbTag.objects.filter(tag_id=tag_id)
+                etc_tag = TagName.objects.get(id=1)
+                for tag in prob_tag:
+                    tag.tag_id = etc_tag
+                    tag.save()
+                tag.delete()
+                status = "OK"
+        except TagName.DoesNotExist:
             pass
     return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
 
