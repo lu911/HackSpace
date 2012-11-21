@@ -70,7 +70,8 @@ $(function () {
 {% else %}
 {% include "admin/solve_status/header.html" %}
 {% include "admin/solve_status/user_search.html" %}
-<table class="table table-hover" style="width:40%; float:right;">
+<div id="container" style="min-width:50%; height:400px; margin:0 auto;float:left"></div>
+<table class="table table-hover" style="width:30%; float:left; margin-left:150px;">
     <tbody>
         <tr class="info">
             <td>#</td>
@@ -88,6 +89,5 @@ $(function () {
 </table>
 <script src="/static/js/highcharts.js"></script>
 <script src="/static/js/exporting.js"></script>
-<div id="container" style="min-width: 60%; height: 400px; margin: 0 auto;float:left"></div>
 {% endif %}
 {% endblock %}
