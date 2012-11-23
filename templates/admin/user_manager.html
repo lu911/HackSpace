@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %} User Manager {% endblock %}
+{% block css_extneral %}
+<link href="/static/css/jquery.treeview.css" rel="stylesheet" type="text/css">
+{% endblock %}
+{% block js_external %}
+<script src="/static/js/jquery.treeview.js"></script>
+{% endblock %}
+
+{% block content %}
+{% block header-menu %}
+{% endblock %}
+FIRST FAGE
+{% for user in users %}
+    {{ user.username }}<hr>
+{% endfor %}
+ 
+{% load admin_filter %}
+{% endblock %}
