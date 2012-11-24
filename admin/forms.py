@@ -23,5 +23,6 @@ class ProblemForm(forms.Form):
     prob_auth = forms.CharField(label=u'문제 정답')
     prob_flag = forms.ChoiceField(label=u'공개 여부', choices=GENDER_CHOICE)
     prob_tag = forms.ModelChoiceField(queryset=TagName.objects.all(), label=u'태그')
-    
- 
+
+class CategoryForm(forms.Form):
+    category_name = forms.CharField(label=u'Category')

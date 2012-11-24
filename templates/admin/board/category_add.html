@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %} Category Manager {% endblock %}
+{% block content %}
+<p>Categoris</p>
+{% for category in categories %}
+<ul>
+    <li><a href="/board/modify-category/">{{ category.name }}</a></li>
+</ul>
+{% endfor %}
+{% endblock %}
