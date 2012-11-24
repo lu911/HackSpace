@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %} Post {% endblock %}
+{% block style_external %}
+<style type="text/css">
+    #id_title {
+        width: 60%;
+    }
+    #id_category {
+        width: 20%;
+    }
+    #id_content {
+        width: 80%;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<form method="post" class="form-inline form-horizontal">
+    {{ form.category }}
+    {{ form.title }}
+    <hr>
+    <div class="control-group">
+        {{ form.content }}
+    </div>
+    <button type="submit" class="btn">Write</button>
+    {% csrf_token %}
+</form>
+{% endblock %}
