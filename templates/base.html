@@ -34,6 +34,7 @@
                         {% if user.is_authenticated %}
                             <li class="{% block challenge_active %}{% endblock %}"><a  href="/challenge/">Challenge</a></li>
                             <li class="{% block rank_active %}{% endblock %}"><a href="/rank/">Rank</a></li>
+                            <li class=""><a href="/board/">Board</a></li>
                             {% if user.is_superuser %}
                             <li class="{% block admin_active %}{% endblock %}"><a href="/admin/">Admin</a></li>
                             {% endif %}

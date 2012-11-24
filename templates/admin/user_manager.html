@@ -13,11 +13,11 @@
 TEST PAGE<br>
 This is superusers<br>
 {% for user in superusers %}
-    {{ user.username }}<hr>
+    {{ user.username }} <input type="button" onclick="modifyUser()"><hr>
 {% endfor %}
 This is normal users<br>
 {% for user in users %}
-    {{ user.username }}<hr>
+    {{ user.username }<hr>
 {% endfor %}
 
  

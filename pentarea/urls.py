@@ -18,13 +18,10 @@ urlpatterns = patterns('',
     url(r'^challenge/$', ProbListView),
     url(r'^challenge/auth/',ChallengeAuthView),
 
-
     url(r'^rank/', ShowRankView),
-
 
     url(r'^static/(?P<path>.*)', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^admin/', include('admin.urls')),
 
-    # test page
-    url(r'^board/', lambda request:render(request, 'board/board.html')),
+    url(r'^board/', include('board.urls')),
 )
