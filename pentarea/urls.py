@@ -1,5 +1,6 @@
 from django.conf.urls import patterns, include, url
 from django.shortcuts import render
+import os
 
 from member.views import * 
 from challenge.views import *
@@ -18,13 +19,12 @@ urlpatterns = patterns('',
     url(r'^challenge/$', ProbListView),
     url(r'^challenge/auth/',ChallengeAuthView),
 
-
     url(r'^rank/', ShowRankView),
-
-
-    url(r'^static/(?P<path>.*)', 'django.views.static.serve', {'document_root': 'static'}),
+    
     url(r'^admin/', include('admin.urls')),
-
-    # test page
-    url(r'^board/', lambda request:render(request, 'board/board.html')),
+    url(r'^board/', include('board.urls')),
+    
+    
+    url(r'^static/(?P<path>.*)', 'django.views.static.serve', {'document_root': 'static'}),
+    url(r'^uploads/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'uploads'})
 )

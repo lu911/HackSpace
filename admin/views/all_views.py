@@ -1,10 +1,10 @@
 #-*-coding:utf-8-*-
 from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-from django.core.exceptions import ValidationError
+
 
 from member.models import UserProfile
 from challenge.models import Problem, AuthLog, TagName, ProbTag
@@ -71,16 +71,19 @@ def AdminChallengeManagerView(request):
 
 
 def AdminAddProblemManagerView(request):
-    if request.method == 'POST':
-        form = ProblemForm(request.POST)
-        if form.is_valid():
-            if request.user.is_superuser:
-                problem = Problem(prob_name=form.cleaned_data['prob_name'],prob_content=form.cleaned_data['prob_content'],prob_point=form.cleaned_data['prob_point'],prob_auth=form.cleaned_data['prob_auth'],prob_flag=form.cleaned_data['prob_flag'])
-                problem.save()
-                ProbTag.objects.create(prob_id = problem, tag_id = form.cleaned_data['prob_tag'])
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            form = ProblemForm(request.POST, request.FILES)
+            if form.is_valid():
+                    problem = Problem(prob_name=form.cleaned_data['prob_name'],prob_content=form.cleaned_data['prob_content'],prob_point=form.cleaned_data['prob_point'],prob_auth=form.cleaned_data['prob_auth'],prob_flag=form.cleaned_data['prob_flag'],prob_file=form.cleaned_data['prob_file'])
+                    problem.save()
+                    ProbTag.objects.create(prob_id = problem, tag_id = form.cleaned_data['prob_tag'])
+                    return HttpResponseRedirect("/admin/modify-prob/?prob_id="+str(problem.id))
+        else:
+            form = ProblemForm()
+        return render(request,'admin/prob_add_manager.html',dict(form=form))
     else:
-        form = ProblemForm()
-    return render(request,'admin/prob_add_manager.html',dict(form=form))
+        return HttpResponseRedirect('/')
 
 def AdminModifyProblemView(request):
     prob_id = request.GET.get('prob_id')
@@ -94,10 +97,11 @@ def AdminModifyProblemView(request):
                 'prob_point' : prob.prob_point,
                 'prob_auth' : prob.prob_auth,
                 'prob_flag' : prob.prob_flag,
-                'prob_tag'  : prob_tag.tag_id
+                'prob_tag'  : prob_tag.tag_id,
+                'prob_file' : prob.prob_file
             }
             if request.method == 'POST':
-                form = ProblemForm(request.POST)
+                form = ProblemForm(request.POST, request.FILES)
                 if form.is_valid(): 
                     prob.prob_name = form.cleaned_data['prob_name']
                     prob.prob_content = form.cleaned_data['prob_content']
@@ -105,15 +109,18 @@ def AdminModifyProblemView(request):
                     prob.prob_auth = form.cleaned_data['prob_auth']
                     prob.prob_point = form.cleaned_data['prob_point']
                     prob_tag.tag_id = form.cleaned_data['prob_tag']
+                    if form.cleaned_data['prob_file']:
+                        prob.prob_file = form.cleaned_data['prob_file']
                     prob.save()
                     prob_tag.save()
+                    return HttpResponseRedirect(request.META['PATH_INFO'] + "?prob_id=" + prob_id)
             else:
                 form = ProblemForm(initial=default)
+            return render(request,'admin/prob_modify_manager.html',dict(form=form))
         except Problem.DoesNotExist:
-            pass
+            return HttpResponseRedirect('/')
     else:
-        pass
-    return render(request,'admin/prob_modify_manager.html',dict(form=form))
+        return HttpResponseRedirect('/')
 
 def AdminDeleteProblemView(request):
     prob_id = request.GET.get('prob_id')
