@@ -28,6 +28,7 @@ urlpatterns = patterns('',
     url(r'^delete-category/(\w+)', AdminDeleteBoardCategoryView),
 
     url(r'^manager-user/', AdminUserManagerView),
+    url(r'^info-user/', AdminUserInfoView),
     url(r'^modify-user/', AdminModifyUserView),
     url(r'^delete-user/', AdminDeleteUserView),
     url(r'^admin-write/', AdminWritePostView),
