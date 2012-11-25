@@ -3,7 +3,26 @@ from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
 from board.models import Category, Board
+from board.forms import AdminPostForm, PostForm
 from admin.forms import CategoryForm
+
+def AdminWritePostView(request):
+    if request.user.is_superuser:
+        if request.method == 'POST':
+            form = AdminPostForm(request.POST)
+            if form.is_valid():
+                post = Board(user=request.user,
+                             category=form.cleaned_data['category'],
+                             title=form.cleaned_data['title'],
+                             content=form.cleaned_data['content'])
+                post.save()
+                return HttpResponseRedirect('/admin/add-category/')
+        else:
+            form = AdminPostForm(initial=request.GET)
+        return render(request, 'board/write_post.html', dict(form=form))
+    else:
+        form = PostForm(initial=request.GET)
+        return render(request, 'board/write_post.html', dict(form=form))
 
 def AdminAddBoardCategoryView(request):
     if request.user.is_superuser:

@@ -19,7 +19,11 @@
     <td>Time</td>
 </tr>
 {% for post in posts %}
+{% if post.category.id == 1 %}
+<tr class="error">
+{% else %}
 <tr>
+{% endif %}
     <td>{{ forloop.counter }}</td>
     <td>{{ post.user.username }}</td>
     <td><a href="/board/show-post/{{ post.id }}">{{ post.title }}</a></td>

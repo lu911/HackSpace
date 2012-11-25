@@ -22,9 +22,11 @@
 <p class="text">Posted by {{ post.user.username }}</p>
 <hr>
 <div class="btns">
-    <a href="javascript:history.go(-1)"><button type="button" class="btn">Back</button></a>
-    {% if is_author %}
+    <a href="/board/"><button type="button" class="btn">Back</button></a>
+    {% if is_author%}
     <a href="/board/modify-post/{{ post.id }}"><button type="button" class="btn">Modify</button></a>
+    {% endif %}
+    {% if is_author or user.is_superuser %}
     <a href="/board/delete-post/{{ post.id }}"><button type="button" class="btn">Delete</button></a>
     {% endif %}
 </div>

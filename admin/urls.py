@@ -30,4 +30,5 @@ urlpatterns = patterns('',
     url(r'^manager-user/', AdminUserManagerView),
     url(r'^modify-user/', AdminModifyUserView),
     url(r'^delete-user/', AdminDeleteUserView),
+    url(r'^admin-write/', AdminWritePostView),
 )
