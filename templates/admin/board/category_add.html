@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %} Manage Categories {% endblock %}
+{% block content %}
+<div class="container_fluid">
+    <div class="row-fluid">
+        <div class="span2">
+            <ul>
+                {% for category in categories %}
+                <li><a href="/admin/modify-category/{{ category.id }}">{{ category.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="span3">
+            <p>Category Name</p>
+            <form method="post" class="form">
+                {{ form.category_name }}<br>
+                <button type="submit" class="btn">Add</button>
+                {% csrf_token %}
+            </form>
+        </div>
+    </div>
+</div>
+<hr>
+<div class="container_fluid">
+    <div class="row-fluid">
+        <div style="width:100%">
+            <table class="table table-hover">
+                <tr class="info">
+                    <td>Category</td>
+                    <td>ID</td>
+                    <td>User</td>
+                    <td>Title</td>
+                    <td>Time</td>
+                </tr>
+                {% for post in posts %}
+                <tr>
+                    <td>{{ post.category }}</td>
+                    <td>{{ post.id }}</td>
+                    <td>{{ post.user }}</td>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.time }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

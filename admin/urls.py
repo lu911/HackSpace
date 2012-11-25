@@ -23,7 +23,12 @@ urlpatterns = patterns('',
     url(r'^delete-prob/', AdminDeleteProblemView),
     url(r'^problist/', AdminProblemListManagerView),
 
+    url(r'^add-category/', AdminAddBoardCategoryView),
+    url(r'^modify-category/(\w+)', AdminModifyBoardCategoryView),
+    url(r'^delete-category/(\w+)', AdminDeleteBoardCategoryView),
+
     url(r'^manager-user/', AdminUserManagerView),
     url(r'^modify-user/', AdminModifyUserView),
     url(r'^delete-user/', AdminDeleteUserView),
+    url(r'^admin-write/', AdminWritePostView),
 )

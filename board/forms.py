@@ -6,3 +6,8 @@ class PostForm(forms.Form):
     title = forms.CharField(label=u'title', widget=forms.TextInput())
     category = forms.ModelChoiceField(queryset=Category.objects.filter(~Q(id=1)))
     content = forms.CharField(label=u'content', widget=forms.Textarea())
+
+class AdminPostForm(forms.Form):
+    title = forms.CharField(label=u'title', widget=forms.TextInput())
+    category = forms.ModelChoiceField(queryset=Category.objects.all())
+    content = forms.CharField(label=u'content', widget=forms.Textarea())
