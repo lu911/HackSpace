@@ -54,11 +54,10 @@
 <script src="/static/js/highcharts.js"></script>
 <script src="/static/js/highcharts-more.js"></script>
 <script src="/static/js/exporting.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script>
 <script type="text/javascript">
 	
-
 	$(document).ready(function(){
-		$("#browser").treeview();
 		window.chart = new Highcharts.Chart({
 	                
 	        chart: {
@@ -106,6 +105,14 @@
 	            pointPlacement: 'on'
 	        }]
 	    });
+	});
+</script>
+<script type="text/javascript">
+	
+
+	$(document).ready(function(){
+		$("#browser").treeview();
+
 		var prob_id,tag_id;
 		$('.file').live('click',function(){
 			var id = $(this).attr('id');
@@ -136,10 +143,14 @@
 		});
 		
 		$('#problem-modify-form').live('submit',function(){
-			$.post("/admin/modify-prob/?prob_id=" + prob_id,$(this).serialize(),function(data){
-				$('#challenge-content').hide().html(data).fadeIn(700);
-				ReloadProbList();
-			});
+			$('#problem-modify-form').ajaxSubmit({
+				url:"/admin/modify-prob/?prob_id=" + prob_id,
+				type:"post",
+				success: function(data){
+					$('#challenge-content').hide().html(data).fadeIn(700);
+					ReloadProbList();
+				}
+			});			
 			return false;
 		});
 		$('#tag-modify-form').live('submit',function(){
@@ -225,9 +236,13 @@
 			return false;
 		});
 		$('#problem-add-form').live('submit',function(){
-			$.post("/admin/add-prob/",$(this).serialize(),function(data){
-				$('#challenge-content').hide().html(data).fadeIn(700);
-				ReloadProbList();
+			$("#problem-add-form").ajaxSubmit({
+				url:"/admin/add-prob/",
+				type:"post",
+				success: function(data){
+					$('#challenge-content').hide().html(data).fadeIn(700);
+					ReloadProbList();
+				}
 			});
 			return false;
 		});		
