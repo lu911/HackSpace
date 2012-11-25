@@ -18,27 +18,40 @@ def AdminUserInfoView(request):
     )
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
-def AdminUserListManagerView(request):
-    form = UserForm()
-    all_users=dict()
-    super_users = User.objects.filter(is_superuser=1)
-    normal_users = User.objects.filter(is_superuser=0)
-    all_users['super_users']=super_users
-    all_users['normal_users']=normal_users
-
-    return render(request,'admin/user_list.html', dict(all_users=all_users))
-
-   
-
 def AdminUserManagerView(request):
     form = UserForm()
     all_users=dict()
-    super_users = User.objects.filter(is_superuser=1)
-    normal_users = User.objects.filter(is_superuser=0)
-    all_users['super_users']=super_users
-    all_users['normal_users']=normal_users
-    return render(request, 'admin/user_manager.html',
-                            dict(all_users=all_users, form=form))
+    super_users = User.objects.filter(is_superuser=1).order_by("last_login")
+    normal_users = User.objects.filter(is_superuser=0).order_by("last_login")
+    all_users['super-users']={
+        "users":super_users[:10],
+        "page_count":range(1, int(super_users.count()/10)+2)
+    }
+    all_users['normal-users']={
+        "users":normal_users[:10],
+        "page_count":range(1, int(normal_users.count()/10)+2)
+    }
+    return render(request,'admin/user_manager.html', dict(all_users=all_users, form=form))
+
+   
+
+def AdminUserListManagerView(request):
+    user_page=int(request.GET.get('user_page'))-1
+    superuser_page=int(request.GET.get('superuser_page'))-1
+    form = UserForm()
+    all_users=dict()
+    super_users = User.objects.filter(is_superuser=1).order_by("last_login")
+    normal_users = User.objects.filter(is_superuser=0).order_by("last_login")
+    all_users['super-users']={
+        "users":super_users[10*superuser_page:10*superuser_page+10],
+        "page_count":range(1, int(super_users.count()/10)+2)
+    }
+    all_users['normal-users']={
+        "users":normal_users[10*user_page:10*user_page+10],
+        "page_count":range(1, int(normal_users.count()/10)+2)
+    }
+    return render(request, 'admin/user_list.html',
+                            dict(all_users=all_users, user_page=user_page+1, superuser_page=superuser_page+1))
 
 def AdminModifyUserView(request):
     user_id = request.POST.get('user_id')

@@ -1,7 +1,10 @@
 {% extends "base.html" %}
-{% block title %} Challenge Manager {% endblock %}
+{% block title %} User Manager {% endblock %}
 {% block css_extneral %}
 <link href="/static/css/jquery.treeview.css" rel="stylesheet" type="text/css">
+<style>
+    .pages{ width:140px; text-align:center;}
+</style>
 {% endblock %}
 {% block js_external %}
 <script src="/static/js/jquery.treeview.js"></script>
@@ -16,16 +19,23 @@
 			{% for type, users in all_users.items %}
 			<li class="collapsable" id="{{ type }}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ type }}</span>
 				<ul>
-					{% for user in users %}
+					{% for user in users.users %}
 						<li class="last">
                             <a class="file" id="user-{{user.id}}">{{user.username}}</a>
 	                        <i class="icon-remove"id="del-user-{{user.id}}"></i>
                         </li>
-					{% endfor %} 
+					{% endfor %}
+                    <div id="{{ type }}-page"class="pages">|
+                    {% for count in users.page_count %}
+                       <span id="{{ type }}-page-{{count}}" onclick="MovePage('{{ type }}', {{count}})"> {{ count }}</span> |
+                    {% endfor %}
+                    </div>
 				</ul>
 			</li>
 			{% endfor %}				
 		</ul>
+        <input type="hidden" value="1" id="user-page">
+        <input type="hidden" value="1" id="superuser-page">
     </div>
     <div class="span7" id="modify-content">
     	<div id="container" style="width: 700px; height: 400px; margin: 0 auto">
@@ -57,7 +67,10 @@
 <script src="/static/js/highcharts-more.js"></script>
 <script src="/static/js/exporting.js"></script>
 <script type="text/javascript">
-
+    
+    $('#normal-users-page-1').css({"font-weight": "bold", "color" : "red"});
+    $('#super-users-page-1').css({"font-weight": "bold", "color" : "red"});
+	
 	$(document).ready(function(){
 		$("#browser").treeview();
 		var user_id;
@@ -111,16 +124,30 @@
         return false;
     });
 	function ReloadUserList(){
+        var user_page = $('#user-page').val();
+        var superuser_page = $('#superuser-page').val();
+    
 		$.ajax(
 		{
-			url: "/admin/userlist/",
+			url: "/admin/userlist/?user_page="+user_page+"&superuser_page="+superuser_page,
 			type: "GET",
 			dataType: "html",
 			success: function(data){
 				$('#user-content').html(data);
+                $('#normal-users-page-'+user_page).css({"font-weight": "bold", "color" : "red"});
+                $('#super-users-page-'+superuser_page).css({"font-weight": "bold", "color" : "red"});
 			}
 		});	
 	}
+
+    function MovePage(type, page){
+        if(type==='normal-users'){
+            $('#user-page').val(page);
+        }else if(type==='super-users'){
+            $('#superuser-page').val(page);
+        }
+        ReloadUserList();
+    }
 
 </script>
 {% endblock %}
