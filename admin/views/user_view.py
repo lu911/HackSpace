@@ -3,9 +3,9 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from member.models import UserProfile
 from admin.forms import UserForm
+from collections import OrderedDict
 
 import json
-
 
 def AdminUserInfoView(request):
     user_id=request.GET.get('user_id')
@@ -14,44 +14,54 @@ def AdminUserInfoView(request):
         user_id=user.id,
         username=user.username, 
         is_staff=user.is_staff,
-        is_superuser=user.is_superuser
+        is_superuser=user.is_superuser,
+        is_active=user.is_active
     )
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
 def AdminUserManagerView(request):
+    groups={"super", "active", "block"};
     form = UserForm()
-    all_users=dict()
-    super_users = User.objects.filter(is_superuser=1).order_by("last_login")
-    normal_users = User.objects.filter(is_superuser=0).order_by("last_login")
-    all_users['super-users']={
-        "users":super_users[:10],
-        "page_count":range(1, int(super_users.count()/10)+2)
+    pages_count=dict()
+    all_users={
+        "super-users" : 
+            User.objects.filter(is_superuser=1).order_by("last_login"),
+        "active-users" : 
+            User.objects.filter(is_superuser=0, is_active=1).order_by("last_login"),
+        "block-users" : 
+            User.objects.filter(is_superuser=0, is_active=0).order_by("last_login")
     }
-    all_users['normal-users']={
-        "users":normal_users[:10],
-        "page_count":range(1, int(normal_users.count()/10)+2)
-    }
-    return render(request,'admin/user_manager.html', dict(all_users=all_users, form=form))
+    for k, v in  all_users.iteritems():
+        all_users[k]=v[:10]
+        pages_count[k]=int(v.count()/10)+1
+    all_users=OrderedDict(sorted(all_users.items()))
+    return render(request,'admin/user_manager.html', dict(groups=groups, all_users=all_users, pages_count=pages_count, form=form))
 
    
 
 def AdminUserListManagerView(request):
-    user_page=int(request.GET.get('user_page'))-1
-    superuser_page=int(request.GET.get('superuser_page'))-1
-    form = UserForm()
-    all_users=dict()
-    super_users = User.objects.filter(is_superuser=1).order_by("last_login")
-    normal_users = User.objects.filter(is_superuser=0).order_by("last_login")
-    all_users['super-users']={
-        "users":super_users[10*superuser_page:10*superuser_page+10],
-        "page_count":range(1, int(super_users.count()/10)+2)
+    groups={"super", "active", "block"};
+    pages={
+        "active-users" :int(request.GET.get('active_user_page')),
+        "block-users" :int(request.GET.get('block_user_page')),
+        "super-users" : int(request.GET.get('super_user_page'))
     }
-    all_users['normal-users']={
-        "users":normal_users[10*user_page:10*user_page+10],
-        "page_count":range(1, int(normal_users.count()/10)+2)
+    pages_count=dict()
+    all_users={
+        "super-users" : 
+            User.objects.filter(is_superuser=1).order_by("last_login"),
+        "active-users" : 
+            User.objects.filter(is_superuser=0, is_active=1).order_by("last_login"),
+        "block-users" : 
+            User.objects.filter(is_superuser=0, is_active=0).order_by("last_login")
     }
+    for k, v in  all_users.iteritems():
+        all_users[k]=v[10*(pages[k]-1):10*(pages[k]-1)+10]
+        pages_count[k]=int(v.count()/10)+1
+        
+    all_users=OrderedDict(sorted(all_users.items()))
     return render(request, 'admin/user_list.html',
-                            dict(all_users=all_users, user_page=user_page+1, superuser_page=superuser_page+1))
+                            dict(groups=groups, all_users=all_users, pages=pages, pages_count=pages_count))
 
 def AdminModifyUserView(request):
     user_id = request.POST.get('user_id')
@@ -68,6 +78,7 @@ def AdminModifyUserView(request):
                 user.set_password(form.cleaned_data['password'] or user.password)
                 user.is_staff = form.cleaned_data['is_staff']
                 user.is_superuser = form.cleaned_data['is_superuser']
+                user.is_active = form.cleaned_data['is_active']
                 user.save()
                 result="Done"
         except User.DoesNotExist:

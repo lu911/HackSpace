@@ -39,3 +39,4 @@ class UserForm(forms.Form):
     password = forms.CharField(label=u'Password', required=False,  widget=forms.PasswordInput(render_value=False))
     is_staff = forms.TypedChoiceField(label=u'IS_STAFF', coerce=int, choices=BOOL_CHOICE)
     is_superuser = forms.TypedChoiceField(label=u'IS_SUPERUSER', coerce=int, choices=BOOL_CHOICE)
+    is_active = forms.TypedChoiceField(label=u'IS_ACTIVE', coerce=int, choices=BOOL_CHOICE)

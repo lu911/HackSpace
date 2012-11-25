@@ -11,7 +11,15 @@
 {% endblock %}
 
 {% block content %}
-{% load admin_filter %}
+<div style="padding-bottom:80px;">
+{% include "admin/solve_status/header.html" %}
+
+{% block header-menu %}
+	<div class="span4 offset8">
+	</div>
+{% endblock %}
+</div>
+<hr>
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span3" id="user-content" style="border-right:2px solid #eeeeee;">
@@ -19,23 +27,22 @@
 			{% for type, users in all_users.items %}
 			<li class="collapsable" id="{{ type }}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ type }}</span>
 				<ul>
-					{% for user in users.users %}
+					{% for user in users %}
 						<li class="last">
                             <a class="file" id="user-{{user.id}}">{{user.username}}</a>
 	                        <i class="icon-remove"id="del-user-{{user.id}}"></i>
                         </li>
 					{% endfor %}
                     <div id="{{ type }}-page"class="pages">|
-                    {% for count in users.page_count %}
-                       <span id="{{ type }}-page-{{count}}" onclick="MovePage('{{ type }}', {{count}})"> {{ count }}</span> |
-                    {% endfor %}
                     </div>
 				</ul>
 			</li>
 			{% endfor %}				
 		</ul>
-        <input type="hidden" value="1" id="user-page">
-        <input type="hidden" value="1" id="superuser-page">
+        {% for k, v in pages_count.items %}
+            <input type="hidden" value="1" id="{{ k }}-page-index">
+            <input type="hidden" value="{{ v }}" id="{{ k }}-page-num">
+        {% endfor %}
     </div>
     <div class="span7" id="modify-content">
     	<div id="container" style="width: 700px; height: 400px; margin: 0 auto">
@@ -85,11 +92,13 @@
 				success: function(data){
                     var is_staff=Number(data.is_staff);
                     var is_superuser=Number(data.is_superuser);
+                    var is_active=Number(data.is_active);
                     $('#id_user_id').val(data.user_id);
                     $('#id_username').val(data.username);
                     $('#id_is_staff option[value='+is_staff+']').attr("selected", true);
                     $('#id_is_superuser option[value='+is_superuser+']').attr("selected", true);
-                }
+                    $('#id_is_active option[value='+is_active+']').attr("selected", true);
+}
 			});
 		});
 		
@@ -124,30 +133,56 @@
         return false;
     });
 	function ReloadUserList(){
-        var user_page = $('#user-page').val();
-        var superuser_page = $('#superuser-page').val();
+        {% for group in groups %}
+            var {{ group }}_user_page = $('#{{ group }}-users-page-index').val();
+        {% endfor %}
     
 		$.ajax(
 		{
-			url: "/admin/userlist/?user_page="+user_page+"&superuser_page="+superuser_page,
+           url: "/admin/userlist/?"{% for group in groups %}+"&{{ group }}_user_page="+{{ group }}_user_page{% endfor %},
+			
 			type: "GET",
 			dataType: "html",
 			success: function(data){
 				$('#user-content').html(data);
-                $('#normal-users-page-'+user_page).css({"font-weight": "bold", "color" : "red"});
-                $('#super-users-page-'+superuser_page).css({"font-weight": "bold", "color" : "red"});
+                DecidePageRanges();
+                ShowPageIndexes();
 			}
 		});	
 	}
 
     function MovePage(type, page){
-        if(type==='normal-users'){
-            $('#user-page').val(page);
-        }else if(type==='super-users'){
-            $('#superuser-page').val(page);
-        }
+        $('#'+type+'-users-page-index').val(page);
         ReloadUserList();
     }
 
+    {% for group in groups %}
+        var {{ group }}_users_page=1;
+        var {{ group }}_users_page_end=6;
+    {% endfor %}
+
+    function ShowPageIndexes(){
+        {% for group in groups %}
+            $('#{{ group }}-users-page').html('|');
+            for(var i={{ group }}_users_page; i<={{ group }}_users_page_end; i++){
+                $('#{{ group }}-users-page').append("<span id='{{ group }}-users-page-"+i+"' onclick='MovePage(\"{{ group }}\", "+i+")'> "+i+" </span>|"); 
+            }
+            index=$('#{{ group }}-users-page-index').val();
+            $('#{{ group }}-users-page-'+index).css({"font-weight" : "bold", "color" : "red"});
+        {% endfor %}
+    }
+
+    function DecidePageRanges(){
+        {% for group in groups %}
+            {{ group }}_users_page=Math.floor($('#{{ group }}-users-page-index').val()/5)+1;
+            {{ group }}_users_page_end={{ group }}_users_page+5;
+            if({{ group }}_users_page_end>$('#{{ group }}-users-page-num').val()){
+                {{ group }}_users_page_end=$('#{{ group }}-users-page-num').val();
+            }
+        {% endfor %}
+    }
+
+   DecidePageRanges();
+   ShowPageIndexes();
 </script>
 {% endblock %}

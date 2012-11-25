@@ -2,22 +2,22 @@
 			{% for type, users in all_users.items %}
 			<li class="collapsable" id="{{ type }}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ type }}</span>
 				<ul>
-					{% for user in users.users %}
+					{% for user in users %}
 						<li class="last">
                             <a class="file" id="user-{{user.id}}">{{user.username}}</a>
 	                        <i class="icon-remove"id="del-user-{{user.id}}"></i>
                         </li>
 					{% endfor %}
                     <div id="{{ type }}-page"class="pages">|
-                    {% for count in users.page_count %}
-                       <span id="{{ type }}-page-{{count}}" onclick="MovePage('{{ type }}', {{count}})"> {{ count }}</span> |
-                    {% endfor %}
                     </div>
 				</ul>
 			</li>
 			{% endfor %}				
 		</ul>
-        <input type="hidden" value="{{ user_page }}" id="user-page">
-        <input type="hidden" value="{{ superuser_page}}" id="superuser-page">
+        {% for k, v in pages.items %}
+            <input type="hidden" value="{{ v }}" id="{{ k }}-page-index">
+        {% endfor %}
+        {% for k, v in pages_count.items %}
+            <input type="hidden" value="{{ v }}" id="{{ k }}-page-num">
+        {% endfor %}
     </div>
- 
