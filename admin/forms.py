@@ -22,11 +22,8 @@ class ProblemForm(forms.Form):
     prob_auth = forms.CharField(label=u'문제 정답')
     prob_flag = forms.ChoiceField(label=u'공개 여부', choices=GENDER_CHOICE)
     prob_tag = forms.ModelChoiceField(queryset=TagName.objects.all(), label=u'태그')
-<<<<<<< HEAD
     prob_file = forms.FileField(label=u'문제 파일', required=False)    
  
-=======
 
 class CategoryForm(forms.Form):
     category_name = forms.CharField(label=u'Category')
->>>>>>> 53ca47273737b526b284d1bfe52be487335cfe0e
