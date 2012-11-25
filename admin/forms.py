@@ -24,4 +24,14 @@ class ProblemForm(forms.Form):
     prob_flag = forms.ChoiceField(label=u'공개 여부', choices=GENDER_CHOICE)
     prob_tag = forms.ModelChoiceField(queryset=TagName.objects.all(), label=u'태그')
     
- 
+class UserForm(forms.Form):
+    BOOL_CHOICE = (
+        (0, 'False'),
+        (1, 'True'),
+    )
+
+    user_id = forms.IntegerField(widget=forms.HiddenInput())
+    username = forms.CharField(label=u'ID', max_length=32)
+    password = forms.CharField(label=u'Password', required=False,  widget=forms.PasswordInput(render_value=False))
+    is_staff = forms.TypedChoiceField(label=u'IS_STAFF', coerce=int, choices=BOOL_CHOICE)
+    is_superuser = forms.TypedChoiceField(label=u'IS_SUPERUSER', coerce=int, choices=BOOL_CHOICE)

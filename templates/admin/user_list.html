@@ -1,0 +1,15 @@
+{% load admin_filter %}
+<ul id="browser" class="filetree treeview">
+	{% for type, users in all_users.items %}
+	<li class="collapsable" id="{{ type }}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ type }}</span>
+		<ul>
+			{% for user in users %}
+				<li class="last">
+                    <a class="file" id="user-{{user.id}}">{{user.username}}</a>
+                    <i class="icon-remove"id="del-user-{{user.id}}"></i>
+                </li>
+			{% endfor %} 
+		</ul>
+	</li>
+	{% endfor %}				
+</ul>    

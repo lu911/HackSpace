@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %} User Manager {% endblock %}
+{% block title %} Challenge Manager {% endblock %}
 {% block css_extneral %}
 <link href="/static/css/jquery.treeview.css" rel="stylesheet" type="text/css">
 {% endblock %}
@@ -8,18 +8,124 @@
 {% endblock %}
 
 {% block content %}
-{% block header-menu %}
-{% endblock %}
-TEST PAGE<br>
-This is superusers<br>
-{% for user in superusers %}
-    {{ user.username }}<hr>
-{% endfor %}
-This is normal users<br>
-{% for user in users %}
-    {{ user.username }}<hr>
-{% endfor %}
+<div style="padding-bottom:80px;">
+{% include "admin/solve_status/header.html" %}
 
- 
+</div>
+<hr>
 {% load admin_filter %}
+<div class="container-fluid">
+  <div class="row-fluid">
+    <div class="span3" id="user-content" style="border-right:2px solid #eeeeee;">
+		<ul id="browser" class="filetree treeview">
+			{% for type, users in all_users.items %}
+			<li class="collapsable" id="{{ type }}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ type }}</span>
+				<ul>
+					{% for user in users %}
+						<li class="last">
+                            <a class="file" id="user-{{user.id}}">{{user.username}}</a>
+	                        <i class="icon-remove"id="del-user-{{user.id}}"></i>
+                        </li>
+					{% endfor %} 
+				</ul>
+			</li>
+			{% endfor %}				
+		</ul>
+    </div>
+    <div class="span7" id="modify-content">
+    	<div id="container" style="width: 700px; height: 400px; margin: 0 auto">
+            <div id="wrap-modify-form">
+                <form method="POST" id="modify-form">
+                    <fieldset>
+                        <dl>
+                            {% for field in form.hidden_fields %}
+                                {{ field }}
+                            {% endfor %}
+                            {% for field in form.visible_fields %}
+                                <dt>{{ field.label_tag }}</dt>
+                                <dd>{{ field }} {{ field.errors }}</dd>
+                            {% endfor %}
+                        </dl>
+                        {% csrf_token %}
+                         <input class="btn" type="submit" value="modify"/>
+                    </fieldset>
+                </form>
+           </div>
+        </div>	
+    </div>
+  </div>
+</div>
+
+
+
+<script src="/static/js/highcharts.js"></script>
+<script src="/static/js/highcharts-more.js"></script>
+<script src="/static/js/exporting.js"></script>
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		$("#browser").treeview();
+		var user_id;
+		$('.file').live('click',function(){
+			var id = $(this).attr('id');
+			user_id = id.split("-")[1];
+			$.ajax(
+			{
+				url: "/admin/info-user/?user_id=" + user_id,
+				type: "GET",
+				dataType: "json",
+				success: function(data){
+                    var is_staff=Number(data.is_staff);
+                    var is_superuser=Number(data.is_superuser);
+                    $('#id_user_id').val(data.user_id);
+                    $('#id_username').val(data.username);
+                    $('#id_is_staff option[value='+is_staff+']').attr("selected", true);
+                    $('#id_is_superuser option[value='+is_superuser+']').attr("selected", true);
+                }
+			});
+		});
+		
+		$('.last').find('.icon-remove').live('click',function(){
+			var id = $(this).attr('id');
+			user_id = id.split("-")[2];
+			if(confirm("유저를  삭제합니다."))
+			{
+				$.ajax(
+				{
+					url: "/admin/delete-user/?user_id=" + user_id,
+					type: "GET",
+					dataType: "html",
+					success: function(data){
+						location.href = location.href;
+						ReloadUserList();
+					}
+				});				
+			}
+			else
+			{
+				return false;
+			}
+		});
+	});
+
+    $('#modify-form').submit(function(){
+        $.post('/admin/modify-user/',$(this).serialize(),function(data){
+            alert(data);
+            ReloadUserList();
+        });
+        return false;
+    });
+	function ReloadUserList(){
+		$.ajax(
+		{
+			url: "/admin/userlist/",
+			type: "GET",
+			dataType: "html",
+			success: function(data){
+				$('#user-content').html(data);
+			}
+		});	
+	}
+
+</script>
 {% endblock %}
