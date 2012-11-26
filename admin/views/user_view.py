@@ -13,6 +13,8 @@ def AdminUserInfoView(request):
     data=dict(
         user_id=user.id,
         username=user.username, 
+        email=user.email,
+        nickname=user.first_name,
         is_staff=user.is_staff,
         is_superuser=user.is_superuser,
         is_active=user.is_active
@@ -33,7 +35,7 @@ def AdminUserManagerView(request):
     }
     for k, v in  all_users.iteritems():
         all_users[k]=v[:10]
-        pages_count[k]=int(v.count()/10)+1
+        pages_count[k]=int((v.count()-1)/10)+1
     all_users=OrderedDict(sorted(all_users.items()))
     return render(request,'admin/user_manager.html', dict(groups=groups, all_users=all_users, pages_count=pages_count, form=form))
 
@@ -46,22 +48,23 @@ def AdminUserListManagerView(request):
         "block-users" :int(request.GET.get('block_user_page')),
         "super-users" : int(request.GET.get('super_user_page'))
     }
+    search=str(request.GET.get('search'));
     pages_count=dict()
     all_users={
         "super-users" : 
-            User.objects.filter(is_superuser=1).order_by("last_login"),
+            User.objects.filter(is_superuser=1, username__icontains=search).order_by("last_login"),
         "active-users" : 
-            User.objects.filter(is_superuser=0, is_active=1).order_by("last_login"),
+            User.objects.filter(is_superuser=0, is_active=1, username__icontains=search).order_by("last_login"),
         "block-users" : 
-            User.objects.filter(is_superuser=0, is_active=0).order_by("last_login")
+            User.objects.filter(is_superuser=0, is_active=0, username__icontains=search).order_by("last_login")
     }
     for k, v in  all_users.iteritems():
         all_users[k]=v[10*(pages[k]-1):10*(pages[k]-1)+10]
-        pages_count[k]=int(v.count()/10)+1
+        pages_count[k]=int((v.count()-1)/10)+1
         
     all_users=OrderedDict(sorted(all_users.items()))
     return render(request, 'admin/user_list.html',
-                            dict(groups=groups, all_users=all_users, pages=pages, pages_count=pages_count))
+                            dict(groups=groups, all_users=all_users, pages=pages, pages_count=pages_count, search=search))
 
 def AdminModifyUserView(request):
     user_id = request.POST.get('user_id')
@@ -76,6 +79,8 @@ def AdminModifyUserView(request):
                 print type(form.cleaned_data['is_superuser'])
                 user.username = form.cleaned_data['username']
                 user.set_password(form.cleaned_data['password'] or user.password)
+                user.first_name = form.cleaned_data['nickname']
+                user.email = form.cleaned_data['email']
                 user.is_staff = form.cleaned_data['is_staff']
                 user.is_superuser = form.cleaned_data['is_superuser']
                 user.is_active = form.cleaned_data['is_active']

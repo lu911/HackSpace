@@ -23,7 +23,14 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span3" id="user-content" style="border-right:2px solid #eeeeee;">
-		<ul id="browser" class="filetree treeview">
+		<div class="form-search">
+            <div class="input-append">
+                    <input type="text" id="search-username" class="span6 search-query" placeholder="Username">
+                    <button type="button" class="btn" onclick="ReloadUserList()">Search</button>
+            </div>
+        </div>
+        <br>
+        <ul id="browser" class="filetree treeview">
 			{% for type, users in all_users.items %}
 			<li class="collapsable" id="{{ type }}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ type }}</span>
 				<ul>
@@ -95,6 +102,8 @@
                     var is_active=Number(data.is_active);
                     $('#id_user_id').val(data.user_id);
                     $('#id_username').val(data.username);
+                    $('#id_email').val(data.email);
+                    $('#id_nickname').val(data.nickname);
                     $('#id_is_staff option[value='+is_staff+']').attr("selected", true);
                     $('#id_is_superuser option[value='+is_superuser+']').attr("selected", true);
                     $('#id_is_active option[value='+is_active+']').attr("selected", true);
@@ -136,10 +145,10 @@
         {% for group in groups %}
             var {{ group }}_user_page = $('#{{ group }}-users-page-index').val();
         {% endfor %}
-    
+        var search= $('#search-username').val(); 
 		$.ajax(
 		{
-           url: "/admin/userlist/?"{% for group in groups %}+"&{{ group }}_user_page="+{{ group }}_user_page{% endfor %},
+           url: "/admin/userlist/?search="+search{% for group in groups %}+"&{{ group }}_user_page="+{{ group }}_user_page{% endfor %},
 			
 			type: "GET",
 			dataType: "html",
@@ -157,14 +166,14 @@
     }
 
     {% for group in groups %}
-        var {{ group }}_users_page=1;
-        var {{ group }}_users_page_end=6;
+        var {{ group }}_users_page_start;
+        var {{ group }}_users_page_end;
     {% endfor %}
 
     function ShowPageIndexes(){
         {% for group in groups %}
             $('#{{ group }}-users-page').html('|');
-            for(var i={{ group }}_users_page; i<={{ group }}_users_page_end; i++){
+            for(var i={{ group }}_users_page_start; i<={{ group }}_users_page_end; i++){
                 $('#{{ group }}-users-page').append("<span id='{{ group }}-users-page-"+i+"' onclick='MovePage(\"{{ group }}\", "+i+")'> "+i+" </span>|"); 
             }
             index=$('#{{ group }}-users-page-index').val();
@@ -174,15 +183,20 @@
 
     function DecidePageRanges(){
         {% for group in groups %}
-            {{ group }}_users_page=Math.floor($('#{{ group }}-users-page-index').val()/5)+1;
-            {{ group }}_users_page_end={{ group }}_users_page+5;
+
+            {{ group }}_users_page_start=$('#{{ group }}-users-page-index').val()-2;
+            if({{ group }}_users_page_start<=0){
+                {{ group }}_users_page_start=1;
+            }
+            {{ group }}_users_page_end={{ group }}_users_page_start+4;
             if({{ group }}_users_page_end>$('#{{ group }}-users-page-num').val()){
                 {{ group }}_users_page_end=$('#{{ group }}-users-page-num').val();
             }
         {% endfor %}
     }
 
-   DecidePageRanges();
-   ShowPageIndexes();
+    DecidePageRanges();
+    ShowPageIndexes();
+
 </script>
 {% endblock %}
