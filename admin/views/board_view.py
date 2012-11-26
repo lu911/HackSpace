@@ -1,11 +1,13 @@
 #-*-coding:utf-8-*-
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
+from django.contrib.auth.decorators import login_required
 
 from board.models import Category, Board
 from board.forms import AdminPostForm, PostForm
 from admin.forms import CategoryForm
 
+@login_required(login_url='/login/')
 def AdminWritePostView(request):
     if request.user.is_superuser:
         if request.method == 'POST':
@@ -24,6 +26,7 @@ def AdminWritePostView(request):
         form = PostForm(initial=request.GET)
         return render(request, 'board/write_post.html', dict(form=form))
 
+@login_required(login_url='/login/')
 def AdminAddBoardCategoryView(request):
     if request.user.is_superuser:
         categories = Category.objects.all()
@@ -36,6 +39,7 @@ def AdminAddBoardCategoryView(request):
             form = CategoryForm(initial=request.GET)
     return render(request, 'admin/board/category_add.html', dict(form=form, categories=categories, posts=posts))
 
+@login_required(login_url='/login/')
 def AdminModifyBoardCategoryView(request, category_id):
     if request.user.is_superuser:
         categories = Category.objects.all()
@@ -56,6 +60,7 @@ def AdminModifyBoardCategoryView(request, category_id):
             return HttpResponseRedirect('/admin/add-category/')
     return render(request, 'admin/board/category_modify.html', dict(form=form, categories=categories, category_id=category_id))
 
+@login_required(login_url='/login/')
 def AdminDeleteBoardCategoryView(request, category_id):
     if request.user.is_superuser:
         try:
@@ -69,5 +74,3 @@ def AdminDeleteBoardCategoryView(request, category_id):
         except Category.DoesNotExist:
             pass
     return HttpResponseRedirect('/admin/add-category/')
-
-

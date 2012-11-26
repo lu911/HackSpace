@@ -1,12 +1,14 @@
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from member.models import UserProfile
 from admin.forms import UserForm
 from collections import OrderedDict
 
 import json
 
+@login_required(login_url='/login/')
 def AdminUserInfoView(request):
     user_id=request.GET.get('user_id')
     user = User.objects.get(id=user_id)
@@ -21,6 +23,7 @@ def AdminUserInfoView(request):
     )
     return HttpResponse(json.dumps(data), mimetype='application/json')
 
+@login_required(login_url='/login/')
 def AdminUserManagerView(request):
     groups={"super", "active", "block"};
     form = UserForm()
@@ -41,6 +44,7 @@ def AdminUserManagerView(request):
 
    
 
+@login_required(login_url='/login/')
 def AdminUserListManagerView(request):
     groups={"super", "active", "block"};
     pages={
@@ -66,6 +70,7 @@ def AdminUserListManagerView(request):
     return render(request, 'admin/user_list.html',
                             dict(groups=groups, all_users=all_users, pages=pages, pages_count=pages_count, search=search))
 
+@login_required(login_url='/login/')
 def AdminModifyUserView(request):
     user_id = request.POST.get('user_id')
     result="ERROR"
@@ -92,6 +97,7 @@ def AdminModifyUserView(request):
         result="You are not superuser"
     return HttpResponse(result)     
 
+@login_required(login_url='/login/')
 def AdminDeleteUserView(request):
     user_id = request.GET.get('user_id')
     status = "FAIL"

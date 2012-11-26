@@ -2,9 +2,9 @@
 from django.shortcuts import render
 from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import login_required
 from django.core.exceptions import ValidationError
 from django.db.models import Q
-
 
 from member.models import UserProfile
 from challenge.models import Problem, AuthLog, TagName, ProbTag
@@ -12,9 +12,7 @@ from admin.forms import TagForm, ProblemForm
 
 import json
 
-def MainView(request):
-    return render(request, 'admin/main.html')
-
+@login_required(login_url='/login/')
 def ShowSolveStatusView(request):
     all_problems = Problem.objects.all()
     solved_problems = Problem.objects.filter(~Q(prob_solver=0))
@@ -22,6 +20,7 @@ def ShowSolveStatusView(request):
                             dict(all_problems=all_problems,
                                  solved_problems=solved_problems))
 
+@login_required(login_url='/login/')
 def SearchUserView(request):
     username = request.POST.get('username')
     try:
@@ -48,6 +47,7 @@ def SearchUserView(request):
                                 dict(message=message,
                                      chart_render=False))
 
+@login_required(login_url='/login/')
 def ShowSolverStatusView(request, problem_name):
     problem = Problem.objects.get(prob_name=problem_name)
     solvers = AuthLog.objects.filter(prob_id=problem.id, auth_type=1)
@@ -55,6 +55,7 @@ def ShowSolverStatusView(request, problem_name):
                             dict(problem=problem_name,
                                  solvers=solvers))
 
+@login_required(login_url='/login/')
 def AdminProblemListManagerView(request):
     tags = TagName.objects.all()
     probs = {}
@@ -62,6 +63,7 @@ def AdminProblemListManagerView(request):
         probs[tag.tag] = ProbTag.get_from_prob(tag.id)
     return render(request,'admin/prob_list.html',dict(tags=tags,probs=probs))
 
+@login_required(login_url='/login/')
 def AdminChallengeManagerView(request):
     tags = TagName.objects.all()
     probs = {}
@@ -70,6 +72,7 @@ def AdminChallengeManagerView(request):
     return render(request,'admin/challenge_manager.html',dict(tags=tags,probs=probs))
 
 
+@login_required(login_url='/login/')
 def AdminAddProblemManagerView(request):
     if request.user.is_superuser:
         if request.method == 'POST':
@@ -85,6 +88,7 @@ def AdminAddProblemManagerView(request):
     else:
         return HttpResponseRedirect('/')
 
+@login_required(login_url='/login/')
 def AdminModifyProblemView(request):
     prob_id = request.GET.get('prob_id')
     if request.user.is_superuser:
@@ -122,6 +126,7 @@ def AdminModifyProblemView(request):
     else:
         return HttpResponseRedirect('/')
 
+@login_required(login_url='/login/')
 def AdminDeleteProblemView(request):
     prob_id = request.GET.get('prob_id')
     status = "FAIL"
@@ -137,6 +142,7 @@ def AdminDeleteProblemView(request):
         pass
     return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
 
+@login_required(login_url='/login/')
 def AdminAddTagManagerView(request):
     tags = TagName.objects.all()
     if request.method == 'POST':
@@ -148,6 +154,7 @@ def AdminAddTagManagerView(request):
         form = TagForm()
     return render(request,'admin/tag_add_manager.html',dict(form=form,tags=tags))
 
+@login_required(login_url='/login/')
 def AdminModifyTagView(request):
     tag_id = request.GET.get('tag_id')
     tag_name = request.POST.get('tag')
@@ -168,6 +175,7 @@ def AdminModifyTagView(request):
             form = TagForm(initial=default)
     return render(request,'admin/tag_modify_manager.html',dict(form=form)) 
 
+@login_required(login_url='/login/')
 def AdminDeleteTagView(request):
     tag_id = request.GET.get('tag_id')
     status = "FAIL"
@@ -188,6 +196,7 @@ def AdminDeleteTagView(request):
             pass
     return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
 
+@login_required(login_url='/login/')
 def AdminTagCheckView(request):
     tag = request.GET.get('tag')
     status = "FAIL"
@@ -197,7 +206,5 @@ def AdminTagCheckView(request):
             status = "FAIL"
         except TagName.DoesNotExist:
             status = "OK"
-    
+
     return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
-
-

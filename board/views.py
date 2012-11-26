@@ -3,8 +3,10 @@ from models import Board, Category
 from forms import PostForm, AdminPostForm
 
 from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 
+@login_required(login_url='/login/')
 def WritePostView(request):
     if request.method == 'POST':
         if request.user.is_superuser:
@@ -29,6 +31,7 @@ def ShowPostListView(request):
     posts = Board.objects.order_by('category', '-time')
     return render(request, 'board/render_post_list.html', dict(posts=posts))
 
+@login_required(login_url='/login/')
 def ShowPostContentView(request, post_id):
     try:
         post = Board.objects.get(id=post_id)
@@ -40,6 +43,7 @@ def ShowPostContentView(request, post_id):
     except Board.DoesNotExist:
         return HttpResponseRedirect('/board/')
 
+@login_required(login_url='/login/')
 def ModifyPostView(request, post_id):
     try:
         post = Board.objects.get(id=post_id, user=request.user)
@@ -69,6 +73,7 @@ def ModifyPostView(request, post_id):
         return HttpResponseRedirect('/board/show-post/%s' % post_id)
     return HttpResponseRedirect('/board/')
 
+@login_required(login_url='/login/')
 def DeletePostView(request, post_id):
     try:
         post = Board.objects.get(id=post_id, user=request.user)

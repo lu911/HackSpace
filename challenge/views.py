@@ -21,6 +21,7 @@ def ProbListView(request):
         probData=ProbTag.get_from_all_prob()
     return render(request,'challenge/list.html',dict(tag_list=tagList, prob_data=probData))
 
+@login_required(login_url='/login/')
 def ChallengeAuthView(request):
     auth = request.POST.get('auth')
     prob_id = request.POST.get('prob-id')
