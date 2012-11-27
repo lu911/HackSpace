@@ -1,17 +1,11 @@
-<div class="form-search">
-    <div class="input-append">
-        <input type="text" id="search-username" value="{{ search }}" class="span6 search-query" placeholder="Username">
-        <button type="button" class="btn" onclick="ReloadUserList()">Search</button>
-    </div>
-</div>
-<br>
+{% load admin_filter %}
 <ul id="browser" class="filetree treeview">
 	{% for type, users in all_users.items %}
 	    <li class="collapsable" id="{{ type }}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ type }}</span>
 			<ul>
 				{% for user in users %}
 					<li class="last">
-                       <a class="file" id="user-{{user.id}}">{{user.username}}</a>
+                       <a class="file" id="user-{{user.id}}">{{ user.username|highlight:search }}</a>
 	                   <i class="icon-remove"id="del-user-{{user.id}}"></i>
                     </li>
     			{% endfor %}

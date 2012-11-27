@@ -4,6 +4,7 @@
 <link href="/static/css/jquery.treeview.css" rel="stylesheet" type="text/css">
 <style>
     .pages{ width:140px; text-align:center;}
+    .highlight{ font-weight:bold;}
 </style>
 {% endblock %}
 {% block js_external %}
@@ -22,34 +23,36 @@
 <hr>
 <div class="container-fluid">
   <div class="row-fluid">
-    <div class="span3" id="user-content" style="border-right:2px solid #eeeeee;">
+    <div class="span3" style="border-right:2px solid #eeeeee;">
 		<div class="form-search">
             <div class="input-append">
-                    <input type="text" id="search-username" class="span6 search-query" placeholder="Username">
-                    <button type="button" class="btn" onclick="ReloadUserList()">Search</button>
+                    <input type="text" id="search-username" class="span6 search-query" placeholder="Username" onkeypress="SearchKeyPress(event)">
+                    <button type="button" class="btn" id="search-button"  onclick="SearchUser()">Search</button>
             </div>
         </div>
         <br>
-        <ul id="browser" class="filetree treeview">
-			{% for type, users in all_users.items %}
-			<li class="collapsable" id="{{ type }}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ type }}</span>
-				<ul>
-					{% for user in users %}
-						<li class="last">
-                            <a class="file" id="user-{{user.id}}">{{user.username}}</a>
-	                        <i class="icon-remove"id="del-user-{{user.id}}"></i>
-                        </li>
-					{% endfor %}
-                    <div id="{{ type }}-page"class="pages">|
-                    </div>
-				</ul>
-			</li>
-			{% endfor %}				
-		</ul>
-        {% for k, v in pages_count.items %}
-            <input type="hidden" value="1" id="{{ k }}-page-index">
-            <input type="hidden" value="{{ v }}" id="{{ k }}-page-num">
-        {% endfor %}
+        <div id="user-content">
+            <ul id="browser" class="filetree treeview">
+                {% for type, users in all_users.items %}
+                <li class="collapsable" id="{{ type }}"><div class="hitarea collapsable-hitarea"></div><span class="folder"> {{ type }}</span>
+                    <ul>
+                        {% for user in users %}
+                            <li class="last">
+                                <a class="file" id="user-{{user.id}}">{{user.username}}</a>
+                                <i class="icon-remove"id="del-user-{{user.id}}"></i>
+                            </li>
+                        {% endfor %}
+                        <div id="{{ type }}-page"class="pages">|
+                        </div>
+                    </ul>
+                </li>
+                {% endfor %}				
+            </ul>
+            {% for k, v in pages_count.items %}
+                <input type="hidden" value="1" id="{{ k }}-page-index">
+                <input type="hidden" value="{{ v }}" id="{{ k }}-page-num">
+            {% endfor %}
+        </div>
     </div>
     <div class="span7" id="modify-content">
     	<div id="container" style="width: 700px; height: 400px; margin: 0 auto">
@@ -141,6 +144,22 @@
         });
         return false;
     });
+
+    function SearchKeyPress(e){
+        e = e || window.event;
+        if(e.keyCode == 13){
+            $("#search-button").click();
+        }
+    }
+
+    function SearchUser(){
+        {% for group in groups %}
+            $('#{{ group }}-users-page-index').val('1');
+        {% endfor %}
+        ReloadUserList();
+        $('#search-username').focus();
+     }
+
 	function ReloadUserList(){
         {% for group in groups %}
             var {{ group }}_user_page = $('#{{ group }}-users-page-index').val();
