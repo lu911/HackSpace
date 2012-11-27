@@ -5,6 +5,8 @@ register = template.Library()
 def getObject(value, arg):
     return value[arg.tag]
 def highlight(text, search):
-    return mark_safe(text.replace(search, "<span class='highlight'>%s</span>" % search))
+    if(search is not ''):
+        text=mark_safe(text.replace(search, "<span class='highlight'>%s</span>" % search))
+    return text
 register.filter('getObject', getObject)
 register.filter('highlight', highlight)
