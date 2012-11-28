@@ -29,7 +29,7 @@ def register_user(form):
     UserProfile.objects.create(user=user,score=0, last_solve_time=datetime.now())
 
 def memberLoginView(request):
-    if request.user.is_authenticated:
+    if request.user.is_active:
         return HttpResponseRedirect('/')
     if request.method == 'POST':
         form = AuthenticationForm(request.POST)
