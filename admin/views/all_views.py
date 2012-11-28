@@ -11,66 +11,79 @@ from challenge.models import Problem, AuthLog, TagName, ProbTag
 from admin.forms import TagForm, ProblemForm
 
 import json
-
 @login_required(login_url='/login/')
 def ShowSolveStatusView(request):
-    all_problems = Problem.objects.all()
-    solved_problems = Problem.objects.filter(~Q(prob_solver=0))
-    return render(request, 'admin/solve_status/render_solve_status.html',
-                            dict(all_problems=all_problems,
-                                 solved_problems=solved_problems))
+    if request.user.is_superuser:
+        all_problems = Problem.objects.all()
+        solved_problems = Problem.objects.filter(~Q(prob_solver=0))
+        return render(request, 'admin/solve_status/render_solve_status.html',
+                                dict(all_problems=all_problems,
+                                     solved_problems=solved_problems))
+    else:
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def SearchUserView(request):
-    username = request.POST.get('username')
-    try:
-        user = User.objects.get(username=username)
-        solver_info = AuthLog.objects.filter(user_id=user.id, auth_type=1).order_by('auth_time')
-        sum = 0
-        scores = []
-        for info in solver_info:
-            sum += info.prob_id.prob_point
-            scores.append(sum)
-        if sum == 0:
-            score = False
-        else:
-            score = True
-        return render(request, 'admin/solve_status/user_solve_status.html',
-                                dict(solver_info=solver_info,
-                                     scores=scores,
-                                     username=user.username,
-                                     chart_render=True,
-                                     score=score))
-    except:
-        message = 'not exist user.'
-        return render(request, 'admin/solve_status/user_solve_status.html',
-                                dict(message=message,
-                                     chart_render=False))
+    if request.user.is_superuser:
+        username = request.POST.get('username')
+        try:
+            user = User.objects.get(username=username)
+            solver_info = AuthLog.objects.filter(user_id=user.id, auth_type=1).order_by('auth_time')
+            sum = 0
+            scores = []
+            for info in solver_info:
+                sum += info.prob_id.prob_point
+                scores.append(sum)
+            if sum == 0:
+                score = False
+            else:
+                score = True
+            return render(request, 'admin/solve_status/user_solve_status.html',
+                                    dict(solver_info=solver_info,
+                                         scores=scores,
+                                         username=user.username,
+                                         chart_render=True,
+                                         score=score))
+        except:
+            message = 'not exist user.'
+            return render(request, 'admin/solve_status/user_solve_status.html',
+                                    dict(message=message,
+                                         chart_render=False))
+    else:
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def ShowSolverStatusView(request, problem_name):
-    problem = Problem.objects.get(prob_name=problem_name)
-    solvers = AuthLog.objects.filter(prob_id=problem.id, auth_type=1)
-    return render(request, 'admin/solve_status/solver_list.html',
-                            dict(problem=problem_name,
-                                 solvers=solvers))
+    if request.user.is_superuser:
+        problem = Problem.objects.get(prob_name=problem_name)
+        solvers = AuthLog.objects.filter(prob_id=problem.id, auth_type=1)
+        return render(request, 'admin/solve_status/solver_list.html',
+                                dict(problem=problem_name,
+                                     solvers=solvers))
+    else:
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def AdminProblemListManagerView(request):
-    tags = TagName.objects.all()
-    probs = {}
-    for tag in tags:
-        probs[tag.tag] = ProbTag.get_from_prob(tag.id)
-    return render(request,'admin/prob_list.html',dict(tags=tags,probs=probs))
+    if request.user.is_superuser:
+        tags = TagName.objects.all()
+        probs = {}
+        for tag in tags:
+            probs[tag.tag] = ProbTag.get_from_prob(tag.id)
+        return render(request,'admin/prob_list.html',dict(tags=tags,probs=probs))
+    else:
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def AdminChallengeManagerView(request):
-    tags = TagName.objects.all()
-    probs = {}
-    for tag in tags:
-        probs[tag.tag] = ProbTag.get_from_prob(tag.id)
-    return render(request,'admin/challenge_manager.html',dict(tags=tags,probs=probs))
-
+    if request.user.is_superuser:
+        tags = TagName.objects.all()
+        probs = {}
+        for tag in tags:
+            probs[tag.tag] = ProbTag.get_from_prob(tag.id)
+        return render(request,'admin/challenge_manager.html',dict(tags=tags,probs=probs))
+    else:
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def AdminAddProblemManagerView(request):
@@ -90,8 +103,8 @@ def AdminAddProblemManagerView(request):
 
 @login_required(login_url='/login/')
 def AdminModifyProblemView(request):
-    prob_id = request.GET.get('prob_id')
     if request.user.is_superuser:
+        prob_id = request.GET.get('prob_id')
         try:
             prob = Problem.objects.get(id=prob_id)
             prob_tag = ProbTag.objects.get(prob_id=prob_id)
@@ -128,9 +141,9 @@ def AdminModifyProblemView(request):
 
 @login_required(login_url='/login/')
 def AdminDeleteProblemView(request):
-    prob_id = request.GET.get('prob_id')
-    status = "FAIL"
     if request.user.is_superuser:
+        prob_id = request.GET.get('prob_id')
+        status = "FAIL"
         try:
             prob = Problem.objects.get(id=prob_id)
             prob.delete()
@@ -144,21 +157,24 @@ def AdminDeleteProblemView(request):
 
 @login_required(login_url='/login/')
 def AdminAddTagManagerView(request):
-    tags = TagName.objects.all()
-    if request.method == 'POST':
-        form = TagForm(request.POST)
-        if form.is_valid():
-            if request.user.is_superuser:
-                TagName.objects.create(tag=form.cleaned_data['tag'])
+    if request.user.is_superuser:
+        tags = TagName.objects.all()
+        if request.method == 'POST':
+            form = TagForm(request.POST)
+            if form.is_valid():
+                if request.user.is_superuser:
+                    TagName.objects.create(tag=form.cleaned_data['tag'])
+        else:
+            form = TagForm()
+        return render(request,'admin/tag_add_manager.html',dict(form=form,tags=tags))
     else:
-        form = TagForm()
-    return render(request,'admin/tag_add_manager.html',dict(form=form,tags=tags))
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def AdminModifyTagView(request):
-    tag_id = request.GET.get('tag_id')
-    tag_name = request.POST.get('tag')
     if request.user.is_superuser:
+        tag_id = request.GET.get('tag_id')
+        tag_name = request.POST.get('tag')
         try:
             tag = TagName.objects.get(id=tag_id)
             default = {
@@ -173,13 +189,15 @@ def AdminModifyTagView(request):
                 form = TagForm(initial=default)
         except:
             form = TagForm(initial=default)
-    return render(request,'admin/tag_modify_manager.html',dict(form=form)) 
+        return render(request,'admin/tag_modify_manager.html',dict(form=form)) 
+    else:
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def AdminDeleteTagView(request):
-    tag_id = request.GET.get('tag_id')
-    status = "FAIL"
     if request.user.is_superuser:
+        tag_id = request.GET.get('tag_id')
+        status = "FAIL"
         try:
             if tag_id == 1 or tag_id == "1":
                 pass
@@ -194,17 +212,20 @@ def AdminDeleteTagView(request):
                 status = "OK"
         except TagName.DoesNotExist:
             pass
-    return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
+    else:
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def AdminTagCheckView(request):
-    tag = request.GET.get('tag')
-    status = "FAIL"
     if request.user.is_superuser:
+        tag = request.GET.get('tag')
+        status = "FAIL"
         try:
             tag_ = TagName.objects.get(tag=tag)
             status = "FAIL"
         except TagName.DoesNotExist:
             status = "OK"
-
-    return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
+        return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
+    else:
+        return HttpResponseRedirect('/')

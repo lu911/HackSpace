@@ -37,12 +37,17 @@ def AdminAddBoardCategoryView(request):
                 Category.objects.create(name=form.cleaned_data['category_name'])
         else:
             form = CategoryForm(initial=request.GET)
-    return render(request, 'admin/board/category_add.html', dict(form=form, categories=categories, posts=posts))
+        return render(request, 'admin/board/category_add.html', dict(form=form,
+                                                                     categories=categories,
+                                                                     posts=posts))
+    else:
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def AdminModifyBoardCategoryView(request, category_id):
     if request.user.is_superuser:
         categories = Category.objects.all()
+        posts = Board.objects.order_by('-time')[:10]
         try:
             category = Category.objects.get(id=category_id)
             default = {
@@ -56,9 +61,14 @@ def AdminModifyBoardCategoryView(request, category_id):
                     return HttpResponseRedirect('/admin/add-category/')
             else:
                 form = CategoryForm(initial=default)
+                return render(request, 'admin/board/category_modify.html', dict(form=form,
+                                                                                categories=categories,
+                                                                                category_id=category_id,
+                                                                                posts=posts))
         except:
             return HttpResponseRedirect('/admin/add-category/')
-    return render(request, 'admin/board/category_modify.html', dict(form=form, categories=categories, category_id=category_id))
+    else:
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def AdminDeleteBoardCategoryView(request, category_id):
@@ -73,4 +83,6 @@ def AdminDeleteBoardCategoryView(request, category_id):
             category.delete()
         except Category.DoesNotExist:
             pass
-    return HttpResponseRedirect('/admin/add-category/')
+        return HttpResponseRedirect('/admin/add-category/')
+    else:
+        return HttpResponseRedirect('/')
