@@ -10,7 +10,13 @@ import time
 
 @login_required(login_url='/login/')
 def ProbListView(request):
-    try:   
+    try:
+        auth = request.POST.get('auth')
+        print auth
+    except:
+        pass
+    print 'test'
+    try:
         tagID = request.GET.get('tag', None)
         tagList = TagName.objects.all()
         if tagID is not None:
@@ -24,29 +30,32 @@ def ProbListView(request):
 @login_required(login_url='/login/')
 def ChallengeAuthView(request):
     auth = request.POST.get('auth')
-    prob_id = request.POST.get('prob-id')
     try:
-        prob = Problem.objects.get(id=prob_id)
-        authLog = AuthLog.objects.get(user_id=request.user, prob_id=prob, auth_type=1)
-        if authLog.count() > 0 :
-            reason = "Already Cleared"
-        else:
-            if prob.prob_auth == auth:
-                status = "OK"
-                authType = 1
-                user = request.user.get_profile()
-                user.score += prob.prob_point
-                last_solve_time = datetime.datetime.now()
-                user.save()
-                prob.prob_solver += 1
-                prob.save()
-            else:
-                reason = "Wrong"
-                authType = 0
-            authLog = AuthLog(prob_id=prob, user_id=request.user, auth_type=authType, auth_time=datetime.datetime.now(), auth_ip=request.META['REMOTE_ADDR'], auth_value=auth)
-            authLog.save()
+        # Check Problem for auth
+        prob = Problem.objects.get(prob_auth=auth)
     except Problem.DoesNotExist:
-        raise ValidationError("존재 하지 않는 문제입니다.")  
-    status = {"status":status, "reason":reason}
-    print status
-    return HttpResponse(json.dumps(dict(status=status)), mimetype='application/json')
+        return render(request, 'challenge/list.html', dict(fail=True))
+
+    try:
+        # Check Problem was solved
+        authLog = AuthLog.objects.get(user_id=request.user, prob_id=prob, auth_type=1)
+        return render(request, 'challenge/list.html', dict(solved=True))
+    except:
+        if prob.prob_auth == auth:
+            authType = 1
+            # UserProfile Save
+            user = request.user.get_profile()
+            user.score += prob.prob_point
+            last_solve_time = datetime.datetime.now()
+            user.save()
+            # Problem Data Save
+            prob.prob_solver += 1
+            prob.save()
+        else:
+            authType = 0
+        # Input authentication data in Authlog Database
+        authLog = AuthLog(prob_id=prob, user_id=request.user,
+                          auth_type=authType, auth_time=datetime.datetime.now(),
+                          auth_ip=request.META['REMOTE_ADDR'], auth_value=auth)
+        authLog.save()
+    return render(request, 'challenge/list.html', dict(solve=True))

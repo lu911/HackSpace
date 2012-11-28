@@ -2,58 +2,61 @@
 {% block title %}Challenge{% endblock %}
 {% block challenge_active %}active{% endblock %}
 {% block content %}
-    <a href="/challenge/">All</a>
+{% if solved %}
+<script>
+alert("Already Solved!");
+location.href="/challenge/";
+</script>
+{% endif %}
+{% if solve %}
+<script>alert("Congratulation!");
+location.href="/challenge/";
+</script>
+{% endif %}
+{% if fail %}
+<script>
+alert("Wrong!");
+location.href="/challenge/";
+</script>
+{% endif %}
+
+<div style="width:60%;float:left;">
+<a href="/challenge/">All</a>
 {% for tag in tag_list %}
-    <a href="/challenge/?tag={{tag.id|urlencode}}">{{tag.tag|escape}}</a>
+<a href="/challenge/?tag={{tag.id|urlencode}}">{{tag.tag|escape}}</a>
 {% endfor %}
-<br />
-<table style="float:left">
+</div>
+<div style="width:40%;float:left;">
+    <form method="post" class="form-inline" action="/challenge/auth/">
+        <input type="text" name="auth" placeholder="Do not bruteforce!" />
+        <button type="submit" class="btn">Auth</button>
+        {% csrf_token %}
+    </form>
+</div>
+<hr />
+<table>
     <tbody>
         <tr>
         {% for prob in prob_data %}
             <th><button type="button" class="btn btn-large" onClick="printProb({{prob.id|escape}},'{{prob.prob_content|escape}}',{{prob.prob_point|escape}})">{{ prob.prob_name|escape }}</button></th>
-        {% if forloop.counter|divisibleby:"4" %} <!-- 4는 커스텀 정보-->
-        </tr>
-        {% endif %}
+            {% if forloop.counter|divisibleby:"6" %} <!-- 4는 커스텀 정보-->
+            </tr>
+            {% endif %}
         {% endfor %}
         </tr>
     </tbody>
 </table>
-
-<div style="float:left">
-    <table>
-        <tbody>
-            <tr><th id="prob-content"></tr>
-            <tr><th id="prob-score"></th>
-            <form method="post" id="auth-form">
-                {% csrf_token %}
-                <tr>
-                    <input type="hidden" id="prob-id" name="prob-id" />
-                    <th><input type="text" name="auth" placeholder="Do not bruteforce!" /></th>
-                    <th><button id="btn_send" type="submit" class="btn">Auth</button></th>
-                </tr>
-            </form>
-        </tbody>
-    </table>
+<hr>
+<div style="width:50%;float:left">
+    <p id="prob-score"></p>
+    <p id="prob-content"></p>
 </div>
 
 <script type="text/javascript">
     function printProb(id, content,score){
         $('#prob-id').val(id)
-        $('#prob-content').html(content);
-        $('#prob-score').html(score);
+        $('#prob-content').html("content<br>- " + content);
+        $('#prob-score').html("points : " + score);
     }
-
-    $('#auth-form').submit(function(){
-        $.post('/challenge/auth/',$(this).serialize(),function(data){
-        	console.log(data);
-            if(data.auth == "OK"){
-                alert("Clear !");
-            }else{
-                alert("Wrong !");
-            }
-        });
-        return false;
-    });
 </script>
 {% endblock %}
