@@ -21,10 +21,12 @@ location.href="/challenge/";
 {% endif %}
 
 <div style="width:60%;float:left;">
-<a href="/challenge/">All</a>
+<div class="btn-group">
+<a href="/challenge/"><button class="btn btn-info">All</button></a>
 {% for tag in tag_list %}
-<a href="/challenge/?tag={{tag.id|urlencode}}">{{tag.tag|escape}}</a>
+<a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn">{{tag.tag|escape}}</button></a>
 {% endfor %}
+</div>
 </div>
 <div style="width:40%;float:left;">
     <form method="post" class="form-inline" action="/challenge/auth/">
@@ -38,8 +40,12 @@ location.href="/challenge/";
     <tbody>
         <tr>
         {% for prob in prob_data %}
-            <th><button type="button" class="btn btn-large" onClick="printProb({{prob.id|escape}},'{{prob.prob_content|escape}}',{{prob.prob_point|escape}})">{{ prob.prob_name|escape }}</button></th>
-            {% if forloop.counter|divisibleby:"6" %} <!-- 4는 커스텀 정보-->
+            {% if prob.id in solvedProblems %}
+            <td><button type="button" class="btn btn-large btn-success disabled" onClick="printProb({{prob.id}},'{{prob.prob_content}}',{{prob.prob_point}})">{{ prob.prob_name }}</button></td>
+            {% else %}
+            <td><button type="button" class="btn btn-large btn-inverse" onClick="printProb({{prob.id}},'{{prob.prob_content}}',{{prob.prob_point}})">{{ prob.prob_name }}</button></td>
+            {% endif %}
+            {% if forloop.counter|divisibleby:"6" %} 
             </tr>
             {% endif %}
         {% endfor %}

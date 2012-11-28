@@ -11,11 +11,14 @@ import time
 @login_required(login_url='/login/')
 def ProbListView(request):
     try:
-        auth = request.POST.get('auth')
-        print auth
+        solvedProb = AuthLog.objects.filter(user_id=request.user, auth_type=1)
+        solvedProbIds = []
+        for prob in solvedProb:
+            solvedProbIds.append(prob.prob_id.id)
+        solvedProb=True
     except:
-        pass
-    print 'test'
+        solvedProb=False
+
     try:
         tagID = request.GET.get('tag', None)
         tagList = TagName.objects.all()
@@ -25,7 +28,8 @@ def ProbListView(request):
             raise ValueError
     except ValueError:
         probData=ProbTag.get_from_all_prob()
-    return render(request,'challenge/list.html',dict(tag_list=tagList, prob_data=probData))
+    return render(request,'challenge/list.html',dict(tag_list=tagList, prob_data=probData,
+                                                     solvedProblems=solvedProbIds, solvedProb=solvedProb))
 
 @login_required(login_url='/login/')
 def ChallengeAuthView(request):
@@ -41,6 +45,8 @@ def ChallengeAuthView(request):
         authLog = AuthLog.objects.get(user_id=request.user, prob_id=prob, auth_type=1)
         return render(request, 'challenge/list.html', dict(solved=True))
     except:
+        if prob.prob_flag == 0:
+            return redner(request, 'challenge/list.html', dict(fail=True))
         if prob.prob_auth == auth:
             authType = 1
             # UserProfile Save

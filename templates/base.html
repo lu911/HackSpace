@@ -38,7 +38,7 @@
                             {% endif %}
                             <li><a href="/logout/">Logout</a></li>
                         </ul>
-                        <p class="navbar-text pull-right">{{ user.username|escape }}</p>
+                        <p class="navbar-text pull-right">{{ user.username }}</p>
                         {% else %}
                             <li class="{% block login_active %}{% endblock %}"><a href="/login/">Login</a></li>
                             <li class="{% block register_active %}{% endblock %}"><a href="/register/">Register</a></li>
