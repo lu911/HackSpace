@@ -12,6 +12,8 @@ from rank.views import ShowRankView
 # admin.autodiscover()
 
 urlpatterns = patterns('',
+    url(r'^$', lambda request:render(request, 'index.html')),
+
     url(r'^register/', memberRegisterView),
     url(r'^login/', memberLoginView),
     url(r'^logout/', memberLogout),
@@ -20,11 +22,10 @@ urlpatterns = patterns('',
     url(r'^challenge/auth/',ChallengeAuthView),
 
     url(r'^rank/', ShowRankView),
-    
+
     url(r'^admin/', include('admin.urls')),
     url(r'^board/', include('board.urls')),
-    
-    
+
     url(r'^static/(?P<path>.*)', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^uploads/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'uploads'})
 )

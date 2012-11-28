@@ -7,7 +7,7 @@ from django.shortcuts import render
 
 @login_required(login_url='/login/')
 def ShowRankView(request):
-    users = UserProfile.objects.order_by('-score')[:10]
+    users = UserProfile.objects.order_by('-score')[:30]
     userlist = []
     for user in users:
         if user.score != 0:
