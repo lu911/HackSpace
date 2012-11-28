@@ -117,7 +117,7 @@
 		$('.last').find('.icon-remove').live('click',function(){
 			var id = $(this).attr('id');
 			user_id = id.split("-")[2];
-			if(confirm("유저를  삭제합니다."))
+			if(confirm("정말로 삭제할까요?\n게시글도 지워집니다."))
 			{
 				$.ajax(
 				{

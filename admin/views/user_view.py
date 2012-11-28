@@ -3,6 +3,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from member.models import UserProfile
+from board.models import Board
 from admin.forms import UserForm
 from collections import OrderedDict
 
@@ -17,7 +18,6 @@ def AdminUserInfoView(request):
         username=user.username, 
         email=user.email,
         nickname=user.first_name,
-        is_staff=user.is_staff,
         is_superuser=user.is_superuser,
         is_active=user.is_active
     )
@@ -30,11 +30,11 @@ def AdminUserManagerView(request):
     pages_count=dict()
     all_users={
         "super-users" : 
-            User.objects.filter(is_superuser=1).order_by("last_login"),
+            User.objects.filter(is_superuser=1).order_by("-last_login"),
         "active-users" : 
-            User.objects.filter(is_superuser=0, is_active=1).order_by("last_login"),
+            User.objects.filter(is_superuser=0, is_active=1).order_by("-last_login"),
         "block-users" : 
-            User.objects.filter(is_superuser=0, is_active=0).order_by("last_login")
+            User.objects.filter(is_superuser=0, is_active=0).order_by("-last_login")
     }
     for k, v in  all_users.iteritems():
         all_users[k]=v[:10]
@@ -56,11 +56,11 @@ def AdminUserListManagerView(request):
     pages_count=dict()
     all_users={
         "super-users" : 
-            User.objects.filter(is_superuser=1, username__icontains=search).order_by("last_login"),
+            User.objects.filter(is_superuser=1, username__icontains=search).order_by("-last_login"),
         "active-users" : 
-            User.objects.filter(is_superuser=0, is_active=1, username__icontains=search).order_by("last_login"),
+            User.objects.filter(is_superuser=0, is_active=1, username__icontains=search).order_by("-last_login"),
         "block-users" : 
-            User.objects.filter(is_superuser=0, is_active=0, username__icontains=search).order_by("last_login")
+            User.objects.filter(is_superuser=0, is_active=0, username__icontains=search).order_by("-last_login")
     }
     for k, v in  all_users.iteritems():
         all_users[k]=v[10*(pages[k]-1):10*(pages[k]-1)+10]
@@ -86,7 +86,6 @@ def AdminModifyUserView(request):
                 user.set_password(form.cleaned_data['password'] or user.password)
                 user.first_name = form.cleaned_data['nickname']
                 user.email = form.cleaned_data['email']
-                user.is_staff = form.cleaned_data['is_staff']
                 user.is_superuser = form.cleaned_data['is_superuser']
                 user.is_active = form.cleaned_data['is_active']
                 user.save()
@@ -105,8 +104,10 @@ def AdminDeleteUserView(request):
         try:
             user = User.objects.get(id=user_id)
             profile = UserProfile.objects.get(user=user)
+            board = Board.objects.filter(user=user)
             user.delete()
             profile.delete()
+            board.delete()
             status = "OK"
         except User.DoesNotExist:
             pass
