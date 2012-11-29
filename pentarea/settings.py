@@ -1,7 +1,8 @@
 # Django settings for pentarea project.
 
-import os.path
 import dbcon
+import os
+
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -96,6 +97,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -119,6 +121,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'debug_toolbar',
     'member',
     'challenge',
     'rank',
@@ -130,6 +133,23 @@ INSTALLED_APPS = (
     # 'django.contrib.admindocs',
 )
 
+INTERNAL_IPS = (
+    '127.0.0.1',
+    '211.209.168.177',
+)
+
+DEBUG_TOOLBAR_PANELS = (
+    'debug_toolbar.panels.version.VersionDebugPanel',
+    'debug_toolbar.panels.timer.TimerDebugPanel',
+    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
+    'debug_toolbar.panels.headers.HeaderDebugPanel',
+    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
+    'debug_toolbar.panels.template.TemplateDebugPanel',
+    'debug_toolbar.panels.sql.SQLDebugPanel',
+    'debug_toolbar.panels.signals.SignalDebugPanel',
+    'debug_toolbar.panels.logger.LoggingPanel',
+)
+
 AUTH_PROFILE_MODULE = 'member.UserProfile'
 
 # A sample logging configuration. The only tangible logging
@@ -137,26 +157,60 @@ AUTH_PROFILE_MODULE = 'member.UserProfile'
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
+VENV_ROOT = os.path.join('.')
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
         }
     },
     'handlers': {
+        'file_userlogins': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': os.path.join(VENV_ROOT, 'log', 'userlogins.log')
+        },
+
+        'file_usersaves': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'formatter': 'verbose',
+            'filename': os.path.join(VENV_ROOT, 'log', 'usersaves.log')
+        },
         'mail_admins': {
             'level': 'ERROR',
             'filters': ['require_debug_false'],
             'class': 'django.utils.log.AdminEmailHandler'
-        }
+        },
     },
     'loggers': {
+        'logview.userlogins': {
+            'handlers': ['file_userlogins'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+
+        'logview.usersaves': {
+            'handlers': ['file_usersaves'],
+            'level': 'INFO',
+            'propagate': True,
+        },
         'django.request': {
             'handlers': ['mail_admins'],
             'level': 'ERROR',
             'propagate': True,
         },
-    }
+    },
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse'
+        }
+    },
 }
