@@ -1,6 +1,7 @@
 # Django settings for pentarea project.
 
 import os.path
+import dbcon
 PROJECT_PATH = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -13,12 +14,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'pentarea',                      # Or path to database file if using sqlite3.
-        'USER': 'pentarea',                      # Not used with sqlite3.
-        'PASSWORD': 'bob123@mysql',                  # Not used with sqlite3.
-        'HOST': 'localhost',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '3306',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.'+dbcon.engine, # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': dbcon.name,                      # Or path to database file if using sqlite3.
+        'USER': dbcon.username,                      # Not used with sqlite3.
+        'PASSWORD': dbcon.password,                  # Not used with sqlite3.
+        'HOST': dbcon.host,                      # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': dbcon.port,                      # Set to empty string for default. Not used with sqlite3.
     }
 }
 
