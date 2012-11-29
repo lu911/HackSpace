@@ -3128,6 +3128,7 @@ button.close {
   -webkit-border-radius: 5px;
      -moz-border-radius: 5px;
           border-radius: 5px;
+  margin:0 3px 0 3px;
 }
 
 .btn-large {

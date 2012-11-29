@@ -1,3 +1,9 @@
+<style>
+	#btn-prob-add{
+		float:right;
+	}
+</style>
+
 <form method="post" class="form-horizontal" id="problem-add-form"  enctype="multipart/form-data">
     <div class="control-group">
         <label class="control-label" for="inputProbName">문제 이름</label>
@@ -41,7 +47,7 @@
             {{ form.prob_file }} {{ form.prob_file.errors }}
         </div>
 	</div>
-    <input type="submit" value="추가" />
+    <input type="submit" value="추가" id="btn-prob-add"/>
     {% csrf_token %}
 </form>
 

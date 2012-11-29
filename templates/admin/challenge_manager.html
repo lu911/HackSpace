@@ -218,8 +218,7 @@
 		});
 		$('#tag-add-form').live('submit',function(){
 			$.post("/admin/add-tag/",$(this).serialize(),function(data){
-				$('#challenge-content').hide().html(data).fadeIn(700);
-				ReloadProbList();
+				location.href = location.href;
 			});
 			return false;
 		});
@@ -240,8 +239,8 @@
 				url:"/admin/add-prob/",
 				type:"post",
 				success: function(data){
-					$('#challenge-content').hide().html(data).fadeIn(700);
-					ReloadProbList();
+					//$('#challenge-content').hide().html(data).fadeIn(700);
+					location.href = location.href;
 				}
 			});
 			return false;

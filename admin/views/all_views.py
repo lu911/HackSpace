@@ -94,7 +94,6 @@ def AdminAddProblemManagerView(request):
                     problem = Problem(prob_name=form.cleaned_data['prob_name'],prob_content=form.cleaned_data['prob_content'],prob_point=form.cleaned_data['prob_point'],prob_auth=form.cleaned_data['prob_auth'],prob_flag=form.cleaned_data['prob_flag'],prob_file=form.cleaned_data['prob_file'])
                     problem.save()
                     ProbTag.objects.create(prob_id = problem, tag_id = form.cleaned_data['prob_tag'])
-                    return HttpResponseRedirect("/admin/modify-prob/?prob_id="+str(problem.id))
         else:
             form = ProblemForm()
         return render(request,'admin/prob_add_manager.html',dict(form=form))

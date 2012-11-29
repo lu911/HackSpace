@@ -1,4 +1,14 @@
-
+<style>
+	#tag-add-form dl dt, #tag-add-form dl dd{
+		float:left;
+	}
+	#tag-add-form dl dt{
+		margin-top:5px;
+	}
+	#btn-tag-add{
+		margin:3px 0 0 3px;
+	}
+</style>
 <form method="post" id="tag-add-form" >
     <fieldset>
         <dl class="form">
@@ -6,6 +16,6 @@
             <dd>{{form.tag}}</dd>
 		</dl>
 		{% csrf_token %}
-		<input type="submit" value="추가" />
+		<input type="submit" value="추가" id="btn-tag-add"/>
 	</fieldset>
 </form>
