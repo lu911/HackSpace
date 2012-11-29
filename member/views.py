@@ -7,13 +7,13 @@ from django.contrib.auth import login, logout
 from datetime import datetime
 
 def memberRegisterView(request):
-    if request.user.is_authenticated:
+    if request.user.is_active:
         return HttpResponseRedirect('/')
     if request.method == 'POST':
         form = RegisterForm(request.POST)
         if form.is_valid():
             register_user(form)
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/login/')
     else:
         form = RegisterForm(initial=request.GET)
     return render(request, 'registration/register.html', dict(form=form))
@@ -36,7 +36,7 @@ def memberLoginView(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return HttpResponseRedirect('/')
+            return render(request, 'index.html')
         else:
             return HttpResponseRedirect(request.GET.get('next', '/login/'))
     else:
@@ -45,4 +45,4 @@ def memberLoginView(request):
 
 def memberLogout(request):
     logout(request)
-    return HttpResponseRedirect('/login/')
+    return render(request, 'index.html')
