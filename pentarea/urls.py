@@ -5,7 +5,7 @@ import os
 from member.views import * 
 from challenge.views import *
 from admin.views import *
-from rank.views import ShowRankView
+from rank.views import ShowRankView, ShowRankGraphView
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
@@ -22,6 +22,7 @@ urlpatterns = patterns('',
     url(r'^challenge/auth/',ChallengeAuthView),
 
     url(r'^rank/', ShowRankView),
+    url(r'^rank2/', ShowRankGraphView),
 
     url(r'^admin/', include('admin.urls')),
     url(r'^board/', include('board.urls')),
