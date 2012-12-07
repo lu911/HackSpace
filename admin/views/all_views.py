@@ -99,7 +99,10 @@ def AdminAddProblemManagerView(request):
                                   prob_flag=form.cleaned_data['prob_flag'],
                                   prob_file=form.cleaned_data['prob_file'])
                 problem.save()
-                ProbTag.objects.create(prob_id = problem, tag_id = form.cleaned_data['prob_tag'])
+                tag = form.cleaned_data['prob_tag']
+                if not tag:
+                    tag = TagName.objects.get(id=1)
+                ProbTag.objects.create(prob_id = problem, tag_id = tag)
         else:
             form = ProblemForm()
         return render(request,'admin/prob_add_manager.html',dict(form=form))
