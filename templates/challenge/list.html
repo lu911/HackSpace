@@ -40,9 +40,9 @@ location.href="/challenge/";
         <tr>
         {% for prob in prob_data %}
             {% if prob.id in solvedProblems %}
-            <td><button type="button" class="btn btn-large btn-success disabled" onClick="printProb({{prob.id}},'{{prob.prob_content}}',{{prob.prob_point}})">{{ prob.prob_name }}</button></td>
+            <td><button type="button" class="btn btn-large btn-success disabled" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}})">{{ prob.prob_name }}</button></td>
             {% else %}
-            <td><button type="button" class="btn btn-large btn-inverse" onClick="printProb({{prob.id}},'{{prob.prob_content}}',{{prob.prob_point}})">{{ prob.prob_name }}</button></td>
+            <td><button type="button" class="btn btn-large btn-inverse" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}})">{{ prob.prob_name }}</button></td>
             {% endif %}
             {% if forloop.counter|divisibleby:"6" %} 
             </tr>
