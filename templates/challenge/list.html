@@ -40,9 +40,9 @@ location.href="/challenge/";
         <tr>
         {% for prob in prob_data %}
             {% if prob.id in solvedProblems %}
-            <td><button type="button" class="btn btn-large btn-success disabled" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}})">{{ prob.prob_name }}</button></td>
+            <td><button type="button" class="btn btn-large btn-success disabled" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}}, {{prob.prob_file}})">{{ prob.prob_name }}</button></td>
             {% else %}
-            <td><button type="button" class="btn btn-large btn-inverse" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}})">{{ prob.prob_name }}</button></td>
+            <td><button type="button" class="btn btn-large btn-inverse" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}}, '{{prob.prob_file}}')">{{ prob.prob_name }}</button></td>
             {% endif %}
             {% if forloop.counter|divisibleby:"6" %} 
             </tr>
@@ -57,10 +57,16 @@ location.href="/challenge/";
 </div>
 
 <script type="text/javascript">
-    function printProb(id, content,score){
+    function printProb(id, content,score,file){
+    	if(file.length > 0){
+    		var file_data = "<br/><br/> <a target='blank' href='/uploads/challenge/" + file +"'>FILE DOWNLOAD</a>";
+       	}else{
+       		var file_data = "";
+       	}
         $('#prob-id').val(id)
-        $('#prob-content').html("content<br>- " + content);
+        $('#prob-content').html("content<br>- " + content + file_data);
         $('#prob-score').html("points : " + score);
+        
     }
 </script>
 {% endblock %}

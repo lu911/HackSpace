@@ -47,6 +47,14 @@ class TagName(models.Model):
     
     def getProblemCount(self):
         return len(ProbTag.get_from_prob(self))
+        
+    @classmethod
+    def get_from_all_opened_tag(cls):
+        results = []
+        for tag in TagName.objects.all():
+            if len(ProbTag.get_from_opened_prob(tag)) > 0:
+                results.append(tag)
+        return results
 
 class ProbTag(models.Model):
     prob_id = models.ForeignKey(Problem)
@@ -55,6 +63,22 @@ class ProbTag(models.Model):
     @classmethod
     def get_from_prob(cls,tag):
         return [prob_tag.prob_id for prob_tag in ProbTag.objects.filter(tag_id=tag)]
+
+    @classmethod
+    def get_from_opened_prob(cls,tag):
+        results = []
+        for prob_tag in ProbTag.objects.filter(tag_id=tag):
+            if prob_tag.prob_id.prob_flag == 1:
+                results.append(prob_tag.prob_id)
+        return results
+
+    @classmethod
+    def get_from_all_opened_prob(cls):
+        results = []
+        for prob_tag in ProbTag.objects.all():
+            if prob_tag.prob_id.prob_flag == 1:
+                results.append(prob_tag.prob_id)
+        return results
 
     @classmethod
     def get_from_all_prob(cls):
