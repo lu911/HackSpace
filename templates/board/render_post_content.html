@@ -18,7 +18,7 @@
 <p>[{{ post.category.name }}] {{ post.time }}</p>
 <hr>
 <div style="width:80%">
-    <blockquote>{{ post.content }}</blockquote>
+    <blockquote>{{ post.content|linebreaksbr }}</blockquote>
 </div>
 <p class="text">Posted by {{ post.user.username }}</p>
 <hr>
