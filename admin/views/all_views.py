@@ -91,7 +91,6 @@ def AdminAddProblemManagerView(request):
         if request.method == 'POST':
             form = ProblemForm(request.POST, request.FILES)
             if form.is_valid():
-                form.cleaned_data['prob_name'] = form.cleaned_data['prob_name'].replace(' ', '_')
                 problem = Problem(prob_name=form.cleaned_data['prob_name'],
                                   prob_content=form.cleaned_data['prob_content'],
                                   prob_point=form.cleaned_data['prob_point'],
@@ -128,7 +127,6 @@ def AdminModifyProblemView(request):
             if request.method == 'POST':
                 form = ProblemForm(request.POST, request.FILES)
                 if form.is_valid():
-                    form.cleaned_data['prob_name'] = form.cleaned_data['prob_name'].replace(' ', '_')
                     prob.prob_name = form.cleaned_data['prob_name']
                     prob.prob_content = form.cleaned_data['prob_content']
                     prob.prob_flag = form.cleaned_data['prob_flag']
