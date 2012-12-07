@@ -15,7 +15,7 @@ import json
 def ShowSolveStatusView(request):
     if request.user.is_superuser:
         all_problems = Problem.objects.all()
-        solved_problems = Problem.objects.filter(~Q(prob_solver=0))
+        solved_problems = Problem.objects.filter(~Q(prob_solver=0)).order_by('-prob_solver')[:10]
         return render(request, 'admin/solve_status/render_solve_status.html',
                                 dict(all_problems=all_problems,
                                      solved_problems=solved_problems))
