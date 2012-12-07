@@ -119,7 +119,6 @@ def AdminModifyProblemView(request):
                 'prob_name' : prob.prob_name,
                 'prob_content' : prob.prob_content,
                 'prob_point' : prob.prob_point,
-                'prob_auth' : prob.prob_auth,
                 'prob_flag' : prob.prob_flag,
                 'prob_tag'  : prob_tag.tag_id,
                 'prob_file' : prob.prob_file
@@ -130,7 +129,10 @@ def AdminModifyProblemView(request):
                     prob.prob_name = form.cleaned_data['prob_name']
                     prob.prob_content = form.cleaned_data['prob_content']
                     prob.prob_flag = form.cleaned_data['prob_flag']
-                    prob.prob_auth = form.cleaned_data['prob_auth']
+                    if form.cleaned_data['prob_auth']:
+                        prob.prob_auth = form.cleaned_data['prob_auth']
+                    else:
+                        prob.prob_auth = prob.prob_auth
                     prob.prob_point = form.cleaned_data['prob_point']
                     prob_tag.tag_id = form.cleaned_data['prob_tag']
                     if form.cleaned_data['prob_file']:
