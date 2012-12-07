@@ -46,7 +46,7 @@ def ChallengeAuthView(request):
         return render(request, 'challenge/list.html', dict(solved=True))
     except:
         if prob.prob_flag == 0:
-            return redner(request, 'challenge/list.html', dict(fail=True))
+            return render(request, 'challenge/list.html', dict(fail=True))
         if prob.prob_auth == auth:
             authType = 1
             # UserProfile Save

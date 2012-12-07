@@ -81,7 +81,7 @@ $(function () {
         {% for problem in all_problems %}
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td><a href="/admin/solver/{{ problem.prob_name }}/">{{ problem.prob_name }}</a></td>
+            <td><a href="/admin/solver/{{ problem.id }}/">{{ problem.prob_name }}</a></td>
             <td>{{ problem.prob_solver }}</td>
         </tr>
         {% endfor %}

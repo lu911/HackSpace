@@ -21,21 +21,20 @@ location.href="/challenge/";
 {% endif %}
 
 <div style="width:60%;float:left;">
-<div class="btn-group">
-<a href="/challenge/"><button class="btn btn-info">All</button></a>
-{% for tag in tag_list %}
-<a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn">{{tag.tag|escape}}</button></a>
-{% endfor %}
+    <div class="btn-group">
+    <a href="/challenge/"><button class="btn btn-info">All</button></a>
+    {% for tag in tag_list %}
+    <a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn">{{tag.tag|escape}}</button></a>
+    {% endfor %}
+    </div>
 </div>
-</div>
-<div style="width:40%;float:left;">
+<div style="float:left;">
     <form method="post" class="form-inline" action="/challenge/auth/">
         <input type="text" name="auth" placeholder="Do not bruteforce!" />
         <button type="submit" class="btn">Auth</button>
         {% csrf_token %}
     </form>
 </div>
-<hr />
 <table>
     <tbody>
         <tr>
@@ -52,8 +51,7 @@ location.href="/challenge/";
         </tr>
     </tbody>
 </table>
-<hr>
-<div style="width:50%;float:left">
+<div style="float:left">
     <p id="prob-score"></p>
     <p id="prob-content"></p>
 </div>

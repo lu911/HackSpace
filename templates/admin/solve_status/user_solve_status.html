@@ -70,7 +70,9 @@ $(function () {
 {% if message %}
     <h3>{{ message }}</h3>
 {% else %}
+{% if chart_render and score %}
 <div id="chart_container" style="min-width:400px; height: 400px; margin: 0 auto"></div>
+{% endif %}
 <br>
 <table class="table table-hover" style="width:100%">
     <tr class="info">

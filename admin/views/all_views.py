@@ -53,12 +53,12 @@ def SearchUserView(request):
         return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
-def ShowSolverStatusView(request, problem_name):
+def ShowSolverStatusView(request, prob_id):
     if request.user.is_superuser:
-        problem = Problem.objects.get(prob_name=problem_name)
+        problem = Problem.objects.get(id=prob_id)
         solvers = AuthLog.objects.filter(prob_id=problem.id, auth_type=1)
         return render(request, 'admin/solve_status/solver_list.html',
-                                dict(problem=problem_name,
+                                dict(problem=problem,
                                      solvers=solvers))
     else:
         return HttpResponseRedirect('/')
@@ -91,9 +91,15 @@ def AdminAddProblemManagerView(request):
         if request.method == 'POST':
             form = ProblemForm(request.POST, request.FILES)
             if form.is_valid():
-                    problem = Problem(prob_name=form.cleaned_data['prob_name'],prob_content=form.cleaned_data['prob_content'],prob_point=form.cleaned_data['prob_point'],prob_auth=form.cleaned_data['prob_auth'],prob_flag=form.cleaned_data['prob_flag'],prob_file=form.cleaned_data['prob_file'])
-                    problem.save()
-                    ProbTag.objects.create(prob_id = problem, tag_id = form.cleaned_data['prob_tag'])
+                form.cleaned_data['prob_name'] = form.cleaned_data['prob_name'].replace(' ', '_')
+                problem = Problem(prob_name=form.cleaned_data['prob_name'],
+                                  prob_content=form.cleaned_data['prob_content'],
+                                  prob_point=form.cleaned_data['prob_point'],
+                                  prob_auth=form.cleaned_data['prob_auth'],
+                                  prob_flag=form.cleaned_data['prob_flag'],
+                                  prob_file=form.cleaned_data['prob_file'])
+                problem.save()
+                ProbTag.objects.create(prob_id = problem, tag_id = form.cleaned_data['prob_tag'])
         else:
             form = ProblemForm()
         return render(request,'admin/prob_add_manager.html',dict(form=form))
@@ -118,7 +124,8 @@ def AdminModifyProblemView(request):
             }
             if request.method == 'POST':
                 form = ProblemForm(request.POST, request.FILES)
-                if form.is_valid(): 
+                if form.is_valid():
+                    form.cleaned_data['prob_name'] = form.cleaned_data['prob_name'].replace(' ', '_')
                     prob.prob_name = form.cleaned_data['prob_name']
                     prob.prob_content = form.cleaned_data['prob_content']
                     prob.prob_flag = form.cleaned_data['prob_flag']
