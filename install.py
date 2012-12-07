@@ -4,31 +4,26 @@ import getpass
 import os
 import subprocess
 
-try:
-    input = raw_input
-except:
-    pass
+def CommandInfo():
+    print "python install.py install - install Pentarea"
+    print "                  remove - delete Database setting and all data about pentarea"
+    print "                  resetting - setting database again (not delete tables and data)"
+    print "                  createsuperuser - make administrator"
 
-engine=name=username=port=password=''
-
-if len(sys.argv) < 2:
-    print "python install.py install"
-    print "                  remove"
-elif sys.argv[1] == "install":
-    if os.path.isfile("./pentarea/dbcon.py"):
-        print "already installed..."
-        print "remove first.."
-        sys.exit(1)
-
-    print "please input DB engine... "
-    print "postgresql_psycopg2, mysql, sqlite3, oracle"
+def DBSetting():
+    engine=name=username=port=password=''
+    print "please check DB character set first!, Django DB follow your DB character set"
+    print "input DB engine... "
+    print "postgresql_psycopg2, mysql, sqlite3, oracle (blank = sqlite3)"
     engine = input("engine: ")
-    if engine not in ["postgresql_psycopg2", "mysql", "sqlite3", "oracle"]:
+    if engine not in ["postgresql_psycopg2", "mysql", "sqlite3", "oracle", '']:
         print "Wrong engine..."
         sys.exit(1)
+    if engine == '':
+        engine = "sqlite3"
     if engine == "sqlite3":
         name = input("db file name: ")
-    if engine != "sqlite3":
+    else:
         name = input("db name: ")
         username = input("db username: ")
         password=getpass.getpass("db password: ")
@@ -59,16 +54,17 @@ elif sys.argv[1] == "install":
     for line in manage.stdout.readlines():
         if line.find("yes/no") == -1:
             sys.stdout.write(line)
-    print "\nCreating superuser..."
-    os.system("python manage.py createsuperuser")
-    print "\n'python manage.py runserver IP:PORT' makes you can access the page.."
-elif sys.argv[1] == "remove":
+ 
+def RemoveDBSetting():
+    os.remove("./pentarea/dbcon.py")
+    os.remove("./pentarea/dbcon.pyc")
+
+def RemoveDBData():
     from pentarea.settings import INSTALLED_APPS
     if os.path.isfile("./pentarea/dbcon.py"):
         import pentarea.dbcon
         if(pentarea.dbcon.engine == "sqlite3"):
             os.remove(pentarea.dbcon.name)
-            sys.exit(0)
         else:
             for app in INSTALLED_APPS:
                 if app.find("django.contrib.") is -1:
@@ -77,7 +73,36 @@ elif sys.argv[1] == "remove":
                 if app.find("django.contrib.") is not -1:
                     app=app.replace("django.contrib.", "")
                     os.system("python manage.py sqlclear "+app+"| python manage.py dbshell")
-    os.remove("./pentarea/dbcon.py")
-    os.remove("./pentarea/dbcon.pyc")
-    print "Done!"
+ 
+def CreateSuperuser():
+    print "Creating superuser..."
+    os.system("python manage.py createsuperuser")
+ 
+try:
+    input = raw_input
+except:
+    pass
 
+if len(sys.argv) < 2:
+    CommandInfo()
+elif sys.argv[1] == "install":
+    if os.path.isfile("./pentarea/dbcon.py"):
+        print "already installed..."
+        sys.exit(1)
+    DBSetting()
+    CreateSuperuser()
+    print "\n'python manage.py runserver IP:PORT' makes you can access the page.."
+elif sys.argv[1] == "remove":
+    print "This command remove all your DB data.."
+    print "Really?(Y/n)"
+    decision = input()
+    if decision == "Y":
+        RemoveDBData()
+        RemoveDBSetting()
+        print "Done!"
+elif sys.argv[1] == "resetting":
+    DBSetting()
+elif sys.argv[1] == "createsuperuser":
+    CreateSuperuser()
+else:
+    CommandInfo()
