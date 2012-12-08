@@ -47,6 +47,7 @@ class ServerOnOffForm(forms.Form):
         (0, "LEVEL 0"),
         (1, "LEVEL 1"),
         (2, "LEVEL 2"),
+        (3, "LEVEL 3"),
     )
 
     on_off_level = forms.TypedChoiceField(label=u'On/Off Level', coerce=int, choices=ONOFF_CHOICE)

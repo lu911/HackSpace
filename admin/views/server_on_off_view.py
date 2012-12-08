@@ -10,9 +10,25 @@ def ServerOnOffView(request):
     form = ServerOnOffForm(request.POST)
     if form.is_valid():
         on_off_level = form.cleaned_data['on_off_level']
-        cache.set('on_off_level', str(on_off_level))
+        f=open("on_off", "wb")
+        f.write(str(on_off_level))
+        f.close();
 
     form = ServerOnOffForm()
-    on_off_level = cache.get('on_off_level') 
+    on_off_level = 0
+    try:
+        on_off_level = open("on_off", "r").read()
+    except:
+        on_off_leve = "0"
     return render(request,'admin/server_on_off.html', dict(form=form, on_off_level = on_off_level))
+
+def CheckOnOffLevel(level):
+    onOffLevel = "0"
+    try:
+        onOffLevel = open("on_off", "r").read()
+    except:
+        onOffLevel = "0"
+    if int(onOffLevel) < level:
+        return -1
+    return int(onOffLevel)
 

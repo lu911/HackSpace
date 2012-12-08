@@ -38,9 +38,11 @@
                             {% endfor %}
                         </dl>
                         {% csrf_token %}
-                        Level 0 : close challenge page.<br />
-                        Level 1 : open challenge page, but can not auth<br />
-                        Level 2 : open challenge page, users can auth<br />
+                        Level 0 : close challenge, close register page.<br />
+                        Level 1 : close challenge page.<br />
+                        Level 2 : open challenge page, but can not auth<br />
+                        Level 3 : open challenge page, users can auth<br />
+                        * but superuser ignore this setting<br />
                          <input class="btn" type="submit" value="modify"/>
                     </fieldset>
                 </form>

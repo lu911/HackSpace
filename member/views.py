@@ -5,6 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import login, logout
 from datetime import datetime
+from admin.views.server_on_off_view import CheckOnOffLevel
 
 def memberRegisterView(request):
     if request.user.is_active:
@@ -19,6 +20,11 @@ def memberRegisterView(request):
     return render(request, 'member/register.html', dict(form=form))
 
 def register_user(form):
+    onOffLevel = CheckOnOffLevel(1)
+    if onOffLevel == -1:
+        return HttpResponse("This page is closed...")
+
+
     user = User.objects.create_user(
         username=form.cleaned_data['username'],
         password=form.cleaned_data['password'],

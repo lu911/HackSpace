@@ -5,21 +5,15 @@ from django.contrib.auth.decorators import login_required
 from member.models import UserProfile
 from django.http import HttpResponse
 from django.core.cache import cache
+from admin.views.server_on_off_view import CheckOnOffLevel
 import json
 import datetime
 import time
 
-def CheckOnOffLevel(level):
-    onOffLevel = cache.get("on_off_level")
-    if onOffLevel is None:
-        onOffLevel = 0
-    if onOffLevel < level:
-        return -1
-    return onOffLevel
 @login_required(login_url='/login/')
 def ProbListView(request):
-    onOffLevel = CheckOnOffLevel(1)
-    if onOffLevel == -1:
+    onOffLevel = CheckOnOffLevel(2)
+    if onOffLevel == -1 and not request.user.is_superuser:
         return HttpResponse("This page is closed...")
 
 
@@ -43,12 +37,11 @@ def ProbListView(request):
         probData=ProbTag.get_from_all_opened_prob()
     return render(request,'challenge/list.html',dict(tag_list=tagList,
                                                      prob_data=probData,
-                                                     solved_problems=solvedProbIds,
-                                                     onOffLevel=onOffLevel))
+                                                     solved_problems=solvedProbIds))
 
 @login_required(login_url='/login/')
 def ChallengeAuthView(request):
-    if CheckOnOffLevel(2) == -1:
+    if CheckOnOffLevel(3) == -1 and not request.user.is_superuser:
         return HttpResponse("This page is closed...")
 
     auth = request.POST.get('auth')
