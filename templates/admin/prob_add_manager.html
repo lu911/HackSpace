@@ -47,27 +47,8 @@
             {{ form.prob_file }} {{ form.prob_file.errors }}
         </div>
 	</div>
-    <input type="submit" value="추가" id="btn-prob-add"/>
+    <div class="control-group">
+        <button type="submit" id="btn-prob-add" class="btn">추가</button>
+    </div>
     {% csrf_token %}
 </form>
-
-    <!--
-    <fieldset>
-        <dl>
-        	<dt>{{form.prob_name.label_tag}}</dt>
-        	<dd>{{ form.prob_name }} {{ form.prob_name.errors }}</dd>
-        	<dt>{{form.prob_content.label_tag}}</dt>
-        	<dd>{{ form.prob_content }} {{ form.prob_content.errors }}</dd>
-        	<dt>{{form.prob_point.label_tag}}</dt>
-        	<dd>{{ form.prob_point }} {{ form.prob_point.errors }}</dd>
-        	<dt>{{form.prob_auth.label_tag}}</dt>
-        	<dd>{{ form.prob_auth }} {{ form.prob_auth.errors }}</dd>
-        	<dt>{{form.prob_flag.label_tag}}</dt>
-        	<dd>{{ form.prob_flag }} {{ form.prob_flag.errors }}</dd>
-        	<dt>{{form.prob_tag.label_tag}}</dt>
-        	<dd>{{ form.prob_tag }} {{ form.prob_tag.errors }}</dd>
-        	
-        </dl>
-        {% csrf_token %}
-		<input type="submit" value="수정" />
-	</fieldset>-->

@@ -1,14 +1,12 @@
 #-*-coding:utf-8-*-
+from django.db.models import Q
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.http import HttpResponseRedirect, HttpResponse
 
 from challenge.models import Problem, AuthLog
-from admin.forms import TagForm, ProblemForm
 
-import json
 @login_required(login_url='/login/')
 def ShowSolveStatusView(request):
     if request.user.is_superuser:

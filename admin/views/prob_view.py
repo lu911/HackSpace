@@ -1,7 +1,11 @@
+#-*-coding:utf-8-*-
 from django.shortcuts import render
-from django.http import HttpResponseRedirect, HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect, HttpResponse
+
+from admin.forms import TagForm, ProblemForm
 from challenge.models import Problem, TagName, ProbTag
+import json
 
 @login_required(login_url='/login/')
 def AdminProblemListManagerView(request):
