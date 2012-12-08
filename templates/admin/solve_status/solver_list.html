@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{problem.prob_name}} - solvers {% endblock %}
+{% block admin_active %}active{% endblock %}
 {% block content %}
 <form method="POST" class="form-search" action="/admin/user/">
     <div class="input-append">

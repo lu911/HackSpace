@@ -16,7 +16,7 @@ def memberRegisterView(request):
             return HttpResponseRedirect('/login/')
     else:
         form = RegisterForm(initial=request.GET)
-    return render(request, 'registration/register.html', dict(form=form))
+    return render(request, 'member/register.html', dict(form=form))
 
 def register_user(form):
     user = User.objects.create_user(
@@ -41,7 +41,7 @@ def memberLoginView(request):
             return HttpResponseRedirect(request.GET.get('next', '/login/'))
     else:
         form = AuthenticationForm()
-    return render(request, 'registration/login.html', dict(form=form, next=request.GET.get('next', '/login/')))
+    return render(request, 'member/login.html', dict(form=form, next=request.GET.get('next', '/login/')))
 
 def memberLogout(request):
     logout(request)

@@ -26,7 +26,7 @@
         <div class="navbar navbar-inverse navbar-fixed-top">
             <div class="navbar-inner">
                 <div class="container">
-                    <a class="brand" href="/">HackSpace</a>
+                    <a class="brand {% block main_active %}{% endblock %}" href="/">HackSpace</a>
                     <div class="nav">
                         <ul class="nav">
                         {% if user.is_authenticated %}
@@ -34,11 +34,12 @@
                             <li class="{% block rank_active %}{% endblock %}"><a href="/rank/">Rank</a></li>
                             <li class="{% block board_active %}{% endblock %}"><a href="/board/">Board</a></li>
                             {% if user.is_superuser %}
-                            <li class="active"><a href="/admin/">Admin</a></li>
+                            <li class="{% block admin_active %}{% endblock %}"><a href="/admin/">Admin</a></li>
                             {% endif %}
                             <li><a href="/logout/">Logout</a></li>
                         </ul>
-                        <p class="navbar-text pull-right">{{ user.username }}</p>
+                        {% load admin_filter %}
+                        <p class="navbar-text pull-right">{{ user }} ( {{ user|getScore }} )</p>
                         {% else %}
                             <li class="{% block login_active %}{% endblock %}"><a href="/login/">Login</a></li>
                             <li class="{% block register_active %}{% endblock %}"><a href="/register/">Register</a></li>

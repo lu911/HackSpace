@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% block title %}{{ username }} - Status {% endblock %}
+{% block admin_active %}active{% endblock %}
 {% block js_external %}
 {% if chart_render and score %}
 <script type="text/javascript">
