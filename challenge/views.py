@@ -47,7 +47,7 @@ def ChallengeAuthView(request):
     auth = request.POST.get('auth')
     try:
         # Check Problem for auth
-        prob = Problem.objects.get(prob_auth=auth)
+        prob = Problem.objects.get(prob_auth__regex="^("+auth+")$")
     except Problem.DoesNotExist:
         return render(request, 'challenge/list.html', dict(fail=True))
 
