@@ -43,7 +43,7 @@ location.href="/challenge/";
     <tbody>
         <tr>
         {% for prob in prob_data %}
-            {% if prob.id in solvedProblems %}
+            {% if prob.id in solved_problems %}
             <td><button type="button" class="btn btn-large btn-success disabled" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}}, {{prob.prob_file}})">{{ prob.prob_name }}</button></td>
             {% else %}
             <td><button type="button" class="btn btn-large btn-inverse" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}}, '{{prob.prob_file}}')">{{ prob.prob_name }}</button></td>

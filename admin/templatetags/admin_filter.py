@@ -10,8 +10,11 @@ def highlight(text, search):
         text=mark_safe(text.replace(search, "<span class='highlight'>%s</span>" % search))
     return text
 def getScore(user):
-    score = UserProfile.objects.get(user_id=user)
-    return score.score
+    try:
+        score = UserProfile.objects.get(user_id=user)
+        return score.score
+    except:
+        return 0
 register.filter('getObject', getObject)
 register.filter('highlight', highlight)
 register.filter('getScore', getScore)

@@ -41,8 +41,10 @@ def ProbListView(request):
             raise ValueError
     except ValueError:
         probData=ProbTag.get_from_all_opened_prob()
-    return render(request,'challenge/list.html',dict(tag_list=tagList, prob_data=probData,
-                                                     solvedProblems=solvedProbIds, solvedProb=solvedProb, onOffLevel = onOffLevel))
+    return render(request,'challenge/list.html',dict(tag_list=tagList,
+                                                     prob_data=probData,
+                                                     solved_problems=solvedProbIds,
+                                                     onOffLevel=onOffLevel))
 
 @login_required(login_url='/login/')
 def ChallengeAuthView(request):
