@@ -22,9 +22,9 @@ location.href="/challenge/";
 
 <div style="width:60%;float:left;">
     <div class="btn-group">
-    <a href="/challenge/"><button class="btn btn-info">All</button></a>
+    <a href="/challenge/"><button class="btn btn-info" id="tag-all">All</button></a>
     {% for tag in tag_list %}
-    <a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn">{{tag.tag|escape}}</button></a>
+    <a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn" id="tag-{{tag.id}}">{{tag.tag|escape}}</button></a>
     {% endfor %}
     </div>
 </div>
@@ -72,5 +72,37 @@ location.href="/challenge/";
         $('#prob-score').html("points : " + score);
         
     }
+ 	function getTagId(){   
+   	   document.$_GET = [];
+        var urlHalves = String(document.location).split('?');   
+        if(urlHalves[1]){
+            var urlVars = urlHalves[1].split('&');
+            for(var i=0; i<=(urlVars.length); i++){         
+                if(urlVars[i]){            
+                    var urlVarPair = urlVars[i].split('=');
+                    if(urlVarPair[0] == "tag"){
+                    	return urlVarPair[1];
+                    	break;
+                    }            
+                }      
+            }   
+		}        
+	}
+	function clearTag(){
+		$('.btn').removeClass('btn-info');
+	}
+	$(document).ready(function(){
+		var tagId = getTagId();
+		clearTag();
+		if(!tagId){
+			$('#tag-all').addClass('btn-info');
+		}else{
+			$('#tag-' + tagId).addClass('btn-info');
+		}
+	
+		
+	});
+
 </script>
 {% endblock %}
+
