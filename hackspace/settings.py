@@ -1,4 +1,4 @@
-# Django settings for pentarea project.
+# Django settings for hackspace project.
 
 import dbcon
 import os
@@ -102,10 +102,10 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'pentarea.urls'
+ROOT_URLCONF = 'hackspace.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'pentarea.wsgi.application'
+WSGI_APPLICATION = 'hackspace.wsgi.application'
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(os.path.dirname(__file__)), 'templates'),
