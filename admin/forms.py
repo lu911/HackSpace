@@ -41,3 +41,12 @@ class UserForm(forms.Form):
     email = forms.EmailField(label=u'Email')
     is_superuser = forms.TypedChoiceField(label=u'IS_SUPERUSER', coerce=int, choices=BOOL_CHOICE)
     is_active = forms.TypedChoiceField(label=u'IS_ACTIVE', coerce=int, choices=BOOL_CHOICE)
+
+class ServerOnOffForm(forms.Form):
+    ONOFF_CHOICE = (
+        (0, "LEVEL 0"),
+        (1, "LEVEL 1"),
+        (2, "LEVEL 2"),
+    )
+
+    on_off_level = forms.TypedChoiceField(label=u'On/Off Level', coerce=int, choices=ONOFF_CHOICE)

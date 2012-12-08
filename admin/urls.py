@@ -33,4 +33,6 @@ urlpatterns = patterns('',
     url(r'^delete-user/', AdminDeleteUserView),
     url(r'^admin-write/', AdminWritePostView),
     url(r'^userlist/', AdminUserListManagerView),
+
+    url(r'^server-onoff/', ServerOnOffView),
 )

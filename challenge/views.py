@@ -4,12 +4,25 @@ from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from member.models import UserProfile
 from django.http import HttpResponse
+from django.core.cache import cache
 import json
 import datetime
 import time
 
+def CheckOnOffLevel(level):
+    onOffLevel = cache.get("on_off_level")
+    if onOffLevel is None:
+        onOffLevel = 0
+    if onOffLevel < level:
+        return -1
+    return onOffLevel
 @login_required(login_url='/login/')
 def ProbListView(request):
+    onOffLevel = CheckOnOffLevel(1)
+    if onOffLevel == -1:
+        return HttpResponse("This page is closed...")
+
+
     try:
         solvedProb = AuthLog.objects.filter(user_id=request.user, auth_type=1)
         solvedProbIds = []
@@ -29,10 +42,13 @@ def ProbListView(request):
     except ValueError:
         probData=ProbTag.get_from_all_opened_prob()
     return render(request,'challenge/list.html',dict(tag_list=tagList, prob_data=probData,
-                                                     solvedProblems=solvedProbIds, solvedProb=solvedProb))
+                                                     solvedProblems=solvedProbIds, solvedProb=solvedProb, onOffLevel = onOffLevel))
 
 @login_required(login_url='/login/')
 def ChallengeAuthView(request):
+    if CheckOnOffLevel(2) == -1:
+        return HttpResponse("This page is closed...")
+
     auth = request.POST.get('auth')
     try:
         # Check Problem for auth
