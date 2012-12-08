@@ -1,5 +1,5 @@
 """
-WSGI config for pentarea project.
+WSGI config for hackspace project.
 
 This module contains the WSGI application used by Django's development server
 and any production WSGI deployments. It should expose a module-level variable
@@ -17,7 +17,7 @@ import os, sys
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)) + '/..')
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pentarea.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "hackspace.settings")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION

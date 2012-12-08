@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %} status {% endblock %}
+{% block js_external %}
+<script type="text/javascript">
+$(function () {
+    var chart;
+    $(document).ready(function() {
+        chart = new Highcharts.Chart({
+            chart: {
+                renderTo: 'container',
+                type: 'line',
+                marginRight: 130,
+                marginBottom: 25
+            },
+            title: {
+                text: 'HackSpace',
+                x: -20 //center
+            },
+            subtitle: {
+                text: 'Ranking',
+                x: -20
+            },
+            xAxis: {
+                categories: []
+            },
+            yAxis: {
+                title: {
+                    text: 'points'
+                },
+                plotLines: [{
+                    value: 0,
+                    width: 1,
+                    color: '#808080'
+                }]
+            },
+            tooltip: {
+                formatter: function() {
+                        return '<b>'+ this.series.name +'</b><br/>'+
+                        this.x +': '+ this.y +'points';
+                }
+            },
+            legend: {
+                layout: 'vertical',
+                align: 'right',
+                verticalAlign: 'top',
+                x: -10,
+                y: 100,
+                borderWidth: 0
+            },
+            series: [{% for user in data %}{ 
+                name: '{{ user.name }}',
+                data: {{ user.scores }} 
+            }{% if not forloop.last %},{% endif %}
+            {% endfor %}
+            ]
+        });
+    });
+    
+});
+</script>
+{% endblock %}
+{% block content %}
+<div id="container" style="min-width:100%; height:400px; margin:0 auto;float:left"></div>
+<script src="/static/js/highcharts.js"></script>
+<script src="/static/js/exporting.js"></script>
+{% endblock %}

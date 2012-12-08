@@ -6,7 +6,7 @@ import subprocess
 
 def CommandInfo():
     print "python install.py install - install Pentarea"
-    print "                  remove - delete Database setting and all data about pentarea"
+    print "                  remove - delete Database setting and all data about hackspace"
     print "                  resetting - setting database again (not delete tables and data)"
     print "                  createsuperuser - make administrator"
 
@@ -31,7 +31,7 @@ def DBSetting():
     if host not in ["localhost", "127.0.0.1"]:
         port = input("port: ")
 
-    fp=open("./pentarea/dbcon.py", "w")
+    fp=open("./hackspace/dbcon.py", "w")
     fp.write("engine= '"+engine+"'\n")
     fp.write("name= '"+name+"'\n")
     fp.write("username= '"+username+"'\n")
@@ -43,7 +43,7 @@ def DBSetting():
     manage.stdin.write("no\n")
     error = manage.stderr.readlines()
     if len(error) != 0:
-        os.remove("./pentarea/dbcon.py")
+        os.remove("./hackspace/dbcon.py")
         print "Error! please check your setting..."
         print "Do you want to see python error message??(Y/N)"
         decision = input()
@@ -56,15 +56,15 @@ def DBSetting():
             sys.stdout.write(line)
  
 def RemoveDBSetting():
-    os.remove("./pentarea/dbcon.py")
-    os.remove("./pentarea/dbcon.pyc")
+    os.remove("./hackspace/dbcon.py")
+    os.remove("./hackspace/dbcon.pyc")
 
 def RemoveDBData():
-    from pentarea.settings import INSTALLED_APPS
-    if os.path.isfile("./pentarea/dbcon.py"):
-        import pentarea.dbcon
-        if(pentarea.dbcon.engine == "sqlite3"):
-            os.remove(pentarea.dbcon.name)
+    from hackspace.settings import INSTALLED_APPS
+    if os.path.isfile("./hackspace/dbcon.py"):
+        import hackspace.dbcon
+        if(hackspace.dbcon.engine == "sqlite3"):
+            os.remove(hackspace.dbcon.name)
         else:
             for app in INSTALLED_APPS:
                 if app.find("django.contrib.") is -1:
@@ -86,7 +86,7 @@ except:
 if len(sys.argv) < 2:
     CommandInfo()
 elif sys.argv[1] == "install":
-    if os.path.isfile("./pentarea/dbcon.py"):
+    if os.path.isfile("./hackspace/dbcon.py"):
         print "already installed..."
         sys.exit(1)
     DBSetting()
