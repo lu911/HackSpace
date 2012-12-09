@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block title %} Board {% endblock %}
 {% block board_active %}active{% endblock %}
-{% block style_external %}
-<style type="text/css">
-    .menu {
-        margin-left: 95%
-    }
-</style>
-{% endblock %}
 {% block content %}
 <h1 class="pager">Board</h1>
-<div class="menu"><a href="/board/write-post/"><button type="button" class="btn">Write</button></a></div>
+<div class="row-fluid">
+    <div class="span4">
+    {% for category in categories %}
+    <a href="/board/{{ category.id }}"><button type="button" class="btn">{{ category.name }}</button></a>
+    {% endfor %}
+    </div>
+    <div class="span1 offset7"><a href="/board/write-post/"><button type="button" class="btn">Write</button></a></div>
+</div>
 <hr>
 <table class="table table-hover">
 <tr class="info">

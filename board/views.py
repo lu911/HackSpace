@@ -2,6 +2,7 @@
 from models import Board, Category
 from forms import PostForm, AdminPostForm
 
+from django.db.models import Q
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
@@ -27,9 +28,17 @@ def WritePostView(request):
             form = PostForm(initial=request.GET)
     return render(request, 'board/write_post.html', dict(form=form))
 
+@login_required
 def ShowPostListView(request):
     posts = Board.objects.order_by('category', '-time')
-    return render(request, 'board/render_post_list.html', dict(posts=posts))
+    categories = Category.objects.all()
+    return render(request, 'board/render_post_list.html', dict(posts=posts,
+                                                               categories=categories))
+def ShowPostOfCategoryListView(request, category_id):
+    posts = Board.objects.filter(category=category_id).order_by('-time')
+    categories = Category.objects.all()
+    return render(request, 'board/render_post_list.html', dict(posts=posts,
+                                                               categories=categories))
 
 @login_required(login_url='/login/')
 def ShowPostContentView(request, post_id):
