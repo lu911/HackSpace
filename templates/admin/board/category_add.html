@@ -12,10 +12,10 @@
                 {% endfor %}
             </ul>
         </div>
-        <div class="span3">
-            <p>Category Name</p>
-            <form method="post" class="form">
-                {{ form.category_name }}<br>
+        <div class="span6">
+            <form method="post" class="form-inline">
+                <p>Category Name</p>
+                {{ form.category_name }}
                 <button type="submit" class="btn">Add</button>
                 {% csrf_token %}
             </form>
@@ -39,7 +39,7 @@
                     <td>{{ post.category }}</td>
                     <td>{{ post.id }}</td>
                     <td>{{ post.user }}</td>
-                    <td>{{ post.title }}</td>
+                    <td><a href="/board/show-post/{{ post.id }}">{{ post.title }}</a></td>
                     <td>{{ post.time }}</td>
                 </tr>
                 {% endfor %}
