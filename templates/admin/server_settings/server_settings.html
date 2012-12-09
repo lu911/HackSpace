@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %} Server On/Off {% endblock %}
+{% block admin_active %}active{% endblock %}
+{% block content %}
+{% include "admin/header.html" %}
+<hr>
+<div class="container-fluid">
+    <div class="row-fluid">
+        <div class="span4" id="modify-content">
+            <div id="container" style="width:100%; height: 400px; margin:0">
+                <div id="wrap-modify-form">
+                    <form method="POST" id="modify-form" class="form-horizontal">
+                    {% for field in form.visible_fields %}
+                        {{ field.label_tag }}
+                        {{ field }} {{ field.errors }}
+                    {% endfor %}
+                    {% csrf_token %}
+                    <button type="submit" class="btn">Change</button>
+                    </form>
+                    <ul>
+                        <li>Level 0 : close challenge page.</li>
+                        <li>Level 1 : open challenge page, but can not auth.</li>
+                        <li>Level 2 : open challenge page, users can auth.</li>
+                    </ul>
+                </div>
+            </div>	
+        </div>
+        <div class="span4" id="rank-mod-select">
+            {% include "admin/server_settings/change_rank_mode.html" %}
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function(){
+        $("#id_on_off_level option[value='{{ on_off_level }}']").attr("selected", true);
+    });
+</script>
+{% endblock %}

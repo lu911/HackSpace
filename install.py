@@ -12,24 +12,23 @@ def CommandInfo():
 
 def DBSetting():
     engine=name=username=port=password=''
-    print "please check DB character set first!, Django DB follow your DB character set"
-    print "input DB engine... "
-    print "postgresql_psycopg2, mysql, sqlite3, oracle (blank = sqlite3)"
-    engine = input("engine: ")
+    print "please check DB character set first! Django DB follow your DB character set"
+    print "postgresql_psycopg2, mysql, sqlite3, oracle"
+    engine = input("DB Engine(sqlite3): ")
     if engine not in ["postgresql_psycopg2", "mysql", "sqlite3", "oracle", '']:
-        print "Wrong engine..."
+        print "%s is not supported." % engine
         sys.exit(1)
     if engine == '':
         engine = "sqlite3"
     if engine == "sqlite3":
-        name = input("db file name: ")
+        name = input("DB file name: ")
     else:
-        name = input("db name: ")
-        username = input("db username: ")
-        password=getpass.getpass("db password: ")
-    host = input("host: ")
+        name = input("DB name: ")
+        username = input("DB username: ")
+        password=getpass.getpass("DB password: ")
+    host = input("HOST: ")
     if host not in ["localhost", "127.0.0.1"]:
-        port = input("port: ")
+        port = input("PORT: ")
 
     fp=open("./hackspace/dbcon.py", "w")
     fp.write("engine= '"+engine+"'\n")
@@ -47,7 +46,7 @@ def DBSetting():
         print "Error! please check your setting..."
         print "Do you want to see python error message??(Y/N)"
         decision = input()
-        if decision == "Y":
+        if decision == "Y" or decision == "y":
             for line in error:
                 sys.stdout.write(line)
         sys.exit(1)
@@ -87,11 +86,11 @@ if len(sys.argv) < 2:
     CommandInfo()
 elif sys.argv[1] == "install":
     if os.path.isfile("./hackspace/dbcon.py"):
-        print "already installed..."
+        print "Already installed..."
         sys.exit(1)
     DBSetting()
     CreateSuperuser()
-    print "\n'python manage.py runserver IP:PORT' makes you can access the page.."
+    print "\n'$ python manage.py runserver IP:PORT'"
 elif sys.argv[1] == "remove":
     print "This command remove all your DB data.."
     print "Really?(Y/n)"

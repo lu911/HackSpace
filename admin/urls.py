@@ -35,4 +35,5 @@ urlpatterns = patterns('',
     url(r'^userlist/', AdminUserListManagerView),
 
     url(r'^server-onoff/', ServerOnOffView),
+    url(r'^change-rank/', RankModeChangeView),
 )

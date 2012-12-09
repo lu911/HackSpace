@@ -1,0 +1,12 @@
+<form method="POST" class="form-horizontal" action="/admin/change-rank/">
+{% for field in form2 %}
+    {{ field.label_tag }}
+    {{ field }} {{ field.errors }}
+{% endfor %}
+<button type="submit" class="btn">Change</button>
+{% csrf_token %}
+</form>
+<ul>
+    <li>TABLE : Show unlimited solvers</li>
+    <li>GRAPH : Show top 10 solvers</li>
+</ul>

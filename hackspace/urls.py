@@ -11,6 +11,15 @@ from rank.views import ShowRankView, ShowRankGraphView
 # from django.contrib import admin
 # admin.autodiscover()
 
+def rank(urlpatterns):
+    f = open("rank_mode", "r")
+    choice = f.readline()
+    f.close()
+    if choice == '0':
+        urlpatterns += patterns('', url(r'^rank/', ShowRankView))
+    else:
+        urlpatterns += patterns('', url(r'^rank/', ShowRankGraphView))
+
 urlpatterns = patterns('',
     url(r'^$', lambda request:render(request, 'index.html')),
 
@@ -21,12 +30,11 @@ urlpatterns = patterns('',
     url(r'^challenge/$', ProbListView),
     url(r'^challenge/auth/',ChallengeAuthView),
 
-    url(r'^rank/', ShowRankView),
-    url(r'^rank2/', ShowRankGraphView),
-
     url(r'^admin/', include('admin.urls')),
     url(r'^board/', include('board.urls')),
 
     url(r'^static/(?P<path>.*)', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^uploads/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'uploads'})
 )
+
+rank(urlpatterns)

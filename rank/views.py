@@ -25,7 +25,6 @@ def ShowRankGraphView(request):
     scores = [[0]*0 for i in xrange(users.count())]
     user = [ user.user.username for user in users ]
 
-
     sum = 0
     j = 0
     for i, solver in enumerate(solvers):
@@ -34,8 +33,10 @@ def ShowRankGraphView(request):
             scores[j].append(sum)
         else:
             j += 1
-            scores[j].append(int(solver.prob_id.prob_point))
-
+            try:
+                scores[j].append(int(solver.prob_id.prob_point))
+            except IndexError:
+                break
     data = []
     for i, score in enumerate(scores):
         data.append(dict(name=user[i],scores=score))

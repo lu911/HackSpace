@@ -8,22 +8,21 @@ from django.core.exceptions import ValidationError
 
 class TagForm(forms.Form):
     tag = forms.CharField(label=u'태그', max_length=32)
-    
-    
+
 class ProblemForm(forms.Form):
     GENDER_CHOICE = (
         ('1', '공개'),
         ('0', '비공개'),
     )
-    
+
     prob_name = forms.CharField(label=u'문제 이름')
     prob_content = forms.CharField(label=u'문제 내용', widget=forms.Textarea)
     prob_point = forms.CharField(label=u'문제 점수')
     prob_auth = forms.CharField(label=u'문제 정답')
     prob_flag = forms.ChoiceField(label=u'공개 여부', choices=GENDER_CHOICE)
     prob_tag = forms.ModelChoiceField(queryset=TagName.objects.all(), label=u'태그', required=False)
-    prob_file = forms.FileField(label=u'문제 파일', required=False)    
- 
+    prob_file = forms.FileField(label=u'문제 파일', required=False)
+
 class CategoryForm(forms.Form):
     category_name = forms.CharField(label=u'Category')
 
@@ -50,3 +49,14 @@ class ServerOnOffForm(forms.Form):
     )
 
     on_off_level = forms.TypedChoiceField(label=u'On/Off Level', coerce=int, choices=ONOFF_CHOICE)
+
+class RankModeChangeForm(forms.Form):
+    MODE_CHOICE = (
+        (0, "TABLE"),
+        (1, "GRAPH"),
+    )
+
+    f = open("rank_mode", "r")
+    choice = f.readline()
+    f.close()
+    mode = forms.TypedChoiceField(label=u'Mode Choice', coerce=str, choices=MODE_CHOICE, initial=choice)
