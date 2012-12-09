@@ -26,7 +26,7 @@ def SearchUserView(request):
             user = User.objects.get(username=username)
             solver_info = AuthLog.objects.filter(user_id=user.id, auth_type=1).order_by('auth_time')
             sum = 0
-            scores = []
+            scores = [0]
             for info in solver_info:
                 sum += info.prob_id.prob_point
                 scores.append(sum)

@@ -5,23 +5,11 @@ import os
 from member.views import * 
 from challenge.views import *
 from admin.views import *
-from rank.views import ShowRankView, ShowRankGraphView
+from rank.views import ShowRankView
 
 # Uncomment the next two lines to enable the admin:
 # from django.contrib import admin
 # admin.autodiscover()
-
-def rank(urlpatterns):
-    try:
-        f = open("rank_mode", "r")
-        choice = f.readline()
-        f.close()
-        if choice == '0':
-            urlpatterns += patterns('', url(r'^rank/', ShowRankView))
-        else:
-            urlpatterns += patterns('', url(r'^rank/', ShowRankGraphView))
-    except:
-        urlpatterns += patterns('', url(r'^rank/', ShowRankView))
 
 urlpatterns = patterns('',
     url(r'^$', lambda request:render(request, 'index.html')),
@@ -33,11 +21,11 @@ urlpatterns = patterns('',
     url(r'^challenge/$', ProbListView),
     url(r'^challenge/auth/',ChallengeAuthView),
 
+    url(r'^rank/', ShowRankView),
+
     url(r'^admin/', include('admin.urls')),
     url(r'^board/', include('board.urls')),
 
     url(r'^static/(?P<path>.*)', 'django.views.static.serve', {'document_root': 'static'}),
     url(r'^uploads/(?P<path>.*)$', 'django.views.static.serve', {'document_root': 'uploads'})
 )
-
-rank(urlpatterns)

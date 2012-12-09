@@ -56,10 +56,4 @@ class RankModeChangeForm(forms.Form):
         (0, "TABLE"),
         (1, "GRAPH"),
     )
-    try:
-        f = open("rank_mode", "r")
-        choice = f.readline()
-        f.close()
-    except:
-        choice = '0'
-    mode = forms.TypedChoiceField(label=u'Mode Choice', coerce=str, choices=MODE_CHOICE, initial=choice)
+    mode = forms.TypedChoiceField(label=u'Rank Mode Choice', coerce=str, choices=MODE_CHOICE)

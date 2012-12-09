@@ -34,8 +34,9 @@
 </div>
 
 <script type="text/javascript">
-	$(document).ready(function(){
+    $(document).ready(function(){
         $("#id_on_off_level option[value='{{ on_off_level }}']").attr("selected", true);
+        $("#id_mode option[value='{{ rank_mode }}']").attr("selected", true);
     });
 </script>
 {% endblock %}

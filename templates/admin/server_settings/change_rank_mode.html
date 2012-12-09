@@ -1,3 +1,4 @@
+{% load admin_filter %}
 <form method="POST" class="form-horizontal" action="/admin/change-rank/">
 {% for field in form2 %}
     {{ field.label_tag }}
