@@ -1,0 +1,15 @@
+<form method="POST" id="modify-form" class="form-horizontal">
+{% for field in form.visible_fields %}
+    {{ field.label_tag }}
+    {{ field }} {{ field.errors }}
+{% endfor %}
+{% csrf_token %}
+<button type="submit" class="btn">Change</button>
+</form>
+<h4>Superuser ignore this setting</h4>
+<ul>
+    <li>Level 0 : close challenge, close register page.</li>
+    <li>Level 1 : close challenge page.</li>
+    <li>Level 2 : open challenge page, but can not auth</li>
+    <li>Level 3 : open challenge page, users can auth</li>
+</ul>

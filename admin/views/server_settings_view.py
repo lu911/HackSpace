@@ -7,7 +7,7 @@ from django.core.cache import *
 
 @login_required(login_url='/login/')
 def ServerOnOffView(request):
-    if not request.user.is_superusr:
+    if not request.user.is_superuser:
         return HttpResponseRedirect('/')
 
     form = ServerOnOffForm(request.POST)
@@ -29,7 +29,9 @@ def ServerOnOffView(request):
         rank_mode = "0"
     return render(request,'admin/server_settings/server_settings.html', dict(form=form,
                                                                              form2=form2,
-                                                                             on_off_level=on_off_level))
+                                                                             rank_mode=rank_mode,
+                                                                             on_off_level=on_off_level,
+                                                                             on_off_level_alert=True))
 
 def CheckOnOffLevel(level):
     onOffLevel = "0"
@@ -66,4 +68,5 @@ def RankModeChangeView(request):
     return render(request,'admin/server_settings/server_settings.html', dict(form=form,
                                                                              form2=form2,
                                                                              rank_mode=rank_mode,
-                                                                             on_off_level=on_off_level))
+                                                                             on_off_level=on_off_level,
+                                                                             rank_mode_alert=True))
