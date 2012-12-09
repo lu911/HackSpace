@@ -1,10 +1,12 @@
 #-*-coding:utf-8-*-
-from models import *
+from models import Problem, AuthLog, TagName, ProbTag
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-from member.models import UserProfile
 from django.http import HttpResponse
 from django.core.cache import cache
+
+from member.models import UserProfile
 from admin.views.server_settings_view import CheckOnOffLevel
 import json
 import datetime
@@ -15,7 +17,6 @@ def ProbListView(request):
     onOffLevel = CheckOnOffLevel(2)
     if onOffLevel == -1 and not request.user.is_superuser:
         return HttpResponse("This page is closed...")
-
 
     try:
         solvedProb = AuthLog.objects.filter(user_id=request.user, auth_type=1)
@@ -35,7 +36,19 @@ def ProbListView(request):
             raise ValueError
     except ValueError:
         probData=ProbTag.get_from_all_opened_prob()
+
+    try:
+        selectedTag = request.GET.get('tag')
+        openedTags = TagName.get_from_all_opened_tag()
+        tags = []
+        for tag in openedTags:
+            tags.append(tag.id)
+        selectedTag = tags.index(int(selectedTag))+1
+    except:
+        selectedTag = 0
+
     return render(request,'challenge/list.html',dict(tag_list=tagList,
+                                                     selected_tag=selectedTag,
                                                      prob_data=probData,
                                                      solved_problems=solvedProbIds))
 

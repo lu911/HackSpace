@@ -4,27 +4,34 @@
 {% block content %}
 {% if solved %}
 <script>
-alert("Already Solved!");
-location.href="/challenge/";
+    alert("Already Solved!");
+    location.href="/challenge/";
 </script>
 {% endif %}
 {% if solve %}
 <script>alert("Congratulation!");
-location.href="/challenge/";
+    location.href="/challenge/";
 </script>
 {% endif %}
 {% if fail %}
 <script>
-alert("Wrong!");
-location.href="/challenge/";
+    alert("Wrong!");
+    location.href="/challenge/";
 </script>
 {% endif %}
-
 <div style="width:60%;float:left;">
     <div class="btn-group">
-    <a href="/challenge/"><button class="btn btn-info" id="tag-all">All</button></a>
+    {% if selected_tag == 0 %}
+        <a href="/challenge/"><button class="btn btn-info" id="tag-all">All</button></a>
+    {% else %}
+        <a href="/challenge/"><button class="btn" id="tag-all">All</button></a>
+    {% endif %}
     {% for tag in tag_list %}
-    <a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn" id="tag-{{tag.id}}">{{tag.tag|escape}}</button></a>
+    {% if selected_tag == forloop.counter %}
+        <a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn btn-info" id="tag-{{ tag.id }}">{{ tag }}</button></a>
+    {% else %}
+        <a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn" id="tag-{{ tag.id }}">{{ tag }}</button></a>
+    {% endif %}
     {% endfor %}
     </div>
 </div>
@@ -88,21 +95,6 @@ location.href="/challenge/";
             }   
 		}        
 	}
-	function clearTag(){
-		$('.btn').removeClass('btn-info');
-	}
-	$(document).ready(function(){
-		var tagId = getTagId();
-		clearTag();
-		if(!tagId){
-			$('#tag-all').addClass('btn-info');
-		}else{
-			$('#tag-' + tagId).addClass('btn-info');
-		}
-	
-		
-	});
-
 </script>
 {% endblock %}
 
