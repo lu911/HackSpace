@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from member.models import UserProfile
 from django.http import HttpResponse
 from django.core.cache import cache
-from admin.views.server_on_off_view import CheckOnOffLevel
+from admin.views.server_settings_view import CheckOnOffLevel
 import json
 import datetime
 import time

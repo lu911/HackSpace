@@ -12,13 +12,16 @@ from rank.views import ShowRankView, ShowRankGraphView
 # admin.autodiscover()
 
 def rank(urlpatterns):
-    f = open("rank_mode", "r")
-    choice = f.readline()
-    f.close()
-    if choice == '0':
+    try:
+        f = open("rank_mode", "r")
+        choice = f.readline()
+        f.close()
+        if choice == '0':
+            urlpatterns += patterns('', url(r'^rank/', ShowRankView))
+        else:
+            urlpatterns += patterns('', url(r'^rank/', ShowRankGraphView))
+    except:
         urlpatterns += patterns('', url(r'^rank/', ShowRankView))
-    else:
-        urlpatterns += patterns('', url(r'^rank/', ShowRankGraphView))
 
 urlpatterns = patterns('',
     url(r'^$', lambda request:render(request, 'index.html')),

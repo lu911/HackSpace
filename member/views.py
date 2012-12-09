@@ -5,7 +5,7 @@ from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import login, logout
 from datetime import datetime
-from admin.views.server_on_off_view import CheckOnOffLevel
+from admin.views.server_settings_view import CheckOnOffLevel
 
 def memberRegisterView(request):
     if request.user.is_active:
