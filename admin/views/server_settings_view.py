@@ -15,7 +15,10 @@ def ServerOnOffView(request):
         on_off_level = form.cleaned_data['on_off_level']
         f=open("on_off", "wb")
         f.write(str(on_off_level))
-        f.close();
+        f.close()
+        alert=True
+    else:
+        alert=False
 
     form = ServerOnOffForm()
     form2 = RankModeChangeForm()
@@ -31,7 +34,7 @@ def ServerOnOffView(request):
                                                                              form2=form2,
                                                                              rank_mode=rank_mode,
                                                                              on_off_level=on_off_level,
-                                                                             on_off_level_alert=True))
+                                                                             on_off_level_alert=alert))
 
 def CheckOnOffLevel(level):
     onOffLevel = "0"
@@ -53,6 +56,9 @@ def RankModeChangeView(request):
         f = open("rank_mode", "w")
         f.write(mode)
         f.close()
+        alert=True
+    else:
+        alert=False
 
     form = ServerOnOffForm()
     form2 = RankModeChangeForm()
@@ -69,4 +75,4 @@ def RankModeChangeView(request):
                                                                              form2=form2,
                                                                              rank_mode=rank_mode,
                                                                              on_off_level=on_off_level,
-                                                                             rank_mode_alert=True))
+                                                                             rank_mode_alert=alert))
