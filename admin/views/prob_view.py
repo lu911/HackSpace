@@ -129,9 +129,7 @@ def AdminModifyTagView(request):
         tag_name = request.POST.get('tag')
         try:
             tag = TagName.objects.get(id=tag_id)
-            default = {
-                'tag' : tag.tag
-            }
+            default = { 'tag' : tag.tag }
             if request.method == 'POST':
                 form = TagForm(request.POST)
                 if form.is_valid(): 

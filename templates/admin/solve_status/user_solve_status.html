@@ -26,7 +26,7 @@ $(function () {
                 title: {
                     text: 'Time'
                 },
-                categories: [
+                categories: ['',
                     {% for info in solver_info %}
                     '{{ info.auth_time }}'{% if not forloop.last %},{% endif %}
                     {% endfor %}
