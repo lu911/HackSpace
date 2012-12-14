@@ -12,8 +12,8 @@ from django.db.models import Q
 def ShowRankView(request):
     choice = open("rank_mode", "r").read()
     if choice == "1":
-        users = UserProfile.objects.filter(~Q(score=0)).order_by('id')[:10]
-        solvers = AuthLog.objects.filter(auth_type=1).order_by('id')
+        users = UserProfile.objects.filter(~Q(score=0)).order_by('user')[:10]
+        solvers = AuthLog.objects.filter(auth_type=1).order_by('user_id')
 
         solverList = [ solver.user_id.username for solver in solvers ]
         scores = [[0]*0 for i in xrange(users.count())]
@@ -36,12 +36,9 @@ def ShowRankView(request):
         data = []
         for i, score in enumerate(scores):
             data.append(dict(name=user[i],scores=score))
+        print scores
         return render(request, 'rank/rank2.html', dict(users=users,
                                                        data=data))
     else:
-        users = UserProfile.objects.order_by('-score', 'last_solve_time')[:30]
-        userList = []
-        for user in users:
-            if user.score != 0:
-                userList.append(UserProfile(user))
-        return render(request, 'rank/rank.html', dict(users=userList))
+        users = UserProfile.objects.filter(~Q(score=0)).order_by('-score', 'last_solve_time')[:30]
+        return render(request, 'rank/rank.html', dict(users=users))

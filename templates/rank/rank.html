@@ -14,9 +14,9 @@
         {% for user in users %}
         <tr>
             <td>{{ forloop.counter }}</td>
-            <td>{{ user.id.user|escape }}</td>
-            <td>{{ user.id.score|escape }}</td>
-            <td>{{ user.id.last_solve_time|escape }}</td>
+            <td>{{ user.user.username|escape }}</td>
+            <td>{{ user.score|escape }}</td>
+            <td>{{ user.last_solve_time|escape }}</td>
         </tr>
         {% endfor %}
     </tbody>
