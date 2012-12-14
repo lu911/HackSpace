@@ -14,7 +14,7 @@ def AdminProblemListManagerView(request):
         probs = {}
         for tag in tags:
             probs[tag.tag] = ProbTag.get_from_prob(tag.id)
-        return render(request,'admin/prob_list.html',dict(tags=tags,probs=probs))
+        return render(request,'admin/challenge_manage/prob_list.html',dict(tags=tags,probs=probs))
     else:
         return HttpResponseRedirect('/')
 
@@ -25,7 +25,7 @@ def AdminChallengeManagerView(request):
         probs = {}
         for tag in tags:
             probs[tag.tag] = ProbTag.get_from_prob(tag.id)
-        return render(request,'admin/challenge_manager.html',dict(tags=tags,probs=probs))
+        return render(request,'admin/challenge_manage/challenge_manager.html',dict(tags=tags,probs=probs))
     else:
         return HttpResponseRedirect('/')
 
@@ -48,7 +48,7 @@ def AdminAddProblemManagerView(request):
                 ProbTag.objects.create(prob_id = problem, tag_id = tag)
         else:
             form = ProblemForm()
-        return render(request,'admin/prob_add_manager.html',dict(form=form))
+        return render(request,'admin/challenge_manage/prob_add_manager.html',dict(form=form))
     else:
         return HttpResponseRedirect('/')
 
@@ -69,14 +69,13 @@ def AdminModifyProblemView(request):
             }
             if request.method == 'POST':
                 form = ProblemForm(request.POST, request.FILES)
+
                 if form.is_valid():
                     prob.prob_name = form.cleaned_data['prob_name']
                     prob.prob_content = form.cleaned_data['prob_content']
-                    prob.prob_flag = form.cleaned_data['prob_flag']
                     if form.cleaned_data['prob_auth']:
                         prob.prob_auth = form.cleaned_data['prob_auth']
-                    else:
-                        prob.prob_auth = prob.prob_auth
+                    prob.prob_flag = form.cleaned_data['prob_flag']
                     prob.prob_point = form.cleaned_data['prob_point']
                     prob_tag.tag_id = form.cleaned_data['prob_tag']
                     if form.cleaned_data['prob_file']:
@@ -86,7 +85,7 @@ def AdminModifyProblemView(request):
                     return HttpResponseRedirect(request.META['PATH_INFO'] + "?prob_id=" + prob_id)
             else:
                 form = ProblemForm(initial=default)
-            return render(request,'admin/prob_modify_manager.html',dict(form=form))
+            return render(request,'admin/challenge_manage/prob_modify_manager.html',dict(form=form))
         except Problem.DoesNotExist:
             return HttpResponseRedirect('/')
     else:
@@ -119,7 +118,7 @@ def AdminAddTagManagerView(request):
                     TagName.objects.create(tag=form.cleaned_data['tag'])
         else:
             form = TagForm()
-        return render(request,'admin/tag_add_manager.html',dict(form=form,tags=tags))
+        return render(request,'admin/challenge_manage/tag_add_manager.html',dict(form=form,tags=tags))
     else:
         return HttpResponseRedirect('/')
 
@@ -142,7 +141,7 @@ def AdminModifyTagView(request):
                 form = TagForm(initial=default)
         except:
             form = TagForm(initial=default)
-        return render(request,'admin/tag_modify_manager.html',dict(form=form)) 
+        return render(request,'admin/challenge_manage/tag_modify_manager.html',dict(form=form)) 
     else:
         return HttpResponseRedirect('/')
 

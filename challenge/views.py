@@ -23,9 +23,8 @@ def ProbListView(request):
         solvedProbIds = []
         for prob in solvedProb:
             solvedProbIds.append(prob.prob_id.id)
-        solvedProb=True
     except:
-        solvedProb=False
+        pass
 
     try:
         tagID = request.GET.get('tag', None)

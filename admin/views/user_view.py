@@ -40,7 +40,7 @@ def AdminUserManagerView(request):
         all_users[k]=v[:10]
         pages_count[k]=int((v.count()-1)/10)+1
     all_users=OrderedDict(sorted(all_users.items()))
-    return render(request,'admin/user_manager.html', dict(groups=groups, all_users=all_users, pages_count=pages_count, form=form))
+    return render(request,'admin/user_manage/user_manager.html', dict(groups=groups, all_users=all_users, pages_count=pages_count, form=form))
 
    
 
@@ -67,21 +67,17 @@ def AdminUserListManagerView(request):
         pages_count[k]=int((v.count()-1)/10)+1
         
     all_users=OrderedDict(sorted(all_users.items()))
-    return render(request, 'admin/user_list.html',
+    return render(request, 'admin/user_manage/user_list.html',
                             dict(groups=groups, all_users=all_users, pages=pages, pages_count=pages_count, search=search))
 
 @login_required(login_url='/login/')
 def AdminModifyUserView(request):
-    user_id = request.POST.get('user_id')
-    result="ERROR"
     if request.user.is_superuser:
+        user_id = request.POST.get('user_id')
         try:
             user = User.objects.get(id=user_id)
             form = UserForm(request.POST)
-            print form.errors
             if form.is_valid():
-                print form.cleaned_data['is_superuser']
-                print type(form.cleaned_data['is_superuser'])
                 user.username = form.cleaned_data['username']
                 user.set_password(form.cleaned_data['password'] or user.password)
                 user.first_name = form.cleaned_data['nickname']
@@ -93,8 +89,7 @@ def AdminModifyUserView(request):
         except User.DoesNotExist:
             pass
     else:
-        result="You are not superuser"
-    return HttpResponse(result)     
+        return HttpResponseRedirect('/')
 
 @login_required(login_url='/login/')
 def AdminDeleteUserView(request):
