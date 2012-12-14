@@ -29,22 +29,19 @@ def ProbListView(request):
     try:
         tagID = request.GET.get('tag', None)
         tagList = TagName.get_from_all_opened_tag()
+
         if tagID is not None:
             probData = ProbTag.get_from_opened_prob(tagID)
+            selectedTag = tagID
+            tags = []
+            for tag in tagList:
+                tags.append(tag.id)
+            selectedTag = tags.index(int(selectedTag))+1
         else:
             raise ValueError
     except ValueError:
-        probData=ProbTag.get_from_all_opened_prob()
-
-    try:
-        selectedTag = request.GET.get('tag')
-        openedTags = TagName.get_from_all_opened_tag()
-        tags = []
-        for tag in openedTags:
-            tags.append(tag.id)
-        selectedTag = tags.index(int(selectedTag))+1
-    except:
         selectedTag = 0
+        probData=ProbTag.get_from_all_opened_prob()
 
     return render(request,'challenge/list.html',dict(tag_list=tagList,
                                                      selected_tag=selectedTag,

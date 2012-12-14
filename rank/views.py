@@ -15,7 +15,7 @@ def ShowRankView(request):
         users = UserProfile.objects.filter(~Q(score=0)).order_by('id')[:10]
         solvers = AuthLog.objects.filter(auth_type=1).order_by('id')
 
-        solver_list = [ solver.user_id.username for solver in solvers ]
+        solverList = [ solver.user_id.username for solver in solvers ]
         scores = [[0]*0 for i in xrange(users.count())]
         user = [ user.user.username for user in users ]
 
@@ -23,7 +23,7 @@ def ShowRankView(request):
         j = 0
         scores[0].append(0)
         for i, solver in enumerate(solvers):
-            if user[j] == solver_list[i]:
+            if user[j] == solverList[i]:
                 sum += int(solver.prob_id.prob_point)
                 scores[j].append(sum)
             else:
@@ -40,8 +40,8 @@ def ShowRankView(request):
                                                        data=data))
     else:
         users = UserProfile.objects.order_by('-score', 'last_solve_time')[:30]
-        userlist = []
+        userList = []
         for user in users:
             if user.score != 0:
-                userlist.append(UserProfile(user))
-        return render(request, 'rank/rank.html', dict(users=userlist))
+                userList.append(UserProfile(user))
+        return render(request, 'rank/rank.html', dict(users=userList))
