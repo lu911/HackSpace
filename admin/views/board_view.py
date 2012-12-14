@@ -37,7 +37,7 @@ def AdminAddBoardCategoryView(request):
                 Category.objects.create(name=form.cleaned_data['category_name'])
         else:
             form = CategoryForm(initial=request.GET)
-        return render(request, 'admin/board/category_add.html', dict(form=form,
+        return render(request, 'admin/board_manage/category_add.html', dict(form=form,
                                                                      categories=categories,
                                                                      posts=posts))
     else:
@@ -61,7 +61,7 @@ def AdminModifyBoardCategoryView(request, category_id):
                     return HttpResponseRedirect('/admin/add-category/')
             else:
                 form = CategoryForm(initial=default)
-                return render(request, 'admin/board/category_modify.html', dict(form=form,
+                return render(request, 'admin/board_manage/category_modify.html', dict(form=form,
                                                                                 categories=categories,
                                                                                 category_id=category_id,
                                                                                 posts=posts))
