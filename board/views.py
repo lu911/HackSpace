@@ -23,17 +23,19 @@ def WritePostView(request):
             return HttpResponseRedirect('/board/')
     else:
         if request.user.is_superuser:
-            form = AdminPostForm(request.POST)
+            form = AdminPostForm(initial=request.GET)
         else:
             form = PostForm(initial=request.GET)
     return render(request, 'board/write_post.html', dict(form=form))
 
-@login_required
+@login_required(login_url='/login/')
 def ShowPostListView(request):
     posts = Board.objects.order_by('category', '-time')
     categories = Category.objects.all()
     return render(request, 'board/render_post_list.html', dict(posts=posts,
                                                                categories=categories))
+
+@login_required(login_url='/login/')
 def ShowPostOfCategoryListView(request, category_id):
     posts = Board.objects.filter(category=category_id).order_by('-time')
     categories = Category.objects.all()

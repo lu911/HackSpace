@@ -7,21 +7,21 @@ from challenge.models import TagName
 from django.core.exceptions import ValidationError
 
 class TagForm(forms.Form):
-    tag = forms.CharField(label=u'태그', max_length=32)
+    tag = forms.CharField(label=u'Tag', max_length=32)
 
 class ProblemForm(forms.Form):
     GENDER_CHOICE = (
-        ('1', '공개'),
-        ('0', '비공개'),
+        ('1', 'Open'),
+        ('0', 'Close'),
     )
 
-    prob_name = forms.CharField(label=u'문제 이름')
-    prob_content = forms.CharField(label=u'문제 내용', widget=forms.Textarea)
-    prob_point = forms.CharField(label=u'문제 점수')
-    prob_auth = forms.CharField(label=u'문제 정답', required=False)
-    prob_flag = forms.ChoiceField(label=u'공개 여부', choices=GENDER_CHOICE)
-    prob_tag = forms.ModelChoiceField(queryset=TagName.objects.all(), label=u'태그', required=False)
-    prob_file = forms.FileField(label=u'문제 파일', required=False)
+    prob_name = forms.CharField(label=u'Title')
+    prob_content = forms.CharField(label=u'Content', widget=forms.Textarea)
+    prob_point = forms.CharField(label=u'Point')
+    prob_auth = forms.CharField(label=u'Key', required=False)
+    prob_flag = forms.ChoiceField(label=u'Open/Close', choices=GENDER_CHOICE)
+    prob_tag = forms.ModelChoiceField(queryset=TagName.objects.all(), label=u'Tag', required=False)
+    prob_file = forms.FileField(label=u'File', required=False)
 
 class CategoryForm(forms.Form):
     category_name = forms.CharField(label=u'Category')

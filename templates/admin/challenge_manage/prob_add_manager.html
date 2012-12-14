@@ -5,50 +5,18 @@
 </style>
 
 <form method="post" class="form-horizontal" id="problem-add-form"  enctype="multipart/form-data">
+    {% for field in form %}
     <div class="control-group">
-        <label class="control-label" for="inputProbName">문제 이름</label>
+        <label class="control-label">{{ field.label_tag }}</label>
         <div class="controls">
-            {{ form.prob_name }} {{ form.prob_name.errors }}
+            {{ field }} {{ field.errors }}
         </div>
     </div>
+    {% endfor %}
     <div class="control-group">
-        <label class="control-label " for="inputContent">문제 내용</label>
         <div class="controls">
-            {{ form.prob_content }} {{ form.prob_content.errors }}
+            <button type="submit" class="btn">Add</button>
         </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="input">문제 점수</label>
-        <div class="controls">
-            {{ form.prob_point }} {{ form.prob_point.errors }}
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="input">문제 답</label>
-        <div class="controls">
-            {{ form.prob_auth }} {{ form.prob_auth.errors }}
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="input">공개 여부</label>
-        <div class="controls">
-            {{ form.prob_flag }} {{ form.prob_flag.errors }}
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="input">태그</label>
-        <div class="controls">
-            {{ form.prob_tag }} {{ form.prob_tag.errors }}
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label" for="input">문제 파일</label>
-        <div class="controls">
-            {{ form.prob_file }} {{ form.prob_file.errors }}
-        </div>
-	</div>
-    <div class="control-group">
-        <button type="submit" id="btn-prob-add" class="btn">추가</button>
     </div>
     {% csrf_token %}
 </form>

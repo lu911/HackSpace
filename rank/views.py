@@ -27,6 +27,7 @@ def ShowRankView(request):
                 sum += int(solver.prob_id.prob_point)
                 scores[j].append(sum)
             else:
+                sum = 0
                 j += 1
                 try:
                     scores[j].append(0)
@@ -36,7 +37,6 @@ def ShowRankView(request):
         data = []
         for i, score in enumerate(scores):
             data.append(dict(name=user[i],scores=score))
-        print scores
         return render(request, 'rank/rank2.html', dict(users=users,
                                                        data=data))
     else:
