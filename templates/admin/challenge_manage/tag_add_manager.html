@@ -9,13 +9,9 @@
 		margin:3px 0 0 3px;
 	}
 </style>
-<form method="post" id="tag-add-form" >
-    <fieldset>
-        <dl class="form">
-            <dt>태그 이름</dt>
-            <dd>{{form.tag}}</dd>
-		</dl>
-		{% csrf_token %}
-		<input type="submit" value="추가" id="btn-tag-add"/>
-	</fieldset>
+<form method="post" class="form-inline">
+    {{ form.tag.label_tag }}
+    {{ form.tag }} {{ form.tag.errors }}
+    {% csrf_token %}
+    <button type="submit" class="btn" id="btn-tag-add">Add</button>
 </form>

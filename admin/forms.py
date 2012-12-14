@@ -7,7 +7,7 @@ from challenge.models import TagName
 from django.core.exceptions import ValidationError
 
 class TagForm(forms.Form):
-    tag = forms.CharField(label=u'Tag', max_length=32)
+    tag = forms.CharField(label=u'Tag Name', max_length=32)
 
 class ProblemForm(forms.Form):
     GENDER_CHOICE = (
