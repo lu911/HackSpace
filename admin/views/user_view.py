@@ -78,6 +78,7 @@ def AdminUserListManagerView(request):
 
 @login_required(login_url='/login/')
 def AdminModifyUserView(request):
+    result="Error"
     if request.user.is_superuser:
         user_id = request.POST.get('user_id')
         try:
@@ -95,7 +96,8 @@ def AdminModifyUserView(request):
         except User.DoesNotExist:
             pass
     else:
-        return HttpResponseRedirect('/')
+        result="You are not superuser"
+    return HttpResponse(result)
 
 @login_required(login_url='/login/')
 def AdminDeleteUserView(request):
