@@ -16,7 +16,7 @@
 <div class="container-fluid">
   <div class="row-fluid">
     <div class="span3" style="border-right:2px solid #eeeeee;">
-		<div class="form-search">
+        <div class="form-search">
             <div class="input-append">
                     <input type="text" id="search-username" class="span6 search-query" placeholder="Username" onkeypress="SearchKeyPress(event)">
                     <button type="button" class="btn" id="search-button"  onclick="SearchUser()">Search</button>
@@ -38,7 +38,7 @@
                         </div>
                     </ul>
                 </li>
-                {% endfor %}				
+                {% endfor %}
             </ul>
             {% for k, v in pages_count.items %}
                 <input type="hidden" value="1" id="{{ k }}-page-index">
@@ -47,7 +47,7 @@
         </div>
     </div>
     <div class="span7" id="modify-content">
-    	<div id="container" style="width: 700px; height: 400px; margin: 0 auto">
+        <div id="container" style="width: 700px; height: 400px; margin: 0 auto">
             <div id="wrap-modify-form">
                 <form method="POST" id="modify-form">
                     <fieldset>
@@ -65,33 +65,27 @@
                     </fieldset>
                 </form>
            </div>
-        </div>	
+        </div>
     </div>
   </div>
 </div>
 
-
-
-<script src="/static/js/highcharts.js"></script>
-<script src="/static/js/highcharts-more.js"></script>
-<script src="/static/js/exporting.js"></script>
 <script type="text/javascript">
-    
+
     $('#normal-users-page-1').css({"font-weight": "bold", "color" : "red"});
     $('#super-users-page-1').css({"font-weight": "bold", "color" : "red"});
-	
-	$(document).ready(function(){
-		$("#browser").treeview();
-		var user_id;
-		$('.file').live('click',function(){
-			var id = $(this).attr('id');
-			user_id = id.split("-")[1];
-			$.ajax(
-			{
-				url: "/admin/info-user/?user_id=" + user_id,
-				type: "GET",
-				dataType: "json",
-				success: function(data){
+
+    $(document).ready(function(){
+        $("#browser").treeview();
+        var user_id;
+        $('.file').live('click',function(){
+            var id = $(this).attr('id');
+            user_id = id.split("-")[1];
+            $.ajax({
+                url: "/admin/info-user/?user_id=" + user_id,
+                type: "GET",
+                dataType: "json",
+                success: function(data){
                     var is_staff=Number(data.is_staff);
                     var is_superuser=Number(data.is_superuser);
                     var is_active=Number(data.is_active);
@@ -102,32 +96,28 @@
                     $('#id_is_staff option[value='+is_staff+']').attr("selected", true);
                     $('#id_is_superuser option[value='+is_superuser+']').attr("selected", true);
                     $('#id_is_active option[value='+is_active+']').attr("selected", true);
-}
-			});
-		});
-		
-		$('.last').find('.icon-remove').live('click',function(){
-			var id = $(this).attr('id');
-			user_id = id.split("-")[2];
-			if(confirm("정말로 삭제할까요?\n게시글도 지워집니다."))
-			{
-				$.ajax(
-				{
-					url: "/admin/delete-user/?user_id=" + user_id,
-					type: "GET",
-					dataType: "html",
-					success: function(data){
-						location.href = location.href;
-						ReloadUserList();
-					}
-				});				
-			}
-			else
-			{
-				return false;
-			}
-		});
-	});
+                }
+            });
+        });
+
+        $('.last').find('.icon-remove').live('click',function(){
+            var id = $(this).attr('id');
+            user_id = id.split("-")[2];
+            if(confirm("정말로 삭제할까요?\n게시글도 지워집니다.")) {
+                $.ajax({
+                    url: "/admin/delete-user/?user_id=" + user_id,
+                    type: "GET",
+                    dataType: "html",
+                    success: function(data){
+                        location.href = location.href;
+                        ReloadUserList();
+                    }
+                });
+            } else {
+                return false;
+            }
+        });
+    });
 
     $('#modify-form').submit(function(){
         $.post('/admin/modify-user/',$(this).serialize(),function(data){
@@ -152,24 +142,23 @@
         $('#search-username').focus();
      }
 
-	function ReloadUserList(){
+    function ReloadUserList(){
         {% for group in groups %}
-            var {{ group }}_user_page = $('#{{ group }}-users-page-index').val();
+        var {{ group }}_user_page = $('#{{ group }}-users-page-index').val();
         {% endfor %}
         var search= $('#search-username').val(); 
-		$.ajax(
-		{
+        $.ajax({
            url: "/admin/userlist/?search="+search{% for group in groups %}+"&{{ group }}_user_page="+{{ group }}_user_page{% endfor %},
-			
-			type: "GET",
-			dataType: "html",
-			success: function(data){
-				$('#user-content').html(data);
+
+            type: "GET",
+            dataType: "html",
+            success: function(data){
+                $('#user-content').html(data);
                 DecidePageRanges();
                 ShowPageIndexes();
-			}
-		});	
-	}
+            }
+        });
+    }
 
     function MovePage(type, page){
         $('#'+type+'-users-page-index').val(page);

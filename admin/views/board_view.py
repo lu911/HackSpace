@@ -76,7 +76,7 @@ def AdminDeleteBoardCategoryView(request, category_id):
         try:
             category = Category.objects.get(id=category_id)
             posts = Board.objects.filter(category_id=category_id)
-            etc_category = Category.objects.get(id=1)
+            etc_category = Category.objects.get(id=2)
             for post in posts:
                 post.category_id = etc_category
                 post.save()

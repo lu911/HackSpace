@@ -15,7 +15,7 @@ def AdminUserInfoView(request):
     user = User.objects.get(id=user_id)
     data=dict(
         user_id=user.id,
-        username=user.username, 
+        username=user.username,
         email=user.email,
         nickname=user.first_name,
         is_superuser=user.is_superuser,
@@ -29,20 +29,22 @@ def AdminUserManagerView(request):
     form = UserForm()
     pages_count=dict()
     all_users={
-        "super-users" : 
+        "super-users" :
             User.objects.filter(is_superuser=1).order_by("-last_login"),
-        "active-users" : 
+        "active-users" :
             User.objects.filter(is_superuser=0, is_active=1).order_by("-last_login"),
-        "block-users" : 
+        "block-users" :
             User.objects.filter(is_superuser=0, is_active=0).order_by("-last_login")
     }
-    for k, v in  all_users.iteritems():
+    for k, v in all_users.iteritems():
         all_users[k]=v[:10]
         pages_count[k]=int((v.count()-1)/10)+1
     all_users=OrderedDict(sorted(all_users.items()))
-    return render(request,'admin/user_manage/user_manager.html', dict(groups=groups, all_users=all_users, pages_count=pages_count, form=form))
+    return render(request,'admin/user_manage/user_manager.html', dict(groups=groups,
+                                                                      all_users=all_users,
+                                                                      pages_count=pages_count,
+                                                                      form=form))
 
-   
 
 @login_required(login_url='/login/')
 def AdminUserListManagerView(request):
@@ -55,20 +57,24 @@ def AdminUserListManagerView(request):
     search=str(request.GET.get('search'));
     pages_count=dict()
     all_users={
-        "super-users" : 
+        "super-users" :
             User.objects.filter(is_superuser=1, username__icontains=search).order_by("-last_login"),
-        "active-users" : 
+        "active-users" :
             User.objects.filter(is_superuser=0, is_active=1, username__icontains=search).order_by("-last_login"),
-        "block-users" : 
+        "block-users" :
             User.objects.filter(is_superuser=0, is_active=0, username__icontains=search).order_by("-last_login")
     }
     for k, v in  all_users.iteritems():
         all_users[k]=v[10*(pages[k]-1):10*(pages[k]-1)+10]
         pages_count[k]=int((v.count()-1)/10)+1
-        
+
     all_users=OrderedDict(sorted(all_users.items()))
     return render(request, 'admin/user_manage/user_list.html',
-                            dict(groups=groups, all_users=all_users, pages=pages, pages_count=pages_count, search=search))
+                            dict(groups=groups,
+                                 all_users=all_users,
+                                 pages=pages,
+                                 pages_count=pages_count,
+                                 search=search))
 
 @login_required(login_url='/login/')
 def AdminModifyUserView(request):

@@ -10,7 +10,10 @@ from django.db.models import Q
 
 @login_required(login_url='/login/')
 def ShowRankView(request):
-    choice = open("rank_mode", "r").read()
+    try:
+        choice = open("rank_mode", "r").read()
+    except:
+        choice = "0"
     if choice == "1":
         users = UserProfile.objects.filter(~Q(score=0)).order_by('user')[:10]
         solvers = AuthLog.objects.filter(auth_type=1).order_by('user_id')
