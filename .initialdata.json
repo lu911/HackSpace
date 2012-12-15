@@ -1,0 +1,26 @@
+[
+    {
+        "pk": 1,
+        "model": "board.category",
+        "fields": {
+            "name": "notice"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "challenge.tagname",
+        "fields": {
+            "tag": "etc"
+        }
+    },
+    {
+        "pk": 1,
+        "model": "member.userprofile",
+        "fields": {
+            "score": 0,
+            "last_solve_time": "2000-01-01T01:00:00.000Z",
+            "user": 1
+
+        }
+    }
+]

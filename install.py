@@ -7,8 +7,6 @@ import subprocess
 def CommandInfo():
     print "python install.py install - install Pentarea"
     print "                  remove - delete Database setting and all data about hackspace"
-    print "                  resetting - setting database again (not delete tables and data)"
-    print "                  createsuperuser - make administrator"
 
 def DBSetting():
     engine=name=username=port=password=''
@@ -76,7 +74,10 @@ def RemoveDBData():
 def CreateSuperuser():
     print "Creating superuser..."
     os.system("python manage.py createsuperuser")
- 
+
+def AddInitialData():
+    os.system("python manage.py loaddata .initialdata.json")
+
 try:
     input = raw_input
 except:
@@ -90,6 +91,7 @@ elif sys.argv[1] == "install":
         sys.exit(1)
     DBSetting()
     CreateSuperuser()
+    AddInitialData()
     print "\n'$ python manage.py runserver IP:PORT'"
 elif sys.argv[1] == "remove":
     print "This command remove all your DB data.."
@@ -99,9 +101,5 @@ elif sys.argv[1] == "remove":
         RemoveDBData()
         RemoveDBSetting()
         print "Done!"
-elif sys.argv[1] == "resetting":
-    DBSetting()
-elif sys.argv[1] == "createsuperuser":
-    CreateSuperuser()
 else:
     CommandInfo()
