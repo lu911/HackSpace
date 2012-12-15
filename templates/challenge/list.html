@@ -36,7 +36,7 @@
     </div>
 </div>
 <div style="float:left;">
-    {% if onOffLevel == 3 %}
+    {% if onOffLevel == 3  or user.is_superuser %}
     <form method="post" class="form-inline" action="/challenge/auth/">
         <input type="text" name="auth" placeholder="Do not bruteforce!" />
         <button type="submit" class="btn">Auth</button>
