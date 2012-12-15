@@ -114,10 +114,9 @@ def AdminAddTagManagerView(request):
         if request.method == 'POST':
             form = TagForm(request.POST)
             if form.is_valid():
-                if request.user.is_superuser:
-                    TagName.objects.create(tag=form.cleaned_data['tag'])
+                TagName.objects.create(tag=form.cleaned_data['tag'])
         else:
-            form = TagForm()
+            form = TagForm(initial=request.GET)
         return render(request,'admin/challenge_manage/tag_add_manager.html',dict(form=form,tags=tags))
     else:
         return HttpResponseRedirect('/')

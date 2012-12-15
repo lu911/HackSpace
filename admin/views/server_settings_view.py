@@ -22,8 +22,6 @@ def ServerOnOffView(request):
 
     form = ServerOnOffForm()
     form2 = RankModeChangeForm()
-    on_off_level = 0
-    rank_mode = 0
     try:
         on_off_level = open("on_off", "r").read()
         rank_mode = open("rank_mode", "r").read()
@@ -62,8 +60,6 @@ def RankModeChangeView(request):
 
     form = ServerOnOffForm()
     form2 = RankModeChangeForm()
-    on_off_level = 0
-    rank_mode = 0
     try:
         on_off_level = open("on_off", "r").read()
         rank_mode = open("rank_mode", "r").read()
