@@ -14,9 +14,12 @@ def ShowRankView(request):
         choice = open("rank_mode", "r").read()
     except:
         choice = "0"
+
     if choice == "1":
-        users = UserProfile.objects.filter(~Q(score=0)).order_by('user')[:10]
         solvers = AuthLog.objects.filter(auth_type=1).order_by('user_id')
+        if solvers.count() == 0:
+            return render(request, 'rank/no_rank.html')
+        users = UserProfile.objects.filter(~Q(score=0)).order_by('user')[:10]
 
         solverList = [ solver.user_id.username for solver in solvers ]
         scores = [[0]*0 for i in xrange(users.count())]
