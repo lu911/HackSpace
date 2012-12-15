@@ -7,5 +7,5 @@ def CheckOnOff(request):
     except:
         onOffLevel = 0
     return {
-        'onOffLevel' : int(onOffLevel)
+        'on_off_level' : int(onOffLevel)
     }

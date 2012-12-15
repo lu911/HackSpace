@@ -30,7 +30,7 @@
                     <div class="nav">
                         <ul class="nav">
                         {% if user.is_authenticated %}
-                            {% if onOffLevel >= 2 or user.is_superuser %}
+                            {% if on_off_level >= 2 or user.is_superuser %}
                                 <li class="{% block challenge_active %}{% endblock %}"><a  href="/challenge/">Challenge</a></li>
                             {% endif %}
                             <li class="{% block rank_active %}{% endblock %}"><a href="/rank/">Rank</a></li>
@@ -44,7 +44,7 @@
                         <p class="navbar-text pull-right">{{ user }} ( {{ user|getScore }} )</p>
                         {% else %}
                             <li class="{% block login_active %}{% endblock %}"><a href="/login/">Login</a></li>
-                            {% if onOffLevel >= 1 or user.is_superuser %}
+                            {% if on_off_level >= 1 or user.is_superuser %}
                                 <li class="{% block register_active %}{% endblock %}"><a href="/register/">Register</a></li>
                             {% endif %}
                         </ul>
