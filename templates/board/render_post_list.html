@@ -1,35 +1,20 @@
-{% extends "base.html" %}
-{% block title %} Board {% endblock %}
-{% block board_active %}active{% endblock %}
-{% block content %}
-<h1 class="pager">Board</h1>
-<div class="row-fluid">
-    <div class="span4">
-    {% for category in categories %}
-    <a href="/board/{{ category.id }}"><button type="button" class="btn">{{ category.name }}</button></a>
-    {% endfor %}
-    </div>
-    <div class="span1 offset7"><a href="/board/write-post/"><button type="button" class="btn">Write</button></a></div>
-</div>
-<hr>
 <table class="table table-hover">
-<tr class="info">
-    <td>No</td>
-    <td>User</td>
-    <td>Title</td>
-    <td>Time</td>
-</tr>
-{% for post in posts %}
-{% if post.category.id == 1 %}
-<tr class="error">
-{% else %}
-<tr>
-{% endif %}
-    <td>{{ forloop.counter }}</td>
-    <td>{{ post.user.username }}</td>
-    <td><a href="/board/show-post/{{ post.id }}">{{ post.title }}</a></td>
-    <td>{{ post.time }}</td>
-</tr>
-{% endfor %}
+    <tr class="info">
+        <td>No</td>
+        <td>User</td>
+        <td>Title</td>
+        <td>Time</td>
+    </tr>
+    {% for post in posts %}
+        {% if post.category.id == 1 %}
+            <tr class="error">
+        {% else %}
+            <tr>
+        {% endif %}
+        <td>{{ forloop.counter }}</td>
+        <td>{{ post.user.username }}</td>
+        <td><a href="/board/show-post/{{ post.id }}">{{ post.title }}</a></td>
+        <td>{{ post.time }}</td>
+    </tr>
+    {% endfor %}
 </table>
-{% endblock %}

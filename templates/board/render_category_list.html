@@ -1,0 +1,17 @@
+<div class="span5">
+    {% if not selectedCategory or selectedCategory == 0 %}
+        <a href="/board/"><button type="button" class="btn btn-info">All</button></a>
+    {% else %}
+        <a href="/board/"><button type="button" class="btn">All</button></a>
+    {% endif %}
+    {% for category in categories %}
+        {% if selectedCategory == forloop.counter %}
+            <a href="/board/{{ category.id }}"><button type="button" class="btn btn-info">{{ category.name }}</button></a>
+        {% else %}
+            <a href="/board/{{ category.id }}"><button type="button" class="btn">{{ category.name }}</button></a>
+        {% endif %}
+    {% endfor %}
+</div>
+<div class="span1 offset6">
+    <a href="/board/write-post/"><button type="button" class="btn">Write</button></a>
+</div>

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %} Board {% endblock %}
+{% block board_active %}active{% endblock %}
+{% block content %}
+<h1 class="pager">Board</h1>
+<div class="row-fluid">
+    {% include "board/render_category_list.html" %}
+</div>
+<hr>
+    {% include "board/render_post_list.html" %}
+{% endblock %}

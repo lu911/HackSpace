@@ -32,15 +32,25 @@ def WritePostView(request):
 def ShowPostListView(request):
     posts = Board.objects.order_by('category', '-time')
     categories = Category.objects.all()
-    return render(request, 'board/render_post_list.html', dict(posts=posts,
+    return render(request, 'board/board.html', dict(posts=posts,
                                                                categories=categories))
 
 @login_required(login_url='/login/')
 def ShowPostOfCategoryListView(request, category_id):
-    posts = Board.objects.filter(category=category_id).order_by('-time')
-    categories = Category.objects.all()
-    return render(request, 'board/render_post_list.html', dict(posts=posts,
-                                                               categories=categories))
+    try:
+        categories = Category.objects.all()
+        categoryList = []
+        for category in categories:
+            categoryList.append(category.id)
+        selectedCategory = categoryList.index(int(category_id))+1
+        posts = Board.objects.filter(category=category_id).order_by('-time')
+    except:
+        posts = Board.objects.all().order_by('category', '-time')
+        categories = Category.objects.all()
+        selectedCategory = 0
+    return render(request, 'board/board.html', dict(posts=posts,
+                                                               categories=categories,
+                                                               selectedCategory=selectedCategory))
 
 @login_required(login_url='/login/')
 def ShowPostContentView(request, post_id):
