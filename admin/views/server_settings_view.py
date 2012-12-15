@@ -9,6 +9,7 @@ from django.core.cache import *
 def ServerOnOffView(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect('/')
+    on_off_level = 0
 
     form = ServerOnOffForm(request.POST)
     if form.is_valid():
@@ -47,6 +48,7 @@ def CheckOnOffLevel(level):
 def RankModeChangeView(request):
     if not request.user.is_superuser:
         return HttpResponseRedirect('/')
+    on_off_level = 0
 
     form = RankModeChangeForm(request.POST)
     if form.is_valid():
