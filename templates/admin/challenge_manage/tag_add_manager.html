@@ -9,11 +9,13 @@
 		margin:3px 0 0 3px;
 	}
 </style>
-<form method="POST" class="form-inline">
-    {% for field in form %}
-        {{ field.label_tag }}
-        {{ field }} {{ field.errors }}
-    {% endfor %}
-    {% csrf_token %}
-    <button type="submit" class="btn">Add</button>
+<form method="POST" class="form-inline" id="tag-add-form">
+    <fieldset>
+        <dl>
+            <dt>{{ form.tag.label_tag }}</dt>
+            <dd>{{ form.tag }} {{ form.tag.errors }}</dd>
+        </dl>
+        {% csrf_token %}
+        <button type="submit" class="btn" id="btn-tag-add">Add</button>
+    </fieldset>
 </form>
