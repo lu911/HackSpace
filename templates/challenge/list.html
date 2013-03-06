@@ -19,52 +19,59 @@
     location.href="/challenge/";
 </script>
 {% endif %}
-<div style="width:60%;float:left;">
-    <div class="btn-group">
-    {% if selected_tag == 0 %}
-        <a href="/challenge/"><button class="btn btn-info" id="tag-all">All</button></a>
-    {% else %}
-        <a href="/challenge/"><button class="btn" id="tag-all">All</button></a>
-    {% endif %}
-    {% for tag in tag_list %}
-    {% if selected_tag == forloop.counter %}
-        <a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn btn-info" id="tag-{{ tag.id }}">{{ tag }}</button></a>
-    {% else %}
-        <a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn" id="tag-{{ tag.id }}">{{ tag }}</button></a>
-    {% endif %}
-    {% endfor %}
-    </div>
-</div>
-<div style="float:left;">
-    {% if on_off_level == 3  or user.is_superuser %}
-    <form method="post" class="form-inline" action="/challenge/auth/">
-        <input type="text" name="auth" placeholder="Do not bruteforce!" />
-        <button type="submit" class="btn">Auth</button>
-        {% csrf_token %}
-    </form>
-    {% else %}
-        Auth is closed..
-    {% endif %}
-</div>
-<table>
-    <tbody>
-        <tr>
-        {% for prob in prob_data %}
-            {% if prob.id in solved_problems %}
-            <td><button type="button" class="btn btn-large btn-success disabled" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}}, '{{prob.prob_file}}')">{{ prob.prob_name }}</button></td>
-            {% else %}
-            <td><button type="button" class="btn btn-large btn-inverse" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}}, '{{prob.prob_file}}')">{{ prob.prob_name }}</button></td>
-            {% endif %}
-            {% if forloop.counter|divisibleby:"6" %} 
-            </tr>
-            {% endif %}
+<div class="row-fluid">
+    <div style="width:70%;float:left;">
+        <div class="btn-group">
+        {% if selected_tag == 0 %}
+            <a href="/challenge/"><button class="btn btn-info" id="tag-all">All</button></a>
+        {% else %}
+            <a href="/challenge/"><button class="btn" id="tag-all">All</button></a>
+        {% endif %}
+        {% for tag in tag_list %}
+        {% if selected_tag == forloop.counter %}
+            <a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn btn-info" id="tag-{{ tag.id }}">{{ tag }}</button></a>
+        {% else %}
+            <a href="/challenge/?tag={{tag.id|urlencode}}"><button class="btn" id="tag-{{ tag.id }}">{{ tag }}</button></a>
+        {% endif %}
         {% endfor %}
-        </tr>
-    </tbody>
-</table>
-<div style="float:left">
-    <p id="prob-score"></p>
-    <p id="prob-content"></p>
+        </div>
+    </div>
+    <div style="width:30%;float:left;">
+        {% if on_off_level == 3  or user.is_superuser %}
+        <form method="post" class="form-inline" action="/challenge/auth/">
+            <input type="text" name="auth" placeholder="Do not bruteforce!" />
+            <button type="submit" class="btn">Auth</button>
+            {% csrf_token %}
+        </form>
+        {% else %}
+            Auth is closed..
+        {% endif %}
+    </div>
+    <br />
+    <br />
+    <br />
+    <div style="width:100%;float:left;">
+        <table>
+            <tbody>
+                <tr>
+                {% for prob in prob_data %}
+                    {% if prob.id in solved_problems %}
+                    <td><button type="button" class="btn btn-large btn-success disabled" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}}, '{{prob.prob_file}}')">{{ prob.prob_name }}</button></td>
+                    {% else %}
+                    <td><button type="button" class="btn btn-large btn-inverse" onClick="printProb({{prob.id}},'{{prob.prob_content|linebreaksbr|escapejs}}',{{prob.prob_point}}, '{{prob.prob_file}}')">{{ prob.prob_name }}</button></td>
+                    {% endif %}
+                    {% if forloop.counter|divisibleby:"6" %} 
+                    </tr>
+                    {% endif %}
+                {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div style="float:left">
+        <p id="prob-score"></p>
+        <p id="prob-content"></p>
+    </div>
 </div>
 
 <script type="text/javascript">
@@ -75,8 +82,8 @@
        		var file_data = "";
        	}
         $('#prob-id').val(id)
-        $('#prob-content').html("content<br>- " + content + file_data);
-        $('#prob-score').html("points : " + score);
+        $('#prob-content').html("<br> " + content + file_data);
+        $('#prob-score').html("<h4>points : " + score + "</h4>");
         
     }
  	function getTagId(){   

@@ -15,6 +15,16 @@ def getScore(user):
         return score.score
     except:
         return 0
+
+def getRank(user):
+    try:
+        rankers = UserProfile.objects.all().order_by('-last_solve_time', 'score')
+        rank = [ r.user.id for r in rankers ]
+        return rank.index(user.id)+1
+    except:
+       return 0
+
 register.filter('getObject', getObject)
 register.filter('highlight', highlight)
 register.filter('getScore', getScore)
+register.filter('getRank', getRank)

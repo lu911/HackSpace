@@ -41,7 +41,7 @@
                             <li><a href="/logout/">Logout</a></li>
                         </ul>
                         {% load admin_filter %}
-                        <p class="navbar-text pull-right">{{ user }} ( {{ user|getScore }} )</p>
+                        <p class="navbar-text pull-right">{{ user }} ( Rank : {{ user|getRank }} Score : {{ user|getScore }} )</p>
                         {% else %}
                             <li class="{% block login_active %}{% endblock %}"><a href="/login/">Login</a></li>
                             {% if on_off_level >= 1 or user.is_superuser %}

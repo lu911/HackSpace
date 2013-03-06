@@ -16,8 +16,8 @@ def ShowRankView(request):
         choice = "0"
 
     if choice == "1":
-        solvers = AuthLog.objects.filter(auth_type=1).order_by('user_id')
-        users = UserProfile.objects.filter(~Q(score=0)).order_by('user')[:10]
+        solvers = AuthLog.objects.filter(auth_type=1).order_by('user_id', 'auth_time')
+        users = UserProfile.objects.filter(~Q(score=0)).order_by('id')[:10]
         if solvers.count() == 0 or users.count() == 0:
             return render(request, 'rank/no_rank.html')
 
@@ -27,17 +27,16 @@ def ShowRankView(request):
 
         sum = 0
         j = 0
-        scores[0].append(0)
         for i, solver in enumerate(solvers):
+            print user[j], solverList[i]
             if user[j] == solverList[i]:
                 sum += int(solver.prob_id.prob_point)
                 scores[j].append(sum)
             else:
-                sum = 0
+                sum = int(solver.prob_id.prob_point)
                 j += 1
                 try:
-                    scores[j].append(0)
-                    scores[j].append(int(solver.prob_id.prob_point))
+                    scores[j].append(sum)
                 except IndexError:
                     break
         data = []
